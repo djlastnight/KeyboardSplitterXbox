@@ -26,6 +26,8 @@ Driver if he/she uses Windows XP, Vista or Seven.
 The User Interface is very intuitive and does not require
 technical skills.
 
+![alt tag](https://raw.githubusercontent.com/djlastnight/KeyboardSplitterXbox/master/splitter_UI_help.png)
+
 All keyboard mappings to xbox functions such as buttons,
 axes, d-pad directions and triggers are fully customizable.
 This is possible via preconfigured presets.
