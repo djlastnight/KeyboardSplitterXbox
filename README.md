@@ -33,10 +33,24 @@ axes, d-pad directions and triggers are fully customizable.
 This is possible via preconfigured presets.
 The user could manage (add/edit/delete) different presets
 for different games/applications/players. The presets are kept in
-presets.xml, which the application reads on startup.
+presets.xml, which the application reads on startup writes on exit.
 It also comes with two hardcoded presets called 'default' and 'empty'.
 
-Keyboard Splitter has built-in gamepad tester and keyboard monitor.
-It provides the feature to block or not the used keyboards input.
+#Main Features:
+- keyboards input monitor
+- virtual xbox 360 controllers tester
+- customizable mapping presets
+- managing xbox custom functions
+- keyboard detector
+- key detector
+- realtime usb detection
+- keyboard input blocker
+- remote blocking/unblocking the keyboards input
+
+#Installation:
+Run the application, it will ask you to install the built-in drivers.
+Do it and reboot your PC.
+If you use Windows XP, Vista or Sever, you also need the
+Microsoft's Xbox Accessories Driver found at https://www.microsoft.com/hardware/en-us/d/xbox-360-controller-for-windows
 
 djlastnight, 2016
