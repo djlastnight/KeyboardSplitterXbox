@@ -1,0 +1,32 @@
+﻿<Window x:Class="KeyboardSplitter.UI.HowItWorks"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="HowItWorks" Height="380" Width="640" MinWidth="300" MinHeight="150">
+    <ScrollViewer Name="scrollViewer">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition></RowDefinition>
+                <RowDefinition></RowDefinition>
+            </Grid.RowDefinitions>
+            <Image Grid.Row="0" Source="/KeyboardSplitter;component/Resources/how_it_works_diagram.png" />
+            <TextBox Grid.Row="1" TextWrapping="Wrap" FontSize="16" IsHitTestVisible="False">
+                <TextBox.Text>
+                    By default Windows OS does not distinguish the different keyboard devices and acts like they are the same device.
+                The current application uses a keyboard driver (by oblitum, thanks to him), which recognize every connected keyboard as separete device.
+                However, if you want to play your favourite game with 2, 3 or 4 keyboards in example, the game still see them as just one keyboard.
+                The workaround is to use 2, 3 or 4 gamepads instead.
+                The current application creates upto 4 virtual xbox 360 gamepads (thanks to nefarius and shauleiz).
+                Every virtual gamepad is mapped to a keyboard (both types PS/2 and USB are supported).
+                When user press a key on a choosen keyboard, the input is being redirected to the coresponding virtual gamepad.
+                By default the input will be blocked when it reach the gamepad, so the Windows OS will not receive it.
+                Application has user friendly GUI (Graphical User Interface).
+                It provides features like keyboard detector, key detector, keyboards input monitor,
+                gamepads button tester and also managing preconfigured gaming presets.
+                Application comes with 2 hardcoded presets (empty and default), which can not be modified or deleted.
+                When 'Start' button is activated, the app mounts the virtual gamepads (1-4 depends on user choice) and waits for keyboard input,
+                which it translates to virtual gamepad activity. On application reset/exit all virtual gamepads are being destroyed.
+                </TextBox.Text>
+            </TextBox>
+        </Grid>
+    </ScrollViewer>
+</Window>

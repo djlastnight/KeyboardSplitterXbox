@@ -1,0 +1,23 @@
+﻿<UserControl x:Class="KeyboardSplitter.Controls.KeyControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="27" d:DesignWidth="251">
+    <Grid>
+        <Button Name="removeButton" Width="20" Height="23" HorizontalAlignment="Left" VerticalAlignment="Top" Visibility="Hidden" Click="RemoveButton_Click"
+                ToolTip="Remove custom function">
+            <StackPanel>
+                <Image Source="/KeyboardSplitter;component/Resources/delete.png"/>
+            </StackPanel>
+        </Button>
+        <ComboBox Name="xboxFunctionBox" Width="91" Height="23" HorizontalAlignment="Left" Visibility="Hidden" VerticalAlignment="Top" Margin="26,0,0,0"
+                  SelectionChanged="XboxFunctionBox_SelectionChanged" ToolTip="Choose custom function" />
+        <Label Content="ButtonName" Height="28" HorizontalAlignment="Left" Margin="26,0,0,0" Name="label1" VerticalAlignment="Top" />
+        <ComboBox Height="23" HorizontalAlignment="Left" Margin="123,0,0,0" Name="comboBox1" VerticalAlignment="Top"
+                  Width="96" x:FieldModifier="private" SelectionChanged="ComboBox1_SelectionChanged" ToolTip="Choose Keyboard Key"/>
+        <Button Content=".." Height="23" HorizontalAlignment="Left" Margin="225,1,0,0" Name="assignButton" VerticalAlignment="Top"
+                Width="20" Click="AssignButton_Click" ToolTip="Detect Keyboard Key"/>
+    </Grid>
+</UserControl>

@@ -1,0 +1,47 @@
+﻿<UserControl x:Class="KeyboardSplitter.UI.XboxTester"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="196" d:DesignWidth="260"
+             Width="260" Height="196"
+             Unloaded="UserControl_Unloaded">
+    <Grid>
+        <Grid>
+            <Label Name="xboxDeviceNameLabel" Content="vXbox Device #" VerticalAlignment="Top" HorizontalAlignment="Center" Height="40" Margin="0,15,0,0"/>
+            <Label Name="keyboardNameLabel" HorizontalAlignment="Center" VerticalAlignment="Bottom" Content="KeyboardName" Margin="0,0,0,15"/>
+            <Label Name="presetNameLabel" HorizontalAlignment="Center" VerticalAlignment="Bottom" Content="Preset: " Margin="0,0,0,0"/>
+
+            <Image Source="/Images/controller_test.png"/>
+            <Image Name="imageGuide" Source="/Images/Guide.png" Opacity="0"/>
+        <Image Name="imageA" Source="/Images/A.png" Visibility="Hidden"/>
+            <Image Name="imageB" Source="/Images/B.png" Visibility="Hidden"/>
+            <Image Name="imageX" Source="/Images/X.png" Visibility="Hidden"/>
+            <Image Name="imageY" Source="/Images/Y.png" Visibility="Hidden"/>
+            <Image Name="imageLB" Source="/Images/LBumper.png" Visibility="Hidden"/>
+            <Image Name="imageRB" Source="/Images/RBumper.png" Visibility="Hidden"/>
+            <Image Name="imageBack" Source="/Images/Back.png" Visibility="Hidden"/>
+            <Image Name="imageStart" Source="/Images/Start.png" Visibility="Hidden"/>
+            <Image Name="imageLT" Source="/Images/LTrigger.png" Visibility="Hidden"/>
+            <Image Name="imageRT" Source="/Images/RTrigger.png" Visibility="Hidden"/>
+            <Image Name="imageDpadLeft" Source="/Images/dpad_left.png" Visibility="Hidden"/>
+            <Image Name="imageDpadRight" Source="/Images/dpad_right.png" Visibility="Hidden"/>
+            <Image Name="imageDpadUp" Source="/Images/dpad_up.png" Visibility="Hidden"/>
+            <Image Name="imageDpadDown" Source="/Images/dpad_down.png" Visibility="Hidden"/>
+        <!-- thumbs -->
+            <Image Name="imageLeftThumb" Source="/Images/LeftThumb.png" Visibility="Hidden"/>
+            <Image Name="imageRightThumb" Source="/Images/RightThumb.png" Visibility="Hidden"/>
+        <!-- left strick -->
+            <Image Name="imageLsUp" Source="/Images/ls_up.png" Visibility="Hidden"/>
+            <Image Name="imageLsDown" Source="/Images/ls_down.png" Visibility="Hidden"/>
+            <Image Name="imageLsLeft" Source="/Images/ls_left.png" Visibility="Hidden"/>
+            <Image Name="imageLsRight" Source="/Images/ls_right.png" Visibility="Hidden"/>
+        <!-- right strick -->
+            <Image Name="imageRsUp" Source="/Images/rs_up.png" Visibility="Hidden"/>
+            <Image Name="imageRsDown" Source="/Images/rs_down.png" Visibility="Hidden"/>
+            <Image Name="imageRsLeft" Source="/Images/rs_left.png" Visibility="Hidden"/>
+            <Image Name="imageRsRight" Source="/Images/rs_right.png" Visibility="Hidden"/>
+        </Grid>
+    </Grid>
+</UserControl>

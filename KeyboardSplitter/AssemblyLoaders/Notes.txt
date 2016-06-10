@@ -1,0 +1,7 @@
+﻿Both classes load assemblies from your project.
+You need to change the desired assembly (resource) build action to "Embedded Resource"
+in the Visual Studio's properties editor.
+
+-managed loader loads only net assemblies (.NET dlls)
+-unmanaged loader copies all your files to the user's temp folder
+and call them from there.

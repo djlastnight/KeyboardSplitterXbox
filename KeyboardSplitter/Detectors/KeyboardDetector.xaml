@@ -1,0 +1,19 @@
+﻿<Window x:Class="KeyboardSplitter.Detectors.KeyboardDetector"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Keyboard Detector" Height="102" Width="337" WindowStartupLocation="CenterOwner" ShowInTaskbar="False" ResizeMode="NoResize"
+        Closed="Window_Closed">
+    <Grid>
+        <Label Margin="0,5,0,0" HorizontalAlignment="Center" VerticalAlignment="Top" Foreground="Black">
+            Press any key of the keyboard, which you wish to detect
+        </Label>
+        <Button Content="Cancel" Height="23" HorizontalAlignment="Center" Margin="0,35,0,0" VerticalAlignment="Top" Width="75" IsCancel="True" />
+        <Grid.Background>
+            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                <GradientStop Color="#4BD800FF" Offset="0" />
+                <GradientStop Color="#17E200FF" Offset="0.516" />
+                <GradientStop Color="#3BFFFFFF" Offset="1" />
+            </LinearGradientBrush>
+        </Grid.Background>
+    </Grid>
+</Window>

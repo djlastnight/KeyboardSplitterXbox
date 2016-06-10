@@ -1,0 +1,81 @@
+﻿<UserControl x:Class="KeyboardSplitter.Controls.JoyControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:my="clr-namespace:KeyboardSplitter"
+             mc:Ignorable="d" 
+             d:DesignHeight="338" d:DesignWidth="285" MaxWidth="300">
+    <Grid>
+        <Border CornerRadius="20,20,0,0" Margin="5,1,5,0" Height="19" VerticalAlignment="Top"
+                HorizontalAlignment="Stretch" BorderBrush="Black" BorderThickness="0.1">
+            <Label Content="Slot # Text Goes Here"  Height="22" Name="slotLabel" FontSize="11" VerticalAlignment="Top"
+               HorizontalAlignment="Center" Margin="0,-2,0,0" Foreground="#FFA292C4" />
+            <Border.Background>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#14868686" Offset="0" />
+                    <GradientStop Color="#2DFFFFFF" Offset="0.713" />
+                    <GradientStop Color="#1D969696" Offset="1" />
+                </LinearGradientBrush>
+            </Border.Background>
+        </Border>
+
+        <Border BorderBrush="Black" BorderThickness="0.5" CornerRadius="0,0,12,12" Margin="5,20,5,5">
+            <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="7,0,7,7" Padding="0,5,5,5">
+                <Grid Name="mainGrid">
+                    <Border Height="45" VerticalAlignment="Top" BorderBrush="Black" BorderThickness="0.5" CornerRadius="6,6,6,6">
+                        <Grid>
+                            <Grid.Background>
+                                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                    <GradientStop Color="Transparent" Offset="0" />
+                                    <GradientStop Color="#39FFE300" Offset="0.823" />
+                                    <GradientStop Color="White" Offset="1" />
+                                    <GradientStop Color="#17EBFF00" Offset="0.138" />
+                                    <GradientStop Color="#1BF3B700" Offset="0.438" />
+                                </LinearGradientBrush>
+                            </Grid.Background>
+                            <Button ToolTip="Detect keyboard" Content=".." Height="23" HorizontalAlignment="Left" Margin="222,3,0,0" Name="detectKeyboardButton"
+                                VerticalAlignment="Top" Width="20" Click="DetectKeyboardButton_Click" />
+                        </Grid>
+                    </Border>
+                    <Grid Name="presetGrid" Background="#1F6CF8A4" Height="32" Margin="0,48,0,0" VerticalAlignment="Top">
+                        <Image Name="presetWarningImage" HorizontalAlignment="Left"/>
+                    </Grid>
+                    <Label Height="30" VerticalAlignment="Top" Content="Xbox Function:" Margin="0,105,0,0"/>
+                    <Label Height="30" Content="Keyboard key:" Margin="0,105,25,0" HorizontalAlignment="Right" VerticalAlignment="Top"/>
+                    <StackPanel Name="stackPanel" Orientation="Vertical" x:FieldModifier="private" Margin="0,130,0,0"/>
+                    <Label Content="Choose keyboard:" Height="28" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Top" />
+                    <Label Content="Keyboard name: " Height="27" HorizontalAlignment="Left" Margin="0,23,0,0" VerticalAlignment="Top" />
+                    <Label Content="n/a " Height="27" HorizontalAlignment="Left" Margin="90,23,0,0" VerticalAlignment="Top"
+                       Name="keyboardInfoLabel" x:FieldModifier="private"/>
+                    <ComboBox Height="23" HorizontalAlignment="Left" Margin="111,3,0,0" Name="keyboardDeviceBox" x:FieldModifier="private" VerticalAlignment="Top"
+                          SelectionChanged="KeyboardDeviceBox_SelectionChanged" Width="105" DropDownOpened="KeyboardDeviceBox_DropDownOpened" />
+                    <Label Name="presetLabel" IsHitTestVisible="False" Content="Preset:" Height="23" HorizontalAlignment="Left" Margin="0,52,0,0"
+                       VerticalAlignment="Top" Width="50" />
+                    <Button Height="23" HorizontalAlignment="Left" Margin="193,52,0,0" Name="savePresetButton" x:FieldModifier="private" VerticalAlignment="Top"
+                        Width="23" Click="SavePresetButton_Click" ToolTip="Save preset" BorderThickness="1" BorderBrush="Blue"
+                            IsEnabled="False" IsEnabledChanged="SavePresetButton_IsEnabledChanged">
+                        <StackPanel>
+                            <Image Source="/KeyboardSplitter;component/Resources/save.png"/>
+                        </StackPanel>
+                    </Button>
+                    <ComboBox Height="23" HorizontalAlignment="Left" Margin="47,52,0,0" Name="presetsBox" x:FieldModifier="private" VerticalAlignment="Top"
+                          Width="140" IsEditable="True" KeyUp="PresetsBox_KeyUp"  SelectionChanged="PresetsBox_SelectionChanged"
+                          ToolTip="Select existing or type new preset" IsTextSearchEnabled="False" StaysOpenOnEdit="True"/>
+                    <Button Height="23" HorizontalAlignment="Left" Margin="221,52,0,0" Name="deletePresetButton" x:FieldModifier="private" VerticalAlignment="Top"
+                        Width="23" Click="DeletePresetButton_Click" ToolTip="Delete preset" BorderBrush="Blue" BorderThickness="1" IsEnabled="False">
+                        <StackPanel>
+                            <Image Source="/KeyboardSplitter;component/Resources/delete.png"/>
+                        </StackPanel>
+                    </Button>
+                    <Border Height="25" Margin="0,78,0,0" VerticalAlignment="Top" BorderBrush="Black" BorderThickness="0.1" CornerRadius="5,5,10,10" Background="#40E8E8E8">
+                        <CheckBox Content="Bind Button 'A' to Keyboard 'Enter'" Height="20" HorizontalAlignment="Center" Name="bindEnterCheckBox"
+                              VerticalAlignment="Top" Margin="0,5,0,0" IsChecked="True" Checked="BindEnterCheckBox_Checked"
+                                  Unchecked="BindEnterCheckBox_Unchecked"/>
+                    </Border>
+                </Grid>
+            </ScrollViewer>
+        </Border>
+    </Grid>
+
+</UserControl>
