@@ -1,7 +1,7 @@
 # KeyboardSplitterXbox
 
 By default Windows OS does not distinguish between the
-connected keyboards. They acs as the same device.
+connected keyboards. They act as the same device.
 
 The current solution creates up to 4 virtual xbox 360 controllers
 and feeds them via one or more keyboards (up to 10).
@@ -16,7 +16,7 @@ The managed ones are directly loaded into memory.
 The unmanaged ones are first extracted to user's temp folder
 and then loaded, using LoadLibrary method from user32.dll via PInvoke.
 
-This produces a single fully portable execution file.
+This produces a single fully portable executable file (*.exe).
 
 Keyboard Splitter required drivers (interception and xbox bus)
 are embedded into the exe file and the user will be prompted to
