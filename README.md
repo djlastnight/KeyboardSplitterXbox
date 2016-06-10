@@ -63,4 +63,10 @@ are embedded into the exe file and the user will be prompted to
 install them on first run. The user must install Xbox Accessories
 Driver if he/she uses Windows XP, Vista or Seven.
 
+#Credits (original author's projects)
+https://github.com/oblitum/Interception
+https://github.com/jasonpang/Interceptor
+https://github.com/nefarius/ScpVBus
+https://github.com/shauleiz/vXboxInterface
+
 djlastnight, 2016
