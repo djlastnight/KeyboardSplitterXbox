@@ -65,8 +65,11 @@ Driver if he/she uses Windows XP, Vista or Seven.
 
 #Credits (original author's projects)
 https://github.com/oblitum/Interception
+
 https://github.com/jasonpang/Interceptor
+
 https://github.com/nefarius/ScpVBus
+
 https://github.com/shauleiz/vXboxInterface
 
 djlastnight, 2016
