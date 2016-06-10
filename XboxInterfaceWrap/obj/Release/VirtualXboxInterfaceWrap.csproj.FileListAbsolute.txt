@@ -1,0 +1,5 @@
+C:\Users\djlastnight\Documents\Visual Studio 2013\Projects\KeyboardSplitterXbox\KeyboardSplitter\Lib\VirtualXboxInterfaceWrap.dll
+C:\Users\djlastnight\Documents\Visual Studio 2013\Projects\KeyboardSplitterXbox\KeyboardSplitter\Lib\VirtualXboxInterfaceWrap.pdb
+C:\Users\djlastnight\Documents\Visual Studio 2013\Projects\KeyboardSplitterXbox\vXboxInterfaceWrap\vXboxInterfaceWrap\obj\Release\VirtualXboxInterfaceWrap.csprojResolveAssemblyReference.cache
+C:\Users\djlastnight\Documents\Visual Studio 2013\Projects\KeyboardSplitterXbox\vXboxInterfaceWrap\vXboxInterfaceWrap\obj\Release\VirtualXboxInterfaceWrap.dll
+C:\Users\djlastnight\Documents\Visual Studio 2013\Projects\KeyboardSplitterXbox\vXboxInterfaceWrap\vXboxInterfaceWrap\obj\Release\VirtualXboxInterfaceWrap.pdb

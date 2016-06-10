@@ -1,0 +1,17 @@
+C:\Users\Vankata\Documents\Visual Studio 2013\Projects\KeyboardSplitterXbox\vXboxInterfaceWrap\vXboxInterfaceWrap\bin\Release\vXboxInterfaceWrap.dll
+C:\Users\Vankata\Documents\Visual Studio 2013\Projects\KeyboardSplitterXbox\vXboxInterfaceWrap\vXboxInterfaceWrap\bin\Release\vXboxInterfaceWrap.pdb
+C:\Users\Vankata\Documents\Visual Studio 2013\Projects\KeyboardSplitterXbox\vXboxInterfaceWrap\vXboxInterfaceWrap\obj\Release\vXboxInterfaceWrap.csprojResolveAssemblyReference.cache
+C:\Users\Vankata\Documents\Visual Studio 2013\Projects\KeyboardSplitterXbox\vXboxInterfaceWrap\vXboxInterfaceWrap\obj\Release\vXboxInterfaceWrap.dll
+C:\Users\Vankata\Documents\Visual Studio 2013\Projects\KeyboardSplitterXbox\vXboxInterfaceWrap\vXboxInterfaceWrap\obj\Release\vXboxInterfaceWrap.pdb
+C:\Users\eHoT4e\Documents\Visual Studio 2013\Projects\KeyboardSplitterXbox\vXboxInterfaceWrap\vXboxInterfaceWrap\bin\Release\vXboxInterfaceWrap.dll
+C:\Users\eHoT4e\Documents\Visual Studio 2013\Projects\KeyboardSplitterXbox\vXboxInterfaceWrap\vXboxInterfaceWrap\bin\Release\vXboxInterfaceWrap.pdb
+C:\Users\eHoT4e\Documents\Visual Studio 2013\Projects\KeyboardSplitterXbox\vXboxInterfaceWrap\vXboxInterfaceWrap\obj\Release\vXboxInterfaceWrap.csprojResolveAssemblyReference.cache
+C:\Users\eHoT4e\Documents\Visual Studio 2013\Projects\KeyboardSplitterXbox\vXboxInterfaceWrap\vXboxInterfaceWrap\obj\Release\vXboxInterfaceWrap.dll
+C:\Users\eHoT4e\Documents\Visual Studio 2013\Projects\KeyboardSplitterXbox\vXboxInterfaceWrap\vXboxInterfaceWrap\obj\Release\vXboxInterfaceWrap.pdb
+C:\Users\Vankata\Documents\Visual Studio 2013\Projects\KeyboardSplitterXbox\vXboxInterfaceWrap\vXboxInterfaceWrap\bin\Release\vXboxInterfaceWrap.dll.CodeAnalysisLog.xml
+C:\Users\Vankata\Documents\Visual Studio 2013\Projects\KeyboardSplitterXbox\vXboxInterfaceWrap\vXboxInterfaceWrap\bin\Release\vXboxInterfaceWrap.dll.lastcodeanalysissucceeded
+C:\Users\djlastnight\Documents\Visual Studio 2013\Projects\KeyboardSplitterXbox\vXboxInterfaceWrap\vXboxInterfaceWrap\obj\Release\vXboxInterfaceWrap.csprojResolveAssemblyReference.cache
+C:\Users\djlastnight\Documents\Visual Studio 2013\Projects\KeyboardSplitterXbox\vXboxInterfaceWrap\vXboxInterfaceWrap\bin\Release\VirtualXboxInterfaceWrap.dll
+C:\Users\djlastnight\Documents\Visual Studio 2013\Projects\KeyboardSplitterXbox\vXboxInterfaceWrap\vXboxInterfaceWrap\bin\Release\VirtualXboxInterfaceWrap.pdb
+C:\Users\djlastnight\Documents\Visual Studio 2013\Projects\KeyboardSplitterXbox\vXboxInterfaceWrap\vXboxInterfaceWrap\obj\Release\VirtualXboxInterfaceWrap.dll
+C:\Users\djlastnight\Documents\Visual Studio 2013\Projects\KeyboardSplitterXbox\vXboxInterfaceWrap\vXboxInterfaceWrap\obj\Release\VirtualXboxInterfaceWrap.pdb
