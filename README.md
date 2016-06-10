@@ -9,20 +9,7 @@ The goal is to play any game that supports xbox controllers
 with different keyboards instead of just one. Any application,
 which works with such controllers should be supported too.
 
-The main project is called Keyboard Splitter.
-All other projects are build into KeyboardSplitter\Lib folder.
-The main project loads both managed and unmanaged assemblies.
-The managed ones are directly loaded into memory.
-The unmanaged ones are first extracted to user's temp folder
-and then loaded, using LoadLibrary method from user32.dll via PInvoke.
-
-This produces a single fully portable executable file (*.exe).
-
-Keyboard Splitter required drivers (interception and xbox bus)
-are embedded into the exe file and the user will be prompted to
-install them on first run. The user must install Xbox Accessories
-Driver if he/she uses Windows XP, Vista or Seven.
-
+#User Interface
 The User Interface is very intuitive and does not require
 technical skills.
 
@@ -52,5 +39,23 @@ Run the application, it will ask you to install the built-in drivers.
 Do it and reboot your PC.
 If you use Windows XP, Vista or Sever, you also need the
 Microsoft's Xbox Accessories Driver found at https://www.microsoft.com/hardware/en-us/d/xbox-360-controller-for-windows
+Please read the FAQ section located in application's Help menu.
+
+#How it works
+#Internal Build Details
+The main project is called Keyboard Splitter.
+All other projects are build into KeyboardSplitter\Lib folder.
+The main project loads both managed and unmanaged assemblies.
+The managed ones are directly loaded into memory.
+The unmanaged ones are first extracted to user's temp folder
+and then loaded, using LoadLibrary method from user32.dll via PInvoke.
+
+This produces a single fully portable executable file (*.exe).
+
+Keyboard Splitter required drivers (interception and xbox bus)
+are embedded into the exe file and the user will be prompted to
+install them on first run. The user must install Xbox Accessories
+Driver if he/she uses Windows XP, Vista or Seven.
+
 
 djlastnight, 2016
