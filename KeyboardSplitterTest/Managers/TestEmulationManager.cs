@@ -70,9 +70,28 @@
 
             EmulationManager.Start();
 
-            EmulationManager.Stop();
-
             EmulationManager.Destroy();
+        }
+
+        [TestMethod]
+        public void TestEmulationManagerStartBeforeCreated()
+        {
+            bool catched = false;
+
+            try
+            {
+                EmulationManager.Start();
+            }
+            catch (InvalidOperationException)
+            {
+                catched = true;
+            }
+            finally
+            {
+                EmulationManager.Destroy();
+            }
+
+            Assert.IsTrue(catched);
         }
 
         [TestMethod]
@@ -86,27 +105,6 @@
                 EmulationManager.Start();
             }
             catch (KeyboardNotSetException)
-            {
-                catched = true;
-            }
-            finally
-            {
-                EmulationManager.Destroy();
-            }
-
-            Assert.IsTrue(catched);
-        }
-
-        [TestMethod]
-        public void TestEmulationManagerStartBeforeCreated()
-        {
-            bool catched = false;
-
-            try
-            {
-                EmulationManager.Start();
-            }
-            catch (InvalidOperationException)
             {
                 catched = true;
             }

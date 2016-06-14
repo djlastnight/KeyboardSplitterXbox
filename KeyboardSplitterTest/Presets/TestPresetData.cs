@@ -44,10 +44,8 @@
             using (var stream = this.GetType().Assembly.GetManifestResourceStream(
                 "KeyboardSplitterTest.Presets.Hardcoded_preset_test_result.txt"))
             {
-                using (var reader = new StreamReader(stream))
-                {
-                    expected = reader.ReadToEnd();
-                }
+                var reader = new StreamReader(stream);
+                expected = reader.ReadToEnd();
             }
 
             Assert.AreEqual(expected, actual);
