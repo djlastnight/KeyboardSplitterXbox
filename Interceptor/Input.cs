@@ -32,6 +32,11 @@
             this.hardwareId = new StringBuilder(Input.HardwareIdSize);
         }
 
+        ~Input()
+        {
+            this.Dispose(false);
+        }
+
         public event EventHandler<KeyPressedEventArgs> OnKeyPressed;
 
         public event EventHandler<MousePressedEventArgs> OnMousePressed;
@@ -75,7 +80,7 @@
 
         public void Dispose()
         {
-            this.Unload();
+            this.Dispose(true);
         }
 
         /*
@@ -487,6 +492,16 @@
             }
 
             return allKeys;
+        }
+
+        private void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                // clean managed resources
+            }
+
+            this.Unload();
         }
 
         private void DriverCallback()
