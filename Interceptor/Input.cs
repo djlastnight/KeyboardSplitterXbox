@@ -421,7 +421,12 @@
 
         private string GetHardwareID(int device)
         {
-            int length = NativeMethods.GetHardwareId(this.context, device, this.hardwareId, Input.HardwareIdSize);
+            int length = NativeMethods.GetHardwareId(
+                this.context,
+                device,
+                this.hardwareId,
+                Input.HardwareIdSize);
+
             if (length > 0 && length < Input.HardwareIdSize)
             {
                 return this.hardwareId.ToString();

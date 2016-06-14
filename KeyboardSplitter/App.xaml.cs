@@ -8,7 +8,7 @@
 
     /// <summary>
     /// The main application's App class.
-    /// Note that single application instance is allowed.
+    /// Note that just a single application instance is allowed.
     /// </summary>
     public partial class App : Application, IDisposable
     {
@@ -18,6 +18,7 @@
 
         /// <summary>
         /// Start the logging and loads all the needed dlls.
+        /// Calling this method more than once has no effect.
         /// </summary>
         public static void Initialize()
         {

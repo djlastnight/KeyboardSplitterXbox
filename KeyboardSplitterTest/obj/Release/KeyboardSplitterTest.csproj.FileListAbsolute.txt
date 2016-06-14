@@ -20,7 +20,6 @@ C:\Users\djlastnight\Documents\Visual Studio 2013\Projects\KeyboardSplitterXbox\
 C:\Users\djlastnight\Documents\Visual Studio 2013\Projects\KeyboardSplitterXbox\KeyboardSplitterTest\obj\Release\KeyboardSplitterTest.csprojResolveAssemblyReference.cache
 C:\Users\djlastnight\Documents\Visual Studio 2013\Projects\KeyboardSplitterXbox\KeyboardSplitterTest\obj\Release\KeyboardSplitterTest.dll
 C:\Users\djlastnight\Documents\Visual Studio 2013\Projects\KeyboardSplitterXbox\KeyboardSplitterTest\obj\Release\KeyboardSplitterTest.pdb
-C:\Users\djlastnight\Source\Repos\KeyboardSplitterXbox\KeyboardSplitterTest\obj\Release\KeyboardSplitterTest.csprojResolveAssemblyReference.cache
 C:\Users\Vankata\Source\Repos\KeyboardSplitterXbox\KeyboardSplitterTest\obj\Release\KeyboardSplitterTest.csprojResolveAssemblyReference.cache
 C:\Users\Vankata\Source\Repos\KeyboardSplitterXbox\KeyboardSplitterTest\bin\Release\KeyboardSplitterTest.dll.config
 C:\Users\Vankata\Source\Repos\KeyboardSplitterXbox\KeyboardSplitterTest\bin\Release\KeyboardSplitterTest.dll
@@ -33,3 +32,4 @@ C:\Users\Vankata\Source\Repos\KeyboardSplitterXbox\KeyboardSplitterTest\bin\Rele
 C:\Users\Vankata\Source\Repos\KeyboardSplitterXbox\KeyboardSplitterTest\bin\Release\KeyboardSplitter.pdb
 C:\Users\Vankata\Source\Repos\KeyboardSplitterXbox\KeyboardSplitterTest\obj\Release\KeyboardSplitterTest.dll
 C:\Users\Vankata\Source\Repos\KeyboardSplitterXbox\KeyboardSplitterTest\obj\Release\KeyboardSplitterTest.pdb
+C:\Users\djlastnight\Source\Repos\KeyboardSplitterXbox\KeyboardSplitterTest\obj\Release\KeyboardSplitterTest.csprojResolveAssemblyReference.cache

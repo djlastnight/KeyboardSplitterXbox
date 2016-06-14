@@ -331,11 +331,17 @@
                     case SlotInvalidationReason.XboxBus_Not_Installed:
                     case SlotInvalidationReason.Controller_In_Use:
                     case SlotInvalidationReason.Controller_Unplugged:
-                        resetBtn.IsEnabled = false;
-                        return;
+                        {
+                            resetBtn.IsEnabled = false;
+                            return;
+                        }
+
                     case SlotInvalidationReason.Keyboard_Unplugged:
-                        this.keyboardDeviceBox.SelectedIndex = -1;
-                        break;
+                        {
+                            this.keyboardDeviceBox.SelectedIndex = -1;
+                            break;
+                        }
+
                     default:
                         throw new NotImplementedException(
                             "Not implemented slot invalidation reason: " + reason);

@@ -1,6 +1,8 @@
 ﻿namespace KeyboardSplitterTest.Managers
 {
     using System;
+    using System.Collections.Generic;
+    using System.Linq;
     using Interceptor;
     using KeyboardSplitter;
     using KeyboardSplitter.Enums;
@@ -19,58 +21,69 @@
             KeyboardSplitter.App.Initialize();
         }
 
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentOutOfRangeException))]
-        public void TestEmulationManagerConstructorZero()
+        [TestCleanup]
+        public void Clean()
         {
-            using (var manager = new EmulationManager(0))
-            {
-            }
+            EmulationManager.Destroy();
+        }
+
+        [TestMethod]
+        public void TestEmulationManagerCreateNormal()
+        {
+            EmulationManager.Create(1);
+            bool created = EmulationManager.IsCreated;
+            EmulationManager.Destroy();
+
+            Assert.IsTrue(created);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentOutOfRangeException))]
-        public void TestEmulationManagerConstructorBigIndex()
+        public void TestEmulationManagerCreateZeroIndex()
         {
-            using (var manager = new EmulationManager(5))
-            {
-            }
+            EmulationManager.Create(0);
         }
 
         [TestMethod]
-        public void TestEmulationManagerAccessoriesNotInstalled()
+        [ExpectedException(typeof(ArgumentOutOfRangeException))]
+        public void TestEmulationManagerCreateBigIndex()
         {
-            if (!DriversManager.IsXboxAccessoriesInstalled())
-            {
-                bool catched = false;
-                var manager = new EmulationManager(slotsCount: 1);
+            EmulationManager.Create(5);
+        }
 
-                try
-                {
-                    manager.Start();
-                }
-                catch (XboxAccessoriesNotInstalledException)
-                {
-                    catched = true;
-                }
-                finally
-                {
-                    manager.Dispose();
-                }
+        [TestMethod]
+        public void TestEmulationManagerCreateJoyControls()
+        {
+            int childrenCount;
 
-                Assert.IsTrue(catched);
-            }
+            EmulationManager.Create(2);
+            childrenCount = EmulationManager.JoyControls.Count;
+            EmulationManager.Destroy();
+
+            Assert.AreEqual(2, childrenCount);
+        }
+
+        [TestMethod]
+        public void TestEmulationManagerStartNormal()
+        {
+            EmulationManager.Create(1, "Keyboard_01");
+
+            EmulationManager.Start();
+
+            EmulationManager.Stop();
+
+            EmulationManager.Destroy();
         }
 
         [TestMethod]
         public void TestEmulationManagerStartWithoutKeyboardSet()
         {
             bool catched = false;
-            var manager = new EmulationManager(slotsCount: 1);
+            EmulationManager.Create(1);
 
             try
             {
-                manager.Start();
+                EmulationManager.Start();
             }
             catch (KeyboardNotSetException)
             {
@@ -78,210 +91,75 @@
             }
             finally
             {
-                manager.Dispose();
+                EmulationManager.Destroy();
             }
 
             Assert.IsTrue(catched);
         }
 
         [TestMethod]
-        public void TestEmulationManagerStartWithInvalidatedJoyControl()
+        public void TestEmulationManagerStartBeforeCreated()
         {
             bool catched = false;
-            var manager = new EmulationManager(slotsCount: 1);
 
             try
             {
-                manager.JoyControls[0].Invalidate(SlotInvalidationReason.Controller_In_Use);
-                manager.Start();
+                EmulationManager.Start();
             }
-            catch (SlotInvalidatedException)
+            catch (InvalidOperationException)
             {
                 catched = true;
             }
             finally
             {
-                manager.Dispose();
+                EmulationManager.Destroy();
             }
 
             Assert.IsTrue(catched);
         }
 
         [TestMethod]
-        public void TestEmulationManagerStartNormal()
+        public void TestEmulationManagerTwoSlots()
         {
-            if (!DriversManager.AreBuiltInDriversInstalled())
+            int childrenCount = 0;
+            List<InterceptionKeyboard> keyboards = null;
+
+            using (var input = new Input(KeyboardFilterMode.None, MouseFilterMode.None))
+            {
+                input.Load();
+                keyboards = input.GetKeyboards();
+            }
+
+            if (keyboards.Count < 2)
             {
                 return;
             }
 
-            bool controllerOnePlugged = false;
-            bool controllerTwoPlugged = false;
+            EmulationManager.Create(2, keyboards.Select(x => x.StrongName).ToArray());
+            childrenCount = EmulationManager.JoyControls.Count;
 
-            using (var manager = new EmulationManager(2))
+            bool fail = false;
+            string failMessage = string.Empty;
+            try
             {
-                foreach (var joyControl in manager.JoyControls)
-                {
-                    joyControl.SetKeyboard("Keyboard_01");
-                }
-
-                manager.Start();
-
-                controllerOnePlugged = VirtualXboxController.Exists(1);
-                controllerTwoPlugged = VirtualXboxController.Exists(2);
+                EmulationManager.Start();
+            }
+            catch (Exception e)
+            {
+                fail = true;
+                failMessage = e.Message;
+            }
+            finally
+            {
+                EmulationManager.Destroy();
             }
 
-            Assert.IsTrue(controllerOnePlugged);
-            Assert.IsTrue(controllerTwoPlugged);
+            if (fail)
+            {
+                Assert.Fail(failMessage);
+            }
+
+            Assert.AreEqual(2, childrenCount);
         }
-
-        ////[TestMethod]
-        ////public void TestEmulationManagerProcessKeyPressButton()
-        ////{
-        ////    if (!DriversManager.AreBuiltInDriversInstalled())
-        ////    {
-        ////        return;
-        ////    }
-
-        ////    bool pressed = false;
-
-        ////    using (var manager = new EmulationManager(1))
-        ////    {
-        ////        const string KeyboardName = "Keyboard_01";
-        ////        manager.JoyControls[0].SetKeyboard(KeyboardName);
-        ////        manager.Start();
-
-        ////        var button = XboxButton.A;
-        ////        string keyName = Preset.Default.Buttons.Find(x => x.Button == button).KeyboardKey;
-        ////        var key = (InterceptionKeys)Enum.Parse(typeof(InterceptionKeys), keyName);
-        ////        var keyState = KeyState.Down;
-
-        ////        var keyEvent = new KeyPressedEventArgs()
-        ////        {
-        ////            Keyboard = KeyboardManager.GetKeyboards()[0],
-        ////            Key = key,
-        ////            State = keyState,
-        ////            Handled = false,
-        ////        };
-
-        ////        manager.ProcessKeyPress(keyEvent, blockChoosenKeyboards: true);
-        ////        pressed = VirtualXboxController.GetButtonValue(1, button);
-        ////        VirtualXboxController.ResetStates(1);
-        ////    }
-
-        ////    Assert.IsTrue(pressed);
-        ////}
-
-        ////[TestMethod]
-        ////public void TestEmulationManagerProcessKeyPressTrigger()
-        ////{
-        ////    if (!DriversManager.AreBuiltInDriversInstalled())
-        ////    {
-        ////        return;
-        ////    }
-
-        ////    byte result;
-        ////    using (var manager = new EmulationManager(1))
-        ////    {
-        ////        const string KeyboardName = "Keyboard_01";
-        ////        manager.JoyControls[0].SetKeyboard(KeyboardName);
-        ////        manager.Start();
-        ////        XboxTrigger trigger = XboxTrigger.RightTrigger;
-        ////        string keyName = Preset.Default.Triggers.Find(x => x.Trigger == trigger).KeyboardKey;
-        ////        InterceptionKeys key = (InterceptionKeys)Enum.Parse(typeof(InterceptionKeys), keyName);
-        ////        KeyState keyState = KeyState.Down;
-
-        ////        var keyEvent = new KeyPressedEventArgs()
-        ////        {
-        ////            Keyboard = KeyboardManager.GetKeyboards()[0],
-        ////            Key = key,
-        ////            State = keyState,
-        ////            Handled = false,
-        ////        };
-
-        ////        manager.ProcessKeyPress(keyEvent, blockChoosenKeyboards: true);
-        ////        result = VirtualXboxController.GetTriggerValue(1, trigger);
-        ////        VirtualXboxController.ResetStates(1);
-        ////    }
-
-        ////    Assert.AreEqual(byte.MaxValue, result);
-        ////}
-
-        ////[TestMethod]
-        ////public void TestEmulationManagerProcessKeyPressAxis()
-        ////{
-        ////    if (!DriversManager.AreBuiltInDriversInstalled())
-        ////    {
-        ////        return;
-        ////    }
-
-        ////    short result;
-        ////    XboxAxis axis = XboxAxis.Y;
-        ////    XboxAxisPosition position = XboxAxisPosition.Min;
-        ////    string keyName = Preset.Default.Axes.Find(x => x.Axis == axis && x.Position == position).KeyboardKey;
-        ////    InterceptionKeys key = (InterceptionKeys)Enum.Parse(typeof(InterceptionKeys), keyName);
-        ////    KeyState keyState = KeyState.Down;
-
-        ////    using (var manager = new EmulationManager(1))
-        ////    {
-        ////        const string KeyboardName = "Keyboard_01";
-        ////        manager.JoyControls[0].SetKeyboard(KeyboardName);
-        ////        manager.Start();
-
-        ////        var keyEvent = new KeyPressedEventArgs()
-        ////        {
-        ////            Keyboard = KeyboardManager.GetKeyboards()[0],
-        ////            Key = key,
-        ////            State = keyState,
-        ////            Handled = false,
-        ////        };
-
-        ////        manager.ProcessKeyPress(keyEvent, blockChoosenKeyboards: true);
-        ////        result = VirtualXboxController.GetAxisValue(1, axis);
-        ////        VirtualXboxController.ResetStates(1);
-        ////    }
-
-        ////    Assert.AreEqual((short)position, result);
-        ////}
-
-        ////[TestMethod]
-        ////public void TestEmulationManagerProcessKeyPressDpad()
-        ////{
-        ////    if (!DriversManager.AreBuiltInDriversInstalled())
-        ////    {
-        ////        return;
-        ////    }
-
-        ////    XboxDpadDirection direction = XboxDpadDirection.Right;
-        ////    string keyName = Preset.Default.Povs.Find(x => x.Direction == direction).KeyboardKey;
-        ////    InterceptionKeys key = (InterceptionKeys)Enum.Parse(typeof(InterceptionKeys), keyName);
-        ////    KeyState keyState = KeyState.Down;
-        ////    bool pressed = false;
-
-        ////    using (var manager = new EmulationManager(1))
-        ////    {
-        ////        const string KeyboardName = "Keyboard_01";
-        ////        manager.JoyControls[0].SetKeyboard(KeyboardName);
-        ////        manager.Start();
-
-        ////        var keyEvent = new KeyPressedEventArgs()
-        ////        {
-        ////            Keyboard = KeyboardManager.GetKeyboards()[0],
-        ////            Key = key,
-        ////            State = keyState,
-        ////            Handled = false,
-        ////        };
-
-        ////        KeyboardManager.SetFakeDown(KeyboardName, keyName);
-        ////        manager.ProcessKeyPress(keyEvent, blockChoosenKeyboards: true);
-                
-        ////        pressed = VirtualXboxController.GetDpadDirectionValue(1, direction);
-
-        ////        VirtualXboxController.ResetStates(1);
-        ////        KeyboardManager.ResetFakeStates();
-        ////    }
-
-        ////    Assert.IsTrue(pressed);
-        ////}
     }
 }

@@ -41,8 +41,6 @@
 
         private ManagementEventWatcher usbWatcher;
 
-        private EmulationManager emulationManager;
-
         public MainWindow()
         {
             this.InitializeComponent();
@@ -53,14 +51,12 @@
             this.autoCollapseTimer.Interval = this.autoCollapseSpan;
             this.autoCollapseTimer.Tick += new EventHandler(this.AutoCollapseTimer_Tick);
             KeyboardManager.KeyPressed += this.KeyboardManager_KeyPressed;
-            this.emulationManager = new EmulationManager(DefaultSlotsCount);
         }
 
         public void Dispose()
         {
             this.StopUsbWatcher();
-            this.emulationManager.Dispose();
-            this.emulationManager = null;
+            EmulationManager.Destroy();
             PresetDataManager.ExportToFile();
         }
 
@@ -109,7 +105,7 @@
 
         private void Stop()
         {
-            this.emulationManager.Stop();
+            EmulationManager.Stop();
 
             this.stopButton.IsEnabled = false;
             this.startButton.IsEnabled = true;
@@ -119,18 +115,14 @@
 
         private void Reset()
         {
-            uint slotsCount = Convert.ToUInt32(this.deviceCountBox.SelectedItem);
-            this.emulationManager.Dispose();
-            this.emulationManager = new EmulationManager(slotsCount);
-
             this.emergencyHitDownCount = 0;
             this.wrapPanel.Children.Clear();
-
-            GC.Collect();
-
             this.initialKeyboards = KeyboardManager.GetKeyboards();
 
-            foreach (JoyControl joyControl in this.emulationManager.JoyControls)
+            uint slotsCount = Convert.ToUInt32(this.deviceCountBox.SelectedItem);
+            EmulationManager.Create(slotsCount, this.initialKeyboards.Select(x => x.StrongName).ToArray());
+
+            foreach (JoyControl joyControl in EmulationManager.JoyControls)
             {
                 this.wrapPanel.Children.Add(joyControl);
             }
@@ -156,7 +148,13 @@
             }
 
             this.inputMonitor.AppendText(
-                string.Format("'{0}' on {1} ({2}) [{3}]{4}", e.CorrectedKey, e.Keyboard.StrongName, e.State, Convert.ToInt32(e.Key), Environment.NewLine));
+                string.Format(
+                "'{0}' on {1} ({2}) [{3}]{4}",
+                e.CorrectedKey,
+                e.Keyboard.StrongName,
+                e.State,
+                Convert.ToInt32(e.Key),
+                Environment.NewLine));
 
             this.inputMonitor.ScrollToEnd();
         }
@@ -171,7 +169,7 @@
                 return output;
             }
 
-            var notSavedControls = this.emulationManager.JoyControls.Where(x => x.CanSavePreset);
+            var notSavedControls = EmulationManager.JoyControls.Where(x => x.CanSavePreset);
 
             if (notSavedControls.Count() == 0)
             {
@@ -205,7 +203,10 @@
                 foreach (var ignoredControl in output.IgnoredControls)
                 {
                     sb.AppendLine(
-                        string.Format("- {0} [vXbox Device #{1}]", ignoredControl.PresetBoxText, ignoredControl.UserIndex));
+                        string.Format(
+                        "- {0} [vXbox Device #{1}]",
+                        ignoredControl.PresetBoxText,
+                        ignoredControl.UserIndex));
                 }
             }
 
@@ -285,6 +286,7 @@
                 this.usbWatcher.EventArrived -= this.OnUsbPlugUnplug;
                 this.usbWatcher.Stop();
                 this.usbWatcher.Dispose();
+                this.usbWatcher = null;
             }
         }
 
@@ -341,16 +343,16 @@
                 }
 
                 bool blockChoosenKeyboards = this.blockKeyboardCheckbox.IsChecked == true;
-                this.emulationManager.ProcessKeyPress(e, blockChoosenKeyboards);
+                EmulationManager.ProcessKeyPress(e, blockChoosenKeyboards);
             });
         }
 
         private void StartButton_Click(object sender, RoutedEventArgs e)
         {
-            int slotsCount = Convert.ToInt32(this.deviceCountBox.SelectedItem);
+            uint slotsCount = Convert.ToUInt32(this.deviceCountBox.SelectedItem);
             try
             {
-                this.emulationManager.Start();
+                EmulationManager.Start();
 
                 this.inputMonitor.Clear();
                 this.startButton.IsEnabled = false;
@@ -486,7 +488,7 @@
 
             Window testWindow = new Window();
             WrapPanel panel = new WrapPanel();
-            foreach (var joyControl in this.emulationManager.JoyControls)
+            foreach (var joyControl in EmulationManager.JoyControls)
             {
                 if (VirtualXboxController.Exists(joyControl.UserIndex) &&
                     VirtualXboxController.IsOwned(joyControl.UserIndex))
@@ -538,17 +540,12 @@
         {
             Dispatcher.Invoke((Action)delegate
             {
-                if (this.emulationManager == null)
-                {
-                    return;
-                }
-
                 var newKeyboards = KeyboardManager.GetKeyboards();
                 switch (e.NewEvent.ClassPath.ClassName)
                 {
                     case "__InstanceDeletionEvent":
                         {
-                            foreach (var joyControl in this.emulationManager.JoyControls)
+                            foreach (var joyControl in EmulationManager.JoyControls)
                             {
                                 if (joyControl.CurrentKeyboard == null)
                                 {

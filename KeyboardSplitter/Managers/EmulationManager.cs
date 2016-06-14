@@ -13,11 +13,37 @@
     using KeyboardSplitter.Presets;
     using XboxInterfaceWrap;
 
-    public class EmulationManager : IDisposable
+    public static class EmulationManager
     {
-        private List<JoyControl> joyControls;
+        private static List<JoyControl> joyControls;
 
-        public EmulationManager(uint slotsCount)
+        public static bool IsCreated
+        {
+            get;
+            private set;
+        }
+
+        public static bool IsRunning
+        {
+            get;
+            private set;
+        }
+
+        public static uint SlotsCount
+        {
+            get;
+            private set;
+        }
+
+        public static List<JoyControl> JoyControls
+        {
+            get
+            {
+                return EmulationManager.joyControls;
+            }
+        }
+
+        public static void Create(uint slotsCount, params string[] keyboards)
         {
             if (slotsCount < 1 || slotsCount > 4)
             {
@@ -25,55 +51,59 @@
                     "slotsCount must be in range 1-4");
             }
 
-            this.SlotsCount = slotsCount;
-            PresetDataManager.PresetsChanged += this.PresetDataManager_PresetsChanged;
-            UnplugAllJoys();
-
-            this.joyControls = new List<JoyControl>();
-            for (uint i = 1; i <= this.SlotsCount; i++)
+            if (EmulationManager.IsCreated)
             {
-                this.joyControls.Add(new JoyControl(i));
+                EmulationManager.Destroy();
             }
-        }
 
-        public uint SlotsCount
-        {
-            get;
-            private set;
-        }
+            EmulationManager.SlotsCount = slotsCount;
+            PresetDataManager.PresetsChanged += EmulationManager.PresetDataManager_PresetsChanged;
 
-        public List<JoyControl> JoyControls
-        {
-            get
+            EmulationManager.joyControls = new List<JoyControl>();
+            for (uint index = 1; index <= EmulationManager.SlotsCount; index++)
             {
-                return this.joyControls;
-            }
-        }
-
-        public static void UnplugAllJoys()
-        {
-            for (uint i = 1; i <= 4; i++)
-            {
-                if (VirtualXboxController.Exists(i))
+                var joyControl = new JoyControl(index);
+                if (keyboards != null && keyboards.Length > index - 1)
                 {
-                    if (VirtualXboxController.UnPlug(i, force: true))
-                    {
-                        LogWriter.Write("Unplugged device #" + i);
-                    }
-                    else
-                    {
-                        LogWriter.Write("Unplug device #" + i + " failed");
-                    }
+                    joyControl.SetKeyboard(keyboards[index - 1]);
                 }
+
+                EmulationManager.joyControls.Add(joyControl);
+            }
+
+            EmulationManager.IsCreated = true;
+        }
+
+        public static void Destroy()
+        {
+            if (EmulationManager.IsCreated)
+            {
+                EmulationManager.Stop();
+
+                foreach (var joyControl in EmulationManager.joyControls)
+                {
+                    joyControl.Dispose();
+                }
+
+                EmulationManager.joyControls.Clear();
+                EmulationManager.joyControls = null;
+                PresetDataManager.PresetsChanged -= EmulationManager.PresetDataManager_PresetsChanged;
+                EmulationManager.IsCreated = false;
             }
         }
 
-        public void Start()
+        public static void Start()
         {
-            this.DoStartUpCheck();
+            if (!EmulationManager.IsCreated)
+            {
+                throw new InvalidOperationException(
+                    "You can not start the emulation manager, before you created it");
+            }
+
+            EmulationManager.DoStartUpCheck();
 
             // plugging in the virtual controllers
-            foreach (var joyControl in this.joyControls)
+            foreach (var joyControl in EmulationManager.joyControls)
             {
                 if (joyControl.IsInvalidated)
                 {
@@ -92,26 +122,28 @@
 
             int mountedGamepadsCount = 4 - VirtualXboxController.GetEmptyBusSlotsCount();
 
-            if (this.SlotsCount != mountedGamepadsCount)
+            if (EmulationManager.SlotsCount != mountedGamepadsCount)
             {
                 var error = string.Format(
-                    "Unexpected error occured: " +
-                    "The slots count ({0}) is different from the created virtual gamepads count ({1})!",
-                    this.SlotsCount,
+                    "Virtual controllers (bus) error occured: " +
+                    "The slots count ({0}) is different from the created virtual gamepads count ({1})! " +
+                    "Please restart the application. If the problem still persists, restart your PC.",
+                    EmulationManager.SlotsCount,
                     mountedGamepadsCount);
 
                 LogWriter.Write(error);
 
-                EmulationManager.UnplugAllJoys();
-                this.Stop();
+                EmulationManager.Stop();
 
                 throw new SlotsCountMismatchException(error);
             }
 
-            // logging
-            LogWriter.Write(string.Format("Emulation started. Slots count: {0}", this.SlotsCount));
+            EmulationManager.IsRunning = true;
 
-            foreach (var joyControl in this.joyControls)
+            // logging
+            LogWriter.Write(string.Format("Emulation started. Slots count: {0}", EmulationManager.SlotsCount));
+
+            foreach (var joyControl in EmulationManager.joyControls)
             {
                 var msg = string.Format(
                     "Emulation info for vXbox device #{0}: {1} | preset: {2}",
@@ -123,20 +155,41 @@
             }
         }
 
-        public void Stop()
+        public static void Stop()
         {
-            foreach (var joyControl in this.joyControls)
+            if (EmulationManager.IsRunning)
             {
-                joyControl.IsEnabled = true;
-            }
+                foreach (var joyControl in EmulationManager.joyControls)
+                {
+                    joyControl.IsEnabled = true;
+                }
 
-            UnplugAllJoys();
-            LogWriter.Write("Emulation stopped");
+                for (uint i = 1; i <= 4; i++)
+                {
+                    VirtualXboxController.UnPlug(i, force: true);
+                }
+
+                EmulationManager.IsRunning = false;
+
+                LogWriter.Write("Emulation stopped");
+            }
         }
 
-        public void ProcessKeyPress(KeyPressedEventArgs e, bool blockChoosenKeyboards)
+        public static void ProcessKeyPress(KeyPressedEventArgs e, bool blockChoosenKeyboards)
         {
-            foreach (var joyControl in this.joyControls)
+            if (!EmulationManager.IsCreated)
+            {
+                throw new InvalidOperationException(
+                    "You can not process key press, before you create the emulation manager.");
+            }
+
+            if (!EmulationManager.IsRunning)
+            {
+                throw new InvalidOperationException(
+                    "You can not process key press, because emulation manager is not running.");
+            }
+
+            foreach (var joyControl in EmulationManager.joyControls)
             {
                 if (joyControl.CurrentKeyboard == null ||
                     joyControl.CurrentKeyboard != e.Keyboard.StrongName ||
@@ -163,29 +216,13 @@
 
                 if (blockChoosenKeyboards)
                 {
-                    var choosenKeyboards = this.joyControls.Select(x => x.CurrentKeyboard).ToList();
+                    var choosenKeyboards = EmulationManager.joyControls.Select(x => x.CurrentKeyboard).ToList();
                     if (choosenKeyboards.Contains(e.Keyboard.StrongName))
                     {
                         e.Handled = true;
                     }
                 }
             }
-        }
-
-        public void Dispose()
-        {
-            if (this.joyControls != null)
-            {
-                this.Stop();
-
-                foreach (var joyControl in this.joyControls)
-                {
-                    joyControl.Dispose();
-                }
-            }
-
-            PresetDataManager.PresetsChanged -= this.PresetDataManager_PresetsChanged;
-            UnplugAllJoys();
         }
 
         private static void FeedXboxController(KeyControl keyControl, KeyPressedEventArgs e)
@@ -254,7 +291,7 @@
             }
         }
 
-        private void DoStartUpCheck()
+        private static void DoStartUpCheck()
         {
             if (!DriversManager.IsXboxAccessoriesInstalled())
             {
@@ -265,7 +302,7 @@
                 throw new XboxAccessoriesNotInstalledException(error);
             }
 
-            var invalidJControls = this.joyControls.FindAll(x => x.IsInvalidated);
+            var invalidJControls = EmulationManager.joyControls.FindAll(x => x.IsInvalidated);
             if (invalidJControls.Count > 0)
             {
                 var sb = new StringBuilder();
@@ -279,7 +316,7 @@
                 throw new SlotInvalidatedException(sb.ToString());
             }
 
-            invalidJControls = this.joyControls.FindAll(x => x.IsInvalidated == false
+            invalidJControls = EmulationManager.joyControls.FindAll(x => x.IsInvalidated == false
                 && x.CurrentKeyboard == null);
 
             if (invalidJControls.Count > 0)
@@ -298,16 +335,16 @@
             }
         }
 
-        private void PresetDataManager_PresetsChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private static void PresetDataManager_PresetsChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            if (this.joyControls == null)
+            if (EmulationManager.joyControls == null)
             {
                 return;
             }
 
             if (e.Action == NotifyCollectionChangedAction.Remove)
             {
-                foreach (var joyControl in this.joyControls)
+                foreach (var joyControl in EmulationManager.joyControls)
                 {
                     if (joyControl.CurrentPreset == e.OldItems[0])
                     {
@@ -321,7 +358,7 @@
                 e.Action == NotifyCollectionChangedAction.Replace)
             {
                 Preset preset = e.NewItems[0] as Preset;
-                foreach (var joyControl in this.joyControls)
+                foreach (var joyControl in EmulationManager.joyControls)
                 {
                     if (joyControl.PresetBoxText == preset.Name)
                     {
