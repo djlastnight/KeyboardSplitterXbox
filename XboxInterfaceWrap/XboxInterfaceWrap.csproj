@@ -51,6 +51,7 @@
     <Compile Include="XboxButton.cs" />
     <Compile Include="XboxBus.cs" />
     <Compile Include="XboxDpadDirection.cs" />
+    <Compile Include="ControllerState.cs" />
     <Compile Include="XboxTrigger.cs" />
   </ItemGroup>
   <ItemGroup>

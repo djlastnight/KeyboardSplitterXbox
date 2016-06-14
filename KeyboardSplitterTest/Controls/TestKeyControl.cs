@@ -11,7 +11,8 @@
     [TestClass]
     public class TestKeyControl
     {
-        public TestKeyControl()
+        [TestInitialize]
+        public void Init()
         {
             KeyboardSplitter.App.Initialize();
         }
@@ -19,123 +20,223 @@
         [TestMethod]
         public void TestButtonKeyControl()
         {
-            var joyControl = new JoyControl(1);
-            var keyControl = new KeyControl(joyControl, XboxButton.A, false);
-            Assert.AreEqual(keyControl.Button, XboxButton.A);
-            Assert.AreEqual(keyControl.ControlType, KeyControlType.Button);
+            XboxButton button;
+            KeyControlType type;
+
+            using (var joyControl = new JoyControl(1))
+            {
+                using (var keyControl = new KeyControl(joyControl, XboxButton.A, removeable: false))
+                {
+                    button = keyControl.Button;
+                    type = keyControl.ControlType;
+                }
+            }
+
+            Assert.AreEqual(button, XboxButton.A);
+            Assert.AreEqual(type, KeyControlType.Button);
         }
 
         [TestMethod]
         public void TestDpadKeyControl()
         {
-            var joyControl = new JoyControl(1);
-            var keyControl = new KeyControl(joyControl, XboxDpadDirection.Left, false);
-            Assert.AreEqual(keyControl.DpadDirection, XboxDpadDirection.Left);
-            Assert.AreEqual(keyControl.ControlType, KeyControlType.Dpad);
+            XboxDpadDirection direction;
+            KeyControlType type;
+
+            using (var joyControl = new JoyControl(1))
+            {
+                using (var keyControl = new KeyControl(
+                    joyControl, XboxDpadDirection.Left, removeable: false))
+                {
+                    direction = keyControl.DpadDirection;
+                    type = keyControl.ControlType;
+                }
+            }
+
+            Assert.AreEqual(direction, XboxDpadDirection.Left);
+            Assert.AreEqual(type, KeyControlType.Dpad);
         }
 
         [TestMethod]
         public void TestTriggerKeyControl()
         {
-            var joyControl = new JoyControl(1);
-            var keyControl = new KeyControl(joyControl, XboxTrigger.RightTrigger, false);
-            Assert.AreEqual(keyControl.Trigger, XboxTrigger.RightTrigger);
-            Assert.AreEqual(keyControl.ControlType, KeyControlType.Trigger);
+            XboxTrigger trigger;
+            KeyControlType type;
+
+            using (var joyControl = new JoyControl(1))
+            {
+                using (var keyControl = new KeyControl(
+                    joyControl, XboxTrigger.RightTrigger, false))
+                {
+                    trigger = keyControl.Trigger;
+                    type = keyControl.ControlType;
+                }
+            }
+            
+            Assert.AreEqual(trigger, XboxTrigger.RightTrigger);
+            Assert.AreEqual(type, KeyControlType.Trigger);
         }
 
         [TestMethod]
         public void TestAxisKeyControl()
         {
-            var joyControl = new JoyControl(1);
-            var keyControl = new KeyControl(joyControl, XboxAxis.Ry, XboxAxisPosition.Max, false);
-            Assert.AreEqual(keyControl.Axis, XboxAxis.Ry);
-            Assert.AreEqual(keyControl.Position, XboxAxisPosition.Max);
-            Assert.AreEqual(keyControl.ControlType, KeyControlType.Axis);
+            XboxAxis axis;
+            XboxAxisPosition position;
+            KeyControlType type;
+
+            using (var joyControl = new JoyControl(1))
+            {
+                using (var keyControl = new KeyControl(
+                    joyControl, XboxAxis.Ry, XboxAxisPosition.Max, false))
+                {
+                    axis = keyControl.Axis;
+                    position = keyControl.Position;
+                    type = keyControl.ControlType;
+                }
+            }
+            
+            Assert.AreEqual(axis, XboxAxis.Ry);
+            Assert.AreEqual(position, XboxAxisPosition.Max);
+            Assert.AreEqual(type, KeyControlType.Axis);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public void TestKeyControlNullParent()
         {
-            var keyControl = new KeyControl(null, false);
+            using (var keyControl = new KeyControl(null, false))
+            {
+            }
         }
 
         [TestMethod]
         public void TestParent()
         {
-            var parent = new JoyControl(1);
-            var keyControl = new KeyControl(parent, false);
+            JoyControl expected;
+            JoyControl actual;
 
-            Assert.AreEqual(parent, keyControl.JoyParent);
+            using (var parent = new JoyControl(1))
+            {
+                using (var keyControl = new KeyControl(parent, false))
+                {
+                    expected = parent;
+                    actual = keyControl.JoyParent;
+                }
+            }
+
+            Assert.AreEqual(expected, actual);
         }
 
         [TestMethod]
         public void TestRemoveableKeyControl()
         {
-            var parent = new JoyControl(1);
-            var keyControl = new KeyControl(parent, isRemoveable: true);
+            bool isRemoveable;
 
-            Assert.IsTrue(keyControl.IsRemoveable);
+            using (var joyControl = new JoyControl(1))
+            {
+                using (var keyControl = new KeyControl(joyControl, isRemoveable: true))
+                {
+                    isRemoveable = keyControl.IsRemoveable;
+                }
+            }
+
+            Assert.IsTrue(isRemoveable);
         }
 
         [TestMethod]
         public void TestDefaultKeyGesture()
         {
-            var keyControl = new KeyControl(new JoyControl(1));
+            string keyGesture;
 
-            Assert.IsTrue(keyControl.KeyGesture == InterceptionKeys.None.ToString());
+            using (var joyControl = new JoyControl(1))
+            {
+                using (var keyControl = new KeyControl(joyControl))
+                {
+                    keyGesture = keyControl.KeyGesture;
+                }
+            }
+
+            Assert.IsTrue(keyGesture == InterceptionKeys.None.ToString());
         }
 
         [TestMethod]
         public void TestKeyGesture()
         {
-            var keyControl = new KeyControl(new JoyControl(1));
-            string keyGesture = InterceptionKeys.RightControl.ToString();
-            keyControl.KeyGesture = keyGesture;
+            string expectedKeyGesture = InterceptionKeys.RightControl.ToString();
+            string actualKeyGesture;
 
-            Assert.AreEqual(keyGesture, keyControl.KeyGesture);
+            using (var joyControl = new JoyControl(1))
+            {
+                using (var keyControl = new KeyControl(joyControl))
+                {
+                    keyControl.KeyGesture = expectedKeyGesture;
+                    actualKeyGesture = keyControl.KeyGesture;
+                }
+            }
+
+            Assert.AreEqual(expectedKeyGesture, actualKeyGesture);
         }
 
         [TestMethod]
         public void TestKeyGestureChanged()
         {
             bool eventRisen = false;
-            using (var keyControl = new KeyControl(new JoyControl(1)))
+            string expectedKeyGesture = InterceptionKeys.H.ToString();
+            string eventKeyGesture = string.Empty;
+
+            using (var joyControl = new JoyControl(1))
             {
-                string keyGesture = InterceptionKeys.H.ToString();
-
-                keyControl.KeyGestureChanged += (ss, ee) =>
+                using (var keyControl = new KeyControl(joyControl))
                 {
-                    Assert.AreEqual(keyGesture, keyControl.KeyGesture);
-                    Assert.AreEqual(keyGesture, ee.NewKey);
-                    eventRisen = true;
-                };
+                    keyControl.KeyGestureChanged += (sender, e) =>
+                    {
+                        eventKeyGesture = e.NewKey;
+                        eventRisen = true;
+                    };
 
-                keyControl.KeyGesture = keyGesture;
-                Assert.AreEqual(keyGesture, keyControl.KeyGesture);
+                    keyControl.KeyGesture = expectedKeyGesture;
+                }
             }
 
-            Assert.IsTrue(eventRisen);
+            Assert.AreEqual(
+                expectedKeyGesture,
+                eventKeyGesture,
+                "Wrong event args key gesture!");
+
+            Assert.IsTrue(eventRisen, "Key Gesture Changed event was not raised!");
         }
 
         [TestMethod]
         public void TestSetCustomFunction()
         {
+            bool testFailed = false;
+            XboxCustomFunction failedFunction;
+
             using (var joyControl = new JoyControl(1))
             {
-                using (var keyControl = new KeyControl(joyControl, true))
+                using (var keyControl = new KeyControl(joyControl, isRemoveable: true))
                 {
                     foreach (XboxCustomFunction function in Enum.GetValues(typeof(XboxCustomFunction)))
                     {
                         keyControl.CustomFunction = function;
                         var controlType = CustomFunctionHelper.GetControlType(function);
 
+                        if (!controlType.Equals(keyControl.ControlType))
+                        {
+                            testFailed = true;
+                            failedFunction = function;
+                            break;
+                        }
+
                         switch (controlType)
                         {
                             case KeyControlType.Button:
                                 {
                                     var button = CustomFunctionHelper.GetXboxButton(function);
-                                    Assert.AreEqual(button, keyControl.Button);
+                                    if (!button.Equals(keyControl.Button))
+                                    {
+                                        testFailed = true;
+                                        break;
+                                    }
                                 }
 
                                 break;
@@ -143,22 +244,34 @@
                                 {
                                     XboxAxisPosition pos = XboxAxisPosition.Center;
                                     var axis = CustomFunctionHelper.GetXboxAxis(function, out pos);
-                                    Assert.AreEqual(axis, keyControl.Axis);
-                                    Assert.AreEqual(pos, keyControl.Position);
+                                    if (!axis.Equals(keyControl.Axis) ||
+                                        !pos.Equals(keyControl.Position))
+                                    {
+                                        testFailed = true;
+                                        break;
+                                    }
                                 }
 
                                 break;
                             case KeyControlType.Dpad:
                                 {
                                     var direction = CustomFunctionHelper.GetDpadDirection(function);
-                                    Assert.AreEqual(direction, keyControl.DpadDirection);
+                                    if (!direction.Equals(keyControl.DpadDirection))
+                                    {
+                                        testFailed = true;
+                                        break;
+                                    }
                                 }
 
                                 break;
                             case KeyControlType.Trigger:
                                 {
                                     var trigger = CustomFunctionHelper.GetXboxTrigger(function);
-                                    Assert.AreEqual(trigger, keyControl.Trigger);
+                                    if (!trigger.Equals(keyControl.Trigger))
+                                    {
+                                        testFailed = true;
+                                        break;
+                                    }
                                 }
 
                                 break;
@@ -167,9 +280,18 @@
                                     "Not implemented control type: " + controlType);
                         }
 
-                        Assert.AreEqual(keyControl.ControlType, controlType);
+                        if (testFailed)
+                        {
+                            failedFunction = function;
+                            break;
+                        }
                     }
                 }
+            }
+
+            if (testFailed)
+            {
+                Assert.Fail();
             }
         }
 
@@ -177,96 +299,116 @@
         public void TestButtonCustomFunctionChanged()
         {
             bool eventRisen = false;
-            var function = XboxCustomFunction.Start;
+            var expectedFunction = XboxCustomFunction.Start;
+            XboxCustomFunction actualFunction = XboxCustomFunction.A;
 
             using (var joyControl = new JoyControl(1))
             {
                 using (var keyControl = new KeyControl(joyControl, isRemoveable: true))
                 {
-                    keyControl.FunctionChanged += (ss, ee) =>
+                    keyControl.FunctionChanged += (sender, e) =>
                         {
-                            Assert.AreEqual(function, keyControl.CustomFunction);
+                            actualFunction = keyControl.CustomFunction;
                             eventRisen = true;
                         };
 
-                    keyControl.CustomFunction = function;
-                    Assert.AreEqual(function, keyControl.CustomFunction);
+                    keyControl.CustomFunction = expectedFunction;
                 }
             }
 
-            Assert.IsTrue(eventRisen);
+            Assert.AreEqual(
+                expectedFunction,
+                actualFunction,
+                "Button custom function was not set correctly!");
+
+            Assert.IsTrue(eventRisen, "Function Changed event was not raised!");
         }
 
         [TestMethod]
         public void TestAxisCustomFunctionChanged()
         {
             bool eventRisen = false;
-            var function = XboxCustomFunction.Rx_Max;
+            var expectedFunction = XboxCustomFunction.Rx_Max;
+            XboxCustomFunction actualFunction = XboxCustomFunction.A;
 
             using (var joyControl = new JoyControl(1))
             {
                 using (var keyControl = new KeyControl(joyControl, isRemoveable: true))
                 {
-                    keyControl.FunctionChanged += (ss, ee) =>
+                    keyControl.FunctionChanged += (sender, e) =>
                     {
-                        Assert.AreEqual(function, keyControl.CustomFunction);
+                        actualFunction = keyControl.CustomFunction;
                         eventRisen = true;
                     };
 
-                    keyControl.CustomFunction = function;
-                    Assert.AreEqual(function, keyControl.CustomFunction);
+                    keyControl.CustomFunction = expectedFunction;
                 }
             }
 
-            Assert.IsTrue(eventRisen);
+            Assert.AreEqual(
+                expectedFunction,
+                actualFunction,
+                "Axis custom function was not set correctly!");
+
+            Assert.IsTrue(eventRisen, "Function Changed event was not raised!");
         }
 
         [TestMethod]
         public void TestTriggerCustomFunctionChanged()
         {
             bool eventRisen = false;
-            var function = XboxCustomFunction.RightTrigger;
+            var expectedFunction = XboxCustomFunction.RightTrigger;
+            XboxCustomFunction actualFunction = XboxCustomFunction.A;
 
             using (var joyControl = new JoyControl(1))
             {
                 using (var keyControl = new KeyControl(joyControl, isRemoveable: true))
                 {
-                    keyControl.FunctionChanged += (ss, ee) =>
+                    keyControl.FunctionChanged += (sender, e) =>
                     {
-                        Assert.AreEqual(function, keyControl.CustomFunction);
+                        actualFunction = keyControl.CustomFunction;
                         eventRisen = true;
                     };
 
-                    keyControl.CustomFunction = function;
-                    Assert.AreEqual(function, keyControl.CustomFunction);
+                    keyControl.CustomFunction = expectedFunction;
                 }
             }
 
-            Assert.IsTrue(eventRisen);
+            Assert.AreEqual(
+                expectedFunction,
+                actualFunction,
+                "Trigger custom function was not set correctly!");
+
+            Assert.IsTrue(eventRisen, "Function Changed event was not raised!");
         }
 
         [TestMethod]
         public void TestDpadCustomFunctionChanged()
         {
             bool eventRisen = false;
-            var function = XboxCustomFunction.Dpad_Left;
+            var expectedFunction = XboxCustomFunction.Dpad_Left;
+            XboxCustomFunction actualFunction = XboxCustomFunction.A;
 
             using (var joyControl = new JoyControl(1))
             {
                 using (var keyControl = new KeyControl(joyControl, isRemoveable: true))
                 {
-                    keyControl.FunctionChanged += (ss, ee) =>
+                    keyControl.FunctionChanged += (sender, e) =>
                     {
-                        Assert.AreEqual(function, keyControl.CustomFunction);
+                        actualFunction = keyControl.CustomFunction;
                         eventRisen = true;
                     };
 
-                    keyControl.CustomFunction = function;
-                    Assert.AreEqual(function, keyControl.CustomFunction);
+                    keyControl.CustomFunction = expectedFunction;
                 }
             }
 
-            Assert.IsTrue(eventRisen);
+            Assert.AreEqual(
+                expectedFunction,
+                actualFunction,
+                "D-pad custom function was not set correctly!");
+
+            Assert.IsTrue(eventRisen, "Function Changed event was not raised!");
         }
     }
 }

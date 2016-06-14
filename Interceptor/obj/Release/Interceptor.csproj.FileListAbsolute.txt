@@ -20,3 +20,13 @@ C:\Users\djlastnight\Documents\Visual Studio 2013\Projects\KeyboardSplitterXbox\
 C:\Users\djlastnight\Documents\Visual Studio 2013\Projects\KeyboardSplitterXbox\KeyboardSplitter\Lib\Interceptor.pdb
 C:\Users\djlastnight\Documents\Visual Studio 2013\Projects\KeyboardSplitterXbox\Interceptor\obj\Release\Interceptor.dll
 C:\Users\djlastnight\Documents\Visual Studio 2013\Projects\KeyboardSplitterXbox\Interceptor\obj\Release\Interceptor.pdb
+C:\Users\djlastnight\Source\Repos\KeyboardSplitterXbox\KeyboardSplitter\Lib\Interceptor.dll
+C:\Users\djlastnight\Source\Repos\KeyboardSplitterXbox\KeyboardSplitter\Lib\Interceptor.pdb
+C:\Users\djlastnight\Source\Repos\KeyboardSplitterXbox\Interceptor\obj\Release\Interceptor.dll
+C:\Users\djlastnight\Source\Repos\KeyboardSplitterXbox\Interceptor\obj\Release\Interceptor.pdb
+C:\Users\Vankata\Source\Repos\KeyboardSplitterXbox\KeyboardSplitter\Lib\Interceptor.dll
+C:\Users\Vankata\Source\Repos\KeyboardSplitterXbox\KeyboardSplitter\Lib\Interceptor.pdb
+C:\Users\Vankata\Source\Repos\KeyboardSplitterXbox\Interceptor\obj\Release\Interceptor.dll
+C:\Users\Vankata\Source\Repos\KeyboardSplitterXbox\Interceptor\obj\Release\Interceptor.pdb
+C:\Users\Vankata\Source\Repos\KeyboardSplitterXbox\KeyboardSplitter\Lib\Interceptor.dll.CodeAnalysisLog.xml
+C:\Users\Vankata\Source\Repos\KeyboardSplitterXbox\KeyboardSplitter\Lib\Interceptor.dll.lastcodeanalysissucceeded

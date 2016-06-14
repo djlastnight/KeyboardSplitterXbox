@@ -12,3 +12,13 @@ C:\Users\djlastnight\Documents\Visual Studio 2013\Projects\KeyboardSplitterXbox\
 C:\Users\djlastnight\Documents\Visual Studio 2013\Projects\KeyboardSplitterXbox\XboxInterfaceWrap\obj\Release\XboxInterfaceWrap.dll
 C:\Users\djlastnight\Documents\Visual Studio 2013\Projects\KeyboardSplitterXbox\XboxInterfaceWrap\obj\Release\XboxInterfaceWrap.pdb
 C:\Users\djlastnight\Documents\Visual Studio 2013\Projects\KeyboardSplitterXbox\XboxInterfaceWrap\obj\Release\XboxInterfaceWrap.csprojResolveAssemblyReference.cache
+C:\Users\djlastnight\Source\Repos\KeyboardSplitterXbox\KeyboardSplitter\Lib\XboxInterfaceWrap.dll
+C:\Users\djlastnight\Source\Repos\KeyboardSplitterXbox\KeyboardSplitter\Lib\XboxInterfaceWrap.pdb
+C:\Users\djlastnight\Source\Repos\KeyboardSplitterXbox\XboxInterfaceWrap\obj\Release\XboxInterfaceWrap.dll
+C:\Users\djlastnight\Source\Repos\KeyboardSplitterXbox\XboxInterfaceWrap\obj\Release\XboxInterfaceWrap.pdb
+C:\Users\Vankata\Source\Repos\KeyboardSplitterXbox\KeyboardSplitter\Lib\XboxInterfaceWrap.dll
+C:\Users\Vankata\Source\Repos\KeyboardSplitterXbox\KeyboardSplitter\Lib\XboxInterfaceWrap.pdb
+C:\Users\Vankata\Source\Repos\KeyboardSplitterXbox\XboxInterfaceWrap\obj\Release\XboxInterfaceWrap.dll
+C:\Users\Vankata\Source\Repos\KeyboardSplitterXbox\XboxInterfaceWrap\obj\Release\XboxInterfaceWrap.pdb
+C:\Users\Vankata\Source\Repos\KeyboardSplitterXbox\XboxInterfaceWrap\obj\Release\XboxInterfaceWrap.csprojResolveAssemblyReference.cache
+C:\Users\djlastnight\Source\Repos\KeyboardSplitterXbox\XboxInterfaceWrap\obj\Release\XboxInterfaceWrap.csprojResolveAssemblyReference.cache

@@ -12,9 +12,9 @@
     [TestClass]
     public class TestAxisHelper
     {
-        public TestAxisHelper()
+        [TestInitialize]
+        public void Init()
         {
-            // loading needed dlls
             KeyboardSplitter.App.Initialize();
         }
 
@@ -26,10 +26,12 @@
                 return;
             }
 
-            using (var jc = new JoyControl(1))
+            short result;
+
+            using (var joyControl = new JoyControl(1))
             {
                 string keyboardStrongName = "Keyboard_01";
-                jc.SetKeyboard(keyboardStrongName);
+                joyControl.SetKeyboard(keyboardStrongName);
                 var testAxis = XboxAxis.Rx;
 
                 string maxKey = Preset.Default.Axes.Find(x => x.Axis == testAxis &&
@@ -37,13 +39,13 @@
 
                 KeyboardManager.SetFakeDown(keyboardStrongName, maxKey);
 
-                var result = AxisHelper.CalculateAxisValue(
-                    jc, testAxis, XboxAxisPosition.Min, KeyState.Up);
+                result = AxisHelper.CalculateAxisValue(
+                    joyControl, testAxis, XboxAxisPosition.Min, KeyState.Up);
 
                 KeyboardManager.ResetFakeStates();
-
-                Assert.AreEqual(short.MaxValue, result);
             }
+
+            Assert.AreEqual(short.MaxValue, result);
         }
 
         [TestMethod]
@@ -54,10 +56,12 @@
                 return;
             }
 
-            using (var jc = new JoyControl(1))
+            short result;
+
+            using (var joyControl = new JoyControl(1))
             {
                 string keyboardStrongName = "Keyboard_01";
-                jc.SetKeyboard(keyboardStrongName);
+                joyControl.SetKeyboard(keyboardStrongName);
                 var testAxis = XboxAxis.Ry;
 
                 string minKey = Preset.Default.Axes.Find(x => x.Axis == testAxis &&
@@ -65,13 +69,13 @@
 
                 KeyboardManager.SetFakeDown(keyboardStrongName, minKey);
 
-                var result = AxisHelper.CalculateAxisValue(
-                    jc, testAxis, XboxAxisPosition.Max, KeyState.Up);
-
-                Assert.AreEqual(short.MinValue, result);
+                result = AxisHelper.CalculateAxisValue(
+                    joyControl, testAxis, XboxAxisPosition.Max, KeyState.Up);
 
                 KeyboardManager.ResetFakeStates();
             }
+
+            Assert.AreEqual(short.MinValue, result);
         }
 
         [TestMethod]
@@ -106,18 +110,20 @@
                 return;
             }
 
+            short result;
+
             using (var joyControl = new JoyControl(1))
             {
                 joyControl.SetKeyboard("Keyboard_01");
 
-                var result = AxisHelper.CalculateAxisValue(
+                result = AxisHelper.CalculateAxisValue(
                     joyControl,
                     XboxAxis.X,
                     XboxAxisPosition.Min,
                     KeyState.Up);
-
-                Assert.AreEqual(0, result);
             }
+
+            Assert.AreEqual(0, result);
         }
 
         [TestMethod]
@@ -128,18 +134,19 @@
                 return;
             }
 
+            short result;
             using (var joyControl = new JoyControl(1))
             {
                 joyControl.SetKeyboard("Keyboard_01");
 
-                var result = AxisHelper.CalculateAxisValue(
+                result = AxisHelper.CalculateAxisValue(
                     joyControl,
                     XboxAxis.X,
                     XboxAxisPosition.Max,
                     KeyState.Up);
-
-                Assert.AreEqual(0, result);
             }
+
+            Assert.AreEqual(0, result);
         }
 
         [TestMethod]
@@ -150,18 +157,19 @@
                 return;
             }
 
+            short result;
             using (var joyControl = new JoyControl(1))
             {
                 joyControl.SetKeyboard("Keyboard_01");
 
-                var result = AxisHelper.CalculateAxisValue(
+                result = AxisHelper.CalculateAxisValue(
                     joyControl,
                     XboxAxis.X,
                     XboxAxisPosition.Center,
                     KeyState.Down);
-
-                Assert.AreEqual(0, result);
             }
+
+            Assert.AreEqual(0, result);
         }
 
         [TestMethod]
@@ -172,18 +180,19 @@
                 return;
             }
 
+            short result;
             using (var joyControl = new JoyControl(1))
             {
                 joyControl.SetKeyboard("Keyboard_01");
 
-                var result = AxisHelper.CalculateAxisValue(
+                result = AxisHelper.CalculateAxisValue(
                     joyControl,
                     XboxAxis.X,
                     XboxAxisPosition.Center,
                     KeyState.Up);
-
-                Assert.AreEqual(0, result);
             }
+
+            Assert.AreEqual(0, result);
         }
 
         [TestMethod]
@@ -194,18 +203,19 @@
                 return;
             }
 
+            short result;
             using (var joyControl = new JoyControl(1))
             {
                 joyControl.SetKeyboard("Keyboard_01");
 
-                var result = AxisHelper.CalculateAxisValue(
+                result = AxisHelper.CalculateAxisValue(
                     joyControl,
                     XboxAxis.X,
                     XboxAxisPosition.Min,
                     KeyState.E0);
-
-                Assert.AreEqual(short.MinValue, result);
             }
+
+            Assert.AreEqual(short.MinValue, result);
         }
 
         [TestMethod]
@@ -216,18 +226,19 @@
                 return;
             }
 
+            short result;
             using (var joyControl = new JoyControl(1))
             {
                 joyControl.SetKeyboard("Keyboard_01");
 
-                var result = AxisHelper.CalculateAxisValue(
+                result = AxisHelper.CalculateAxisValue(
                     joyControl,
                     XboxAxis.X,
                     XboxAxisPosition.Max,
                     KeyState.E0);
-
-                Assert.AreEqual(short.MaxValue, result);
             }
+
+            Assert.AreEqual(short.MaxValue, result);
         }
 
         [TestMethod]
@@ -238,23 +249,24 @@
                 return;
             }
 
-            using (var jc = new JoyControl(1))
+            short result;
+            using (var joyControl = new JoyControl(1))
             {
                 const string KeyboardStrongName = "Keyboard_01";
-                jc.SetKeyboard(KeyboardStrongName);
+                joyControl.SetKeyboard(KeyboardStrongName);
                 var testAxis = XboxAxis.X;
                 string minKey = Preset.Default.Axes.Find(x => x.Axis == testAxis &&
                     x.Position == XboxAxisPosition.Min).KeyboardKey;
 
                 KeyboardManager.SetFakeDown(KeyboardStrongName, minKey);
 
-                var result = AxisHelper.CalculateAxisValue(
-                    jc, testAxis, XboxAxisPosition.Max, KeyState.Down);
-
-                Assert.AreEqual(short.MaxValue, result);
+                result = AxisHelper.CalculateAxisValue(
+                    joyControl, testAxis, XboxAxisPosition.Max, KeyState.Down);
 
                 KeyboardManager.ResetFakeStates();
             }
+
+            Assert.AreEqual(short.MaxValue, result);
         }
 
         [TestMethod]
@@ -265,6 +277,7 @@
                 return;
             }
 
+            short result;
             using (var joyControl = new JoyControl(1))
             {
                 const string KeyboardStrongName = "Keyboard_01";
@@ -275,26 +288,26 @@
 
                 KeyboardManager.SetFakeDown(KeyboardStrongName, maxKey);
 
-                var result = AxisHelper.CalculateAxisValue(
+                result = AxisHelper.CalculateAxisValue(
                     joyControl,
                     testAxis,
                     XboxAxisPosition.Min,
                     KeyState.Down);
 
-                Assert.AreEqual(short.MinValue, result);
-
                 KeyboardManager.ResetFakeStates();
             }
+
+            Assert.AreEqual(short.MinValue, result);
         }
 
         [TestMethod]
-        [ExpectedException(typeof(InvalidOperationException))]
         public void TestAxisBothPressed()
         {
-            using (var jc = new JoyControl(1))
+            bool testPassed = false;
+            using (var joyControl = new JoyControl(1))
             {
                 string keyboardStrongName = "Keyboard_01";
-                jc.SetKeyboard(keyboardStrongName);
+                joyControl.SetKeyboard(keyboardStrongName);
                 var testAxis = XboxAxis.Rx;
 
                 string minKey = Preset.Default.Axes.Find(x => x.Axis == testAxis &&
@@ -307,11 +320,25 @@
                 KeyboardManager.SetFakeDown(keyboardStrongName, maxKey);
 
                 // sending up state to fail the function
-                var result = AxisHelper.CalculateAxisValue(
-                    jc, testAxis, XboxAxisPosition.Min, KeyState.Up);
-
-                KeyboardManager.ResetFakeStates();
+                try
+                {
+                    AxisHelper.CalculateAxisValue(
+                        joyControl,
+                        testAxis,
+                        XboxAxisPosition.Min,
+                        KeyState.Up);
+                }
+                catch (InvalidOperationException)
+                {
+                    testPassed = true;
+                }
+                finally
+                {
+                    KeyboardManager.ResetFakeStates();
+                }
             }
+
+            Assert.IsTrue(testPassed);
         }
 
         [TestMethod]

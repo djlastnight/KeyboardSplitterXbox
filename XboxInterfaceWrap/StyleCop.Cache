@@ -6,11 +6,40 @@
   <project key="259096908">
     <configuration>TRACE</configuration>
   </project>
+  <project key="-657669383">
+    <configuration>TRACE</configuration>
+  </project>
+  <project key="117358012">
+    <configuration>TRACE</configuration>
+  </project>
+  <sourcecode name="ControllerState.cs" parser="StyleCop.CSharp.CsParser">
+    <timestamps>
+      <styleCop>2016/05/12 20:26:32.000</styleCop>
+      <settingsFile>2016/06/13 11:53:37.284</settingsFile>
+      <sourceFile>2016/06/14 08:30:12.694</sourceFile>
+      <parser>2016/05/12 20:26:32.000</parser>
+      <StyleCop.CSharp.DocumentationRules>2016/05/12 20:26:32.000</StyleCop.CSharp.DocumentationRules>
+      <StyleCop.CSharp.DocumentationRules.FilesHashCode>1272315275</StyleCop.CSharp.DocumentationRules.FilesHashCode>
+      <StyleCop.CSharp.LayoutRules>2016/05/12 20:26:32.000</StyleCop.CSharp.LayoutRules>
+      <StyleCop.CSharp.LayoutRules.FilesHashCode>0</StyleCop.CSharp.LayoutRules.FilesHashCode>
+      <StyleCop.CSharp.MaintainabilityRules>2016/05/12 20:26:32.000</StyleCop.CSharp.MaintainabilityRules>
+      <StyleCop.CSharp.MaintainabilityRules.FilesHashCode>0</StyleCop.CSharp.MaintainabilityRules.FilesHashCode>
+      <StyleCop.CSharp.NamingRules>2016/05/12 20:26:32.000</StyleCop.CSharp.NamingRules>
+      <StyleCop.CSharp.NamingRules.FilesHashCode>0</StyleCop.CSharp.NamingRules.FilesHashCode>
+      <StyleCop.CSharp.OrderingRules>2016/05/12 20:26:32.000</StyleCop.CSharp.OrderingRules>
+      <StyleCop.CSharp.OrderingRules.FilesHashCode>0</StyleCop.CSharp.OrderingRules.FilesHashCode>
+      <StyleCop.CSharp.ReadabilityRules>2016/05/12 20:26:32.000</StyleCop.CSharp.ReadabilityRules>
+      <StyleCop.CSharp.ReadabilityRules.FilesHashCode>0</StyleCop.CSharp.ReadabilityRules.FilesHashCode>
+      <StyleCop.CSharp.SpacingRules>2016/05/12 20:26:32.000</StyleCop.CSharp.SpacingRules>
+      <StyleCop.CSharp.SpacingRules.FilesHashCode>0</StyleCop.CSharp.SpacingRules.FilesHashCode>
+    </timestamps>
+    <violations />
+  </sourcecode>
   <sourcecode name="NativeMethods.cs" parser="StyleCop.CSharp.CsParser">
     <timestamps>
       <styleCop>2016/05/12 20:26:32.000</styleCop>
-      <settingsFile>2016/06/04 05:16:45.172</settingsFile>
-      <sourceFile>2016/06/10 09:47:04.696</sourceFile>
+      <settingsFile>2016/06/13 11:53:37.284</settingsFile>
+      <sourceFile>2016/06/13 23:29:52.011</sourceFile>
       <parser>2016/05/12 20:26:32.000</parser>
       <StyleCop.CSharp.DocumentationRules>2016/05/12 20:26:32.000</StyleCop.CSharp.DocumentationRules>
       <StyleCop.CSharp.DocumentationRules.FilesHashCode>1272315275</StyleCop.CSharp.DocumentationRules.FilesHashCode>
@@ -32,8 +61,8 @@
   <sourcecode name="AssemblyInfo.cs" parser="StyleCop.CSharp.CsParser">
     <timestamps>
       <styleCop>2016/05/12 20:26:32.000</styleCop>
-      <settingsFile>2016/06/04 05:16:45.172</settingsFile>
-      <sourceFile>2016/06/02 15:18:52.776</sourceFile>
+      <settingsFile>2016/06/13 11:53:37.284</settingsFile>
+      <sourceFile>2016/06/13 11:53:37.278</sourceFile>
       <parser>2016/05/12 20:26:32.000</parser>
       <StyleCop.CSharp.DocumentationRules>2016/05/12 20:26:32.000</StyleCop.CSharp.DocumentationRules>
       <StyleCop.CSharp.DocumentationRules.FilesHashCode>1272315275</StyleCop.CSharp.DocumentationRules.FilesHashCode>
@@ -55,8 +84,8 @@
   <sourcecode name="RealXboxController.cs" parser="StyleCop.CSharp.CsParser">
     <timestamps>
       <styleCop>2016/05/12 20:26:32.000</styleCop>
-      <settingsFile>2016/06/04 05:16:45.172</settingsFile>
-      <sourceFile>2016/06/02 15:16:41.970</sourceFile>
+      <settingsFile>2016/06/13 11:53:37.284</settingsFile>
+      <sourceFile>2016/06/13 11:53:37.280</sourceFile>
       <parser>2016/05/12 20:26:32.000</parser>
       <StyleCop.CSharp.DocumentationRules>2016/05/12 20:26:32.000</StyleCop.CSharp.DocumentationRules>
       <StyleCop.CSharp.DocumentationRules.FilesHashCode>1272315275</StyleCop.CSharp.DocumentationRules.FilesHashCode>
@@ -78,8 +107,8 @@
   <sourcecode name="UnmanagedAssemblyLoader.cs" parser="StyleCop.CSharp.CsParser">
     <timestamps>
       <styleCop>2016/05/12 20:26:32.000</styleCop>
-      <settingsFile>2016/06/04 05:16:45.172</settingsFile>
-      <sourceFile>2016/06/10 11:29:05.072</sourceFile>
+      <settingsFile>2016/06/13 11:53:37.284</settingsFile>
+      <sourceFile>2016/06/13 11:53:37.288</sourceFile>
       <parser>2016/05/12 20:26:32.000</parser>
       <StyleCop.CSharp.DocumentationRules>2016/05/12 20:26:32.000</StyleCop.CSharp.DocumentationRules>
       <StyleCop.CSharp.DocumentationRules.FilesHashCode>1272315275</StyleCop.CSharp.DocumentationRules.FilesHashCode>
@@ -101,8 +130,8 @@
   <sourcecode name="VirtualXboxController.cs" parser="StyleCop.CSharp.CsParser">
     <timestamps>
       <styleCop>2016/05/12 20:26:32.000</styleCop>
-      <settingsFile>2016/06/04 05:16:45.172</settingsFile>
-      <sourceFile>2016/06/04 04:24:33.752</sourceFile>
+      <settingsFile>2016/06/13 11:53:37.284</settingsFile>
+      <sourceFile>2016/06/14 08:29:37.468</sourceFile>
       <parser>2016/05/12 20:26:32.000</parser>
       <StyleCop.CSharp.DocumentationRules>2016/05/12 20:26:32.000</StyleCop.CSharp.DocumentationRules>
       <StyleCop.CSharp.DocumentationRules.FilesHashCode>1272315275</StyleCop.CSharp.DocumentationRules.FilesHashCode>
@@ -124,8 +153,8 @@
   <sourcecode name="XboxAxis.cs" parser="StyleCop.CSharp.CsParser">
     <timestamps>
       <styleCop>2016/05/12 20:26:32.000</styleCop>
-      <settingsFile>2016/06/04 05:16:45.172</settingsFile>
-      <sourceFile>2016/06/02 15:16:41.685</sourceFile>
+      <settingsFile>2016/06/13 11:53:37.284</settingsFile>
+      <sourceFile>2016/06/13 11:53:37.292</sourceFile>
       <parser>2016/05/12 20:26:32.000</parser>
       <StyleCop.CSharp.DocumentationRules>2016/05/12 20:26:32.000</StyleCop.CSharp.DocumentationRules>
       <StyleCop.CSharp.DocumentationRules.FilesHashCode>1272315275</StyleCop.CSharp.DocumentationRules.FilesHashCode>
@@ -147,8 +176,8 @@
   <sourcecode name="XboxAxisPosition.cs" parser="StyleCop.CSharp.CsParser">
     <timestamps>
       <styleCop>2016/05/12 20:26:32.000</styleCop>
-      <settingsFile>2016/06/04 05:16:45.172</settingsFile>
-      <sourceFile>2016/06/02 15:16:41.427</sourceFile>
+      <settingsFile>2016/06/13 11:53:37.284</settingsFile>
+      <sourceFile>2016/06/13 11:53:37.294</sourceFile>
       <parser>2016/05/12 20:26:32.000</parser>
       <StyleCop.CSharp.DocumentationRules>2016/05/12 20:26:32.000</StyleCop.CSharp.DocumentationRules>
       <StyleCop.CSharp.DocumentationRules.FilesHashCode>1272315275</StyleCop.CSharp.DocumentationRules.FilesHashCode>
@@ -170,8 +199,8 @@
   <sourcecode name="XboxBus.cs" parser="StyleCop.CSharp.CsParser">
     <timestamps>
       <styleCop>2016/05/12 20:26:32.000</styleCop>
-      <settingsFile>2016/06/04 05:16:45.172</settingsFile>
-      <sourceFile>2016/06/10 11:28:42.728</sourceFile>
+      <settingsFile>2016/06/13 11:53:37.284</settingsFile>
+      <sourceFile>2016/06/13 11:53:37.296</sourceFile>
       <parser>2016/05/12 20:26:32.000</parser>
       <StyleCop.CSharp.DocumentationRules>2016/05/12 20:26:32.000</StyleCop.CSharp.DocumentationRules>
       <StyleCop.CSharp.DocumentationRules.FilesHashCode>1272315275</StyleCop.CSharp.DocumentationRules.FilesHashCode>
@@ -193,8 +222,8 @@
   <sourcecode name="XboxButton.cs" parser="StyleCop.CSharp.CsParser">
     <timestamps>
       <styleCop>2016/05/12 20:26:32.000</styleCop>
-      <settingsFile>2016/06/04 05:16:45.172</settingsFile>
-      <sourceFile>2016/06/02 15:16:41.896</sourceFile>
+      <settingsFile>2016/06/13 11:53:37.284</settingsFile>
+      <sourceFile>2016/06/13 11:53:37.298</sourceFile>
       <parser>2016/05/12 20:26:32.000</parser>
       <StyleCop.CSharp.DocumentationRules>2016/05/12 20:26:32.000</StyleCop.CSharp.DocumentationRules>
       <StyleCop.CSharp.DocumentationRules.FilesHashCode>1272315275</StyleCop.CSharp.DocumentationRules.FilesHashCode>
@@ -216,8 +245,8 @@
   <sourcecode name="XboxDpadDirection.cs" parser="StyleCop.CSharp.CsParser">
     <timestamps>
       <styleCop>2016/05/12 20:26:32.000</styleCop>
-      <settingsFile>2016/06/04 05:16:45.172</settingsFile>
-      <sourceFile>2016/06/02 15:16:41.863</sourceFile>
+      <settingsFile>2016/06/13 11:53:37.284</settingsFile>
+      <sourceFile>2016/06/13 11:53:37.300</sourceFile>
       <parser>2016/05/12 20:26:32.000</parser>
       <StyleCop.CSharp.DocumentationRules>2016/05/12 20:26:32.000</StyleCop.CSharp.DocumentationRules>
       <StyleCop.CSharp.DocumentationRules.FilesHashCode>1272315275</StyleCop.CSharp.DocumentationRules.FilesHashCode>
@@ -239,8 +268,8 @@
   <sourcecode name="XboxTrigger.cs" parser="StyleCop.CSharp.CsParser">
     <timestamps>
       <styleCop>2016/05/12 20:26:32.000</styleCop>
-      <settingsFile>2016/06/04 05:16:45.172</settingsFile>
-      <sourceFile>2016/06/02 15:16:41.785</sourceFile>
+      <settingsFile>2016/06/13 11:53:37.284</settingsFile>
+      <sourceFile>2016/06/13 11:53:37.306</sourceFile>
       <parser>2016/05/12 20:26:32.000</parser>
       <StyleCop.CSharp.DocumentationRules>2016/05/12 20:26:32.000</StyleCop.CSharp.DocumentationRules>
       <StyleCop.CSharp.DocumentationRules.FilesHashCode>1272315275</StyleCop.CSharp.DocumentationRules.FilesHashCode>

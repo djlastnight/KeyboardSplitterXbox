@@ -10,13 +10,10 @@
     [TestClass]
     public class TestXboxTester
     {
-        public TestXboxTester()
+        [TestInitialize]
+        public void Init()
         {
             KeyboardSplitter.App.Initialize();
-            VirtualXboxController.UnPlug(1, true);
-            VirtualXboxController.UnPlug(2, true);
-            VirtualXboxController.UnPlug(3, true);
-            VirtualXboxController.UnPlug(4, true);
         }
 
         [TestMethod]
@@ -29,25 +26,30 @@
         }
 
         [TestMethod]
-        [ExpectedException(typeof(InvalidOperationException))]
         public void TestXboxTesterConstructor()
         {
-            using (var joyControl = new JoyControl(1))
+            bool catched = false;
+            var joyControl = new JoyControl(1);
+            XboxTester tester = null;
+
+            try
             {
-                if (!VirtualXboxController.Exists(1))
+                tester = new XboxTester(joyControl);
+            }
+            catch (InvalidOperationException)
+            {
+                catched = true;
+            }
+            finally
+            {
+                joyControl.Dispose();
+                if (tester != null)
                 {
-                    /// due to controller is not plugged in yet
-                    /// Xbox tester's constructor should throw
-                    /// an exception
-                    using (var tester = new XboxTester(joyControl))
-                    {
-                    }
-                }
-                else
-                {
-                    throw new InvalidOperationException();
+                    tester.Dispose();   
                 }
             }
+
+            Assert.IsTrue(catched);
         }
 
         [TestMethod]
@@ -60,6 +62,7 @@
             }
 
             const uint UserIndex = 1;
+            bool highlighted = false;
 
             using (var joyControl = new JoyControl(UserIndex))
             {
@@ -75,12 +78,12 @@
                     var button = XboxButton.Start;
                     VirtualXboxController.SetButton(UserIndex, button, true);
                     tester.UpdateHighlights();
-
+                    highlighted = tester.IsButtonHighlighted(button);
                     VirtualXboxController.UnPlug(UserIndex, true);
-                    
-                    Assert.IsTrue(tester.IsButtonHighlighted(button));
                 }
             }
+
+            Assert.IsTrue(highlighted);
         }
 
         [TestMethod]
@@ -93,6 +96,7 @@
             }
 
             const uint UserIndex = 1;
+            bool highlighted = true;
 
             using (var joyControl = new JoyControl(UserIndex))
             {
@@ -114,9 +118,11 @@
 
                     VirtualXboxController.UnPlug(UserIndex, true);
 
-                    Assert.IsFalse(tester.IsButtonHighlighted(button));
+                    highlighted = tester.IsButtonHighlighted(button);
                 }
             }
+
+            Assert.IsFalse(highlighted);
         }
 
         [TestMethod]
@@ -129,6 +135,7 @@
             }
 
             const uint UserIndex = 1;
+            bool highlighted = false;
 
             using (var joyControl = new JoyControl(UserIndex))
             {
@@ -147,9 +154,11 @@
 
                     VirtualXboxController.UnPlug(UserIndex, true);
 
-                    Assert.IsTrue(tester.IsTriggerHighlighted(trigger));
+                    highlighted = tester.IsTriggerHighlighted(trigger);
                 }
             }
+
+            Assert.IsTrue(highlighted);
         }
 
         [TestMethod]
@@ -162,6 +171,7 @@
             }
 
             const uint UserIndex = 1;
+            bool highlighted = true;
 
             using (var joyControl = new JoyControl(UserIndex))
             {
@@ -183,9 +193,11 @@
 
                     VirtualXboxController.UnPlug(UserIndex, true);
 
-                    Assert.IsFalse(tester.IsTriggerHighlighted(trigger));
+                    highlighted = tester.IsTriggerHighlighted(trigger);
                 }
             }
+
+            Assert.IsFalse(highlighted);
         }
 
         [TestMethod]
@@ -198,6 +210,7 @@
             }
 
             const uint UserIndex = 1;
+            bool highlighted = false;
 
             using (var joyControl = new JoyControl(UserIndex))
             {
@@ -216,9 +229,11 @@
 
                     VirtualXboxController.UnPlug(UserIndex, true);
 
-                    Assert.IsTrue(tester.IsDpadHightlighted(direction));
+                    highlighted = tester.IsDpadHightlighted(direction);
                 }
             }
+
+            Assert.IsTrue(highlighted);
         }
 
         [TestMethod]
@@ -231,6 +246,7 @@
             }
 
             const uint UserIndex = 1;
+            bool highlighted = true;
 
             using (var joyControl = new JoyControl(UserIndex))
             {
@@ -252,9 +268,11 @@
 
                     VirtualXboxController.UnPlug(UserIndex, true);
 
-                    Assert.IsFalse(tester.IsDpadHightlighted(direction));
+                    highlighted = tester.IsDpadHightlighted(direction);
                 }
             }
+
+            Assert.IsFalse(highlighted);
         }
 
         [TestMethod]
@@ -267,6 +285,7 @@
             }
 
             const uint UserIndex = 1;
+            bool hightlighted = false;
 
             using (var joyControl = new JoyControl(UserIndex))
             {
@@ -286,9 +305,11 @@
 
                     VirtualXboxController.UnPlug(UserIndex, true);
 
-                    Assert.IsTrue(tester.IsAxisHighlighted(axis, pos));
+                    hightlighted = tester.IsAxisHighlighted(axis, pos);
                 }
             }
+
+            Assert.IsTrue(hightlighted);
         }
 
         [TestMethod]
@@ -301,6 +322,7 @@
             }
 
             const uint UserIndex = 1;
+            bool highlighted = true;
 
             using (var joyControl = new JoyControl(UserIndex))
             {
@@ -323,9 +345,11 @@
 
                     VirtualXboxController.UnPlug(UserIndex, true);
 
-                    Assert.IsFalse(tester.IsAxisHighlighted(axis, pos));
+                    highlighted = tester.IsAxisHighlighted(axis, pos);
                 }
             }
+
+            Assert.IsFalse(highlighted);
         }
     }
 }

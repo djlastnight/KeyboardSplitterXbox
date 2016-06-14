@@ -11,7 +11,8 @@
     [TestClass]
     public class TestPovHelper
     {
-        public TestPovHelper()
+        [TestInitialize]
+        public void Init()
         {
             KeyboardSplitter.App.Initialize();
         }
@@ -24,21 +25,21 @@
                 return;
             }
 
+            var expected = XboxDpadDirection.Up;
+            XboxDpadDirection actual = XboxDpadDirection.None;
+
             using (var joyControl = new JoyControl(1))
             {
-                var direction = XboxDpadDirection.Up;
-
                 const string KeyboardStrongName = "Keyboard_01";
                 joyControl.SetKeyboard(KeyboardStrongName);
-                string keyGesture = Preset.Default.Povs.Find(x => x.Direction == direction).KeyboardKey;
+                string keyGesture = Preset.Default.Povs.Find(x => x.Direction == expected).KeyboardKey;
                 KeyboardManager.SetFakeDown(KeyboardStrongName, keyGesture);
 
-                var result = PovHelper.CalculatePovDirection(joyControl, direction, KeyState.Down);
-
-                Assert.AreEqual(direction, result);
-
+                actual = PovHelper.CalculatePovDirection(joyControl, expected, KeyState.Down);
                 KeyboardManager.ResetFakeStates();
             }
+
+            Assert.AreEqual(expected, actual);
         }
 
         [TestMethod]
@@ -49,21 +50,21 @@
                 return;
             }
 
+            var expected = XboxDpadDirection.Down;
+            XboxDpadDirection actual = XboxDpadDirection.None;
+
             using (var joyControl = new JoyControl(1))
             {
-                var direction = XboxDpadDirection.Down;
-
                 const string KeyboardStrongName = "Keyboard_01";
                 joyControl.SetKeyboard(KeyboardStrongName);
-                string keyGesture = Preset.Default.Povs.Find(x => x.Direction == direction).KeyboardKey;
+                string keyGesture = Preset.Default.Povs.Find(x => x.Direction == expected).KeyboardKey;
                 KeyboardManager.SetFakeDown(KeyboardStrongName, keyGesture);
 
-                var result = PovHelper.CalculatePovDirection(joyControl, direction, KeyState.Down);
-
-                Assert.AreEqual(direction, result);
-
+                actual = PovHelper.CalculatePovDirection(joyControl, expected, KeyState.Down);
                 KeyboardManager.ResetFakeStates();
             }
+
+            Assert.AreEqual(expected, actual);
         }
 
         [TestMethod]
@@ -74,21 +75,21 @@
                 return;
             }
 
+            var expected = XboxDpadDirection.Left;
+            XboxDpadDirection actual = XboxDpadDirection.None;
+
             using (var joyControl = new JoyControl(1))
             {
-                var direction = XboxDpadDirection.Left;
-
                 const string KeyboardStrongName = "Keyboard_01";
                 joyControl.SetKeyboard(KeyboardStrongName);
-                string keyGesture = Preset.Default.Povs.Find(x => x.Direction == direction).KeyboardKey;
+                string keyGesture = Preset.Default.Povs.Find(x => x.Direction == expected).KeyboardKey;
                 KeyboardManager.SetFakeDown(KeyboardStrongName, keyGesture);
 
-                var result = PovHelper.CalculatePovDirection(joyControl, direction, KeyState.Down);
-
-                Assert.AreEqual(direction, result);
-
+                actual = PovHelper.CalculatePovDirection(joyControl, expected, KeyState.Down);
                 KeyboardManager.ResetFakeStates();
             }
+
+            Assert.AreEqual(expected, actual);
         }
 
         [TestMethod]
@@ -99,21 +100,21 @@
                 return;
             }
 
+            var expected = XboxDpadDirection.Right;
+            XboxDpadDirection actual = XboxDpadDirection.None;
+
             using (var joyControl = new JoyControl(1))
             {
-                var direction = XboxDpadDirection.Right;
-
                 const string KeyboardStrongName = "Keyboard_01";
                 joyControl.SetKeyboard(KeyboardStrongName);
-                string keyGesture = Preset.Default.Povs.Find(x => x.Direction == direction).KeyboardKey;
+                string keyGesture = Preset.Default.Povs.Find(x => x.Direction == expected).KeyboardKey;
                 KeyboardManager.SetFakeDown(KeyboardStrongName, keyGesture);
 
-                var result = PovHelper.CalculatePovDirection(joyControl, direction, KeyState.Down);
-
-                Assert.AreEqual(direction, result);
-
+                actual = PovHelper.CalculatePovDirection(joyControl, expected, KeyState.Down);
                 KeyboardManager.ResetFakeStates();
             }
+
+            Assert.AreEqual(expected, actual);
         }
 
         [TestMethod]
@@ -124,11 +125,12 @@
                 return;
             }
 
+            var firstDirection = XboxDpadDirection.Up;
+            var secondDirection = XboxDpadDirection.Left;
+            XboxDpadDirection actual = XboxDpadDirection.None;
+
             using (var joyControl = new JoyControl(1))
             {
-                var firstDirection = XboxDpadDirection.Up;
-                var secondDirection = XboxDpadDirection.Left;
-
                 const string KeyboardStrongName = "Keyboard_01";
                 joyControl.SetKeyboard(KeyboardStrongName);
 
@@ -137,12 +139,12 @@
                 KeyboardManager.SetFakeDown(KeyboardStrongName, firstKey);
                 KeyboardManager.SetFakeDown(KeyboardStrongName, secondKey);
 
-                var result = PovHelper.CalculatePovDirection(joyControl, secondDirection, KeyState.Down);
-
-                Assert.AreEqual(firstDirection | secondDirection, result);
+                actual = PovHelper.CalculatePovDirection(joyControl, secondDirection, KeyState.Down);
 
                 KeyboardManager.ResetFakeStates();
             }
+
+            Assert.AreEqual(firstDirection | secondDirection, actual);
         }
 
         [TestMethod]
@@ -153,11 +155,12 @@
                 return;
             }
 
+            var firstDirection = XboxDpadDirection.Up;
+            var secondDirection = XboxDpadDirection.Right;
+            XboxDpadDirection actual = XboxDpadDirection.None;
+
             using (var joyControl = new JoyControl(1))
             {
-                var firstDirection = XboxDpadDirection.Up;
-                var secondDirection = XboxDpadDirection.Right;
-
                 const string KeyboardStrongName = "Keyboard_01";
                 joyControl.SetKeyboard(KeyboardStrongName);
 
@@ -166,12 +169,12 @@
                 KeyboardManager.SetFakeDown(KeyboardStrongName, firstKey);
                 KeyboardManager.SetFakeDown(KeyboardStrongName, secondKey);
 
-                var result = PovHelper.CalculatePovDirection(joyControl, secondDirection, KeyState.Down);
-
-                Assert.AreEqual(firstDirection | secondDirection, result);
+                actual = PovHelper.CalculatePovDirection(joyControl, secondDirection, KeyState.Down);
 
                 KeyboardManager.ResetFakeStates();
             }
+
+            Assert.AreEqual(firstDirection | secondDirection, actual);
         }
 
         [TestMethod]
@@ -182,11 +185,12 @@
                 return;
             }
 
+            var firstDirection = XboxDpadDirection.Up;
+            var secondDirection = XboxDpadDirection.Down;
+            XboxDpadDirection actual = XboxDpadDirection.None;
+
             using (var joyControl = new JoyControl(1))
             {
-                var firstDirection = XboxDpadDirection.Up;
-                var secondDirection = XboxDpadDirection.Down;
-
                 const string KeyboardStrongName = "Keyboard_01";
                 joyControl.SetKeyboard(KeyboardStrongName);
 
@@ -195,12 +199,12 @@
                 KeyboardManager.SetFakeDown(KeyboardStrongName, firstKey);
                 KeyboardManager.SetFakeDown(KeyboardStrongName, secondKey);
 
-                var result = PovHelper.CalculatePovDirection(joyControl, secondDirection, KeyState.Down);
-
-                Assert.AreEqual(secondDirection, result);
+                actual = PovHelper.CalculatePovDirection(joyControl, secondDirection, KeyState.Down);
 
                 KeyboardManager.ResetFakeStates();
             }
+
+            Assert.AreEqual(secondDirection, actual);
         }
 
         [TestMethod]
@@ -211,11 +215,12 @@
                 return;
             }
 
+            var firstDirection = XboxDpadDirection.Right;
+            var secondDirection = XboxDpadDirection.Up;
+            XboxDpadDirection actual = XboxDpadDirection.None;
+
             using (var joyControl = new JoyControl(1))
             {
-                var firstDirection = XboxDpadDirection.Right;
-                var secondDirection = XboxDpadDirection.Up;
-
                 const string KeyboardStrongName = "Keyboard_01";
                 joyControl.SetKeyboard(KeyboardStrongName);
 
@@ -224,12 +229,12 @@
                 KeyboardManager.SetFakeDown(KeyboardStrongName, firstKey);
                 KeyboardManager.SetFakeDown(KeyboardStrongName, secondKey);
 
-                var result = PovHelper.CalculatePovDirection(joyControl, secondDirection, KeyState.Down);
-
-                Assert.AreEqual(firstDirection | secondDirection, result);
+                actual = PovHelper.CalculatePovDirection(joyControl, secondDirection, KeyState.Down);
 
                 KeyboardManager.ResetFakeStates();
             }
+
+            Assert.AreEqual(firstDirection | secondDirection, actual);
         }
 
         [TestMethod]
@@ -240,11 +245,12 @@
                 return;
             }
 
+            var firstDirection = XboxDpadDirection.Right;
+            var secondDirection = XboxDpadDirection.Down;
+            XboxDpadDirection actual = XboxDpadDirection.None;
+
             using (var joyControl = new JoyControl(1))
             {
-                var firstDirection = XboxDpadDirection.Right;
-                var secondDirection = XboxDpadDirection.Down;
-
                 const string KeyboardStrongName = "Keyboard_01";
                 joyControl.SetKeyboard(KeyboardStrongName);
 
@@ -253,12 +259,12 @@
                 KeyboardManager.SetFakeDown(KeyboardStrongName, firstKey);
                 KeyboardManager.SetFakeDown(KeyboardStrongName, secondKey);
 
-                var result = PovHelper.CalculatePovDirection(joyControl, secondDirection, KeyState.Down);
-
-                Assert.AreEqual(firstDirection | secondDirection, result);
+                actual = PovHelper.CalculatePovDirection(joyControl, secondDirection, KeyState.Down);
 
                 KeyboardManager.ResetFakeStates();
             }
+
+            Assert.AreEqual(firstDirection | secondDirection, actual);
         }
 
         [TestMethod]
@@ -269,11 +275,12 @@
                 return;
             }
 
+            var firstDirection = XboxDpadDirection.Right;
+            var secondDirection = XboxDpadDirection.Left;
+            XboxDpadDirection actual = XboxDpadDirection.None;
+
             using (var joyControl = new JoyControl(1))
             {
-                var firstDirection = XboxDpadDirection.Right;
-                var secondDirection = XboxDpadDirection.Left;
-
                 const string KeyboardStrongName = "Keyboard_01";
                 joyControl.SetKeyboard(KeyboardStrongName);
 
@@ -282,12 +289,12 @@
                 KeyboardManager.SetFakeDown(KeyboardStrongName, firstKey);
                 KeyboardManager.SetFakeDown(KeyboardStrongName, secondKey);
 
-                var result = PovHelper.CalculatePovDirection(joyControl, secondDirection, KeyState.Down);
-
-                Assert.AreEqual(secondDirection, result);
+                actual = PovHelper.CalculatePovDirection(joyControl, secondDirection, KeyState.Down);
 
                 KeyboardManager.ResetFakeStates();
             }
+
+            Assert.AreEqual(secondDirection, actual);
         }
 
         [TestMethod]
@@ -298,11 +305,12 @@
                 return;
             }
 
+            var firstDirection = XboxDpadDirection.Down;
+            var secondDirection = XboxDpadDirection.Up;
+            XboxDpadDirection actual = XboxDpadDirection.None;
+
             using (var joyControl = new JoyControl(1))
             {
-                var firstDirection = XboxDpadDirection.Down;
-                var secondDirection = XboxDpadDirection.Up;
-
                 const string KeyboardStrongName = "Keyboard_01";
                 joyControl.SetKeyboard(KeyboardStrongName);
 
@@ -311,12 +319,12 @@
                 KeyboardManager.SetFakeDown(KeyboardStrongName, firstKey);
                 KeyboardManager.SetFakeDown(KeyboardStrongName, secondKey);
 
-                var result = PovHelper.CalculatePovDirection(joyControl, secondDirection, KeyState.Down);
-
-                Assert.AreEqual(secondDirection, result);
+                actual = PovHelper.CalculatePovDirection(joyControl, secondDirection, KeyState.Down);
 
                 KeyboardManager.ResetFakeStates();
             }
+
+            Assert.AreEqual(secondDirection, actual);
         }
 
         [TestMethod]
@@ -327,11 +335,12 @@
                 return;
             }
 
+            var firstDirection = XboxDpadDirection.Down;
+            var secondDirection = XboxDpadDirection.Right;
+            XboxDpadDirection actual = XboxDpadDirection.None;
+
             using (var joyControl = new JoyControl(1))
             {
-                var firstDirection = XboxDpadDirection.Down;
-                var secondDirection = XboxDpadDirection.Right;
-
                 const string KeyboardStrongName = "Keyboard_01";
                 joyControl.SetKeyboard(KeyboardStrongName);
 
@@ -340,12 +349,12 @@
                 KeyboardManager.SetFakeDown(KeyboardStrongName, firstKey);
                 KeyboardManager.SetFakeDown(KeyboardStrongName, secondKey);
 
-                var result = PovHelper.CalculatePovDirection(joyControl, secondDirection, KeyState.Down);
-
-                Assert.AreEqual(firstDirection | secondDirection, result);
+                actual = PovHelper.CalculatePovDirection(joyControl, secondDirection, KeyState.Down);
 
                 KeyboardManager.ResetFakeStates();
             }
+
+            Assert.AreEqual(firstDirection | secondDirection, actual);
         }
 
         [TestMethod]
@@ -356,11 +365,12 @@
                 return;
             }
 
+            var firstDirection = XboxDpadDirection.Down;
+            var secondDirection = XboxDpadDirection.Left;
+            XboxDpadDirection actual = XboxDpadDirection.None;
+
             using (var joyControl = new JoyControl(1))
             {
-                var firstDirection = XboxDpadDirection.Down;
-                var secondDirection = XboxDpadDirection.Left;
-
                 const string KeyboardStrongName = "Keyboard_01";
                 joyControl.SetKeyboard(KeyboardStrongName);
 
@@ -369,12 +379,12 @@
                 KeyboardManager.SetFakeDown(KeyboardStrongName, firstKey);
                 KeyboardManager.SetFakeDown(KeyboardStrongName, secondKey);
 
-                var result = PovHelper.CalculatePovDirection(joyControl, secondDirection, KeyState.Down);
-
-                Assert.AreEqual(firstDirection | secondDirection, result);
+                actual = PovHelper.CalculatePovDirection(joyControl, secondDirection, KeyState.Down);
 
                 KeyboardManager.ResetFakeStates();
             }
+
+            Assert.AreEqual(firstDirection | secondDirection, actual);
         }
 
         [TestMethod]
@@ -385,11 +395,12 @@
                 return;
             }
 
+            var firstDirection = XboxDpadDirection.Left;
+            var secondDirection = XboxDpadDirection.Up;
+            XboxDpadDirection actual = XboxDpadDirection.None;
+
             using (var joyControl = new JoyControl(1))
             {
-                var firstDirection = XboxDpadDirection.Left;
-                var secondDirection = XboxDpadDirection.Up;
-
                 const string KeyboardStrongName = "Keyboard_01";
                 joyControl.SetKeyboard(KeyboardStrongName);
 
@@ -398,12 +409,12 @@
                 KeyboardManager.SetFakeDown(KeyboardStrongName, firstKey);
                 KeyboardManager.SetFakeDown(KeyboardStrongName, secondKey);
 
-                var result = PovHelper.CalculatePovDirection(joyControl, secondDirection, KeyState.Down);
-
-                Assert.AreEqual(firstDirection | secondDirection, result);
+                actual = PovHelper.CalculatePovDirection(joyControl, secondDirection, KeyState.Down);
 
                 KeyboardManager.ResetFakeStates();
             }
+
+            Assert.AreEqual(firstDirection | secondDirection, actual);
         }
 
         [TestMethod]
@@ -414,11 +425,12 @@
                 return;
             }
 
+            var firstDirection = XboxDpadDirection.Left;
+            var secondDirection = XboxDpadDirection.Right;
+            XboxDpadDirection actual = XboxDpadDirection.None;
+
             using (var joyControl = new JoyControl(1))
             {
-                var firstDirection = XboxDpadDirection.Left;
-                var secondDirection = XboxDpadDirection.Right;
-
                 const string KeyboardStrongName = "Keyboard_01";
                 joyControl.SetKeyboard(KeyboardStrongName);
 
@@ -427,12 +439,12 @@
                 KeyboardManager.SetFakeDown(KeyboardStrongName, firstKey);
                 KeyboardManager.SetFakeDown(KeyboardStrongName, secondKey);
 
-                var result = PovHelper.CalculatePovDirection(joyControl, secondDirection, KeyState.Down);
-
-                Assert.AreEqual(secondDirection, result);
+                actual = PovHelper.CalculatePovDirection(joyControl, secondDirection, KeyState.Down);
 
                 KeyboardManager.ResetFakeStates();
             }
+
+            Assert.AreEqual(secondDirection, actual);
         }
 
         [TestMethod]
@@ -443,11 +455,12 @@
                 return;
             }
 
+            var firstDirection = XboxDpadDirection.Left;
+            var secondDirection = XboxDpadDirection.Down;
+            XboxDpadDirection actual = XboxDpadDirection.None;
+
             using (var joyControl = new JoyControl(1))
             {
-                var firstDirection = XboxDpadDirection.Left;
-                var secondDirection = XboxDpadDirection.Down;
-
                 const string KeyboardStrongName = "Keyboard_01";
                 joyControl.SetKeyboard(KeyboardStrongName);
 
@@ -456,12 +469,12 @@
                 KeyboardManager.SetFakeDown(KeyboardStrongName, firstKey);
                 KeyboardManager.SetFakeDown(KeyboardStrongName, secondKey);
 
-                var result = PovHelper.CalculatePovDirection(joyControl, secondDirection, KeyState.Down);
-
-                Assert.AreEqual(firstDirection | secondDirection, result);
+                actual = PovHelper.CalculatePovDirection(joyControl, secondDirection, KeyState.Down);
 
                 KeyboardManager.ResetFakeStates();
             }
+
+            Assert.AreEqual(firstDirection | secondDirection, actual);
         }
 
         [TestMethod]
@@ -472,12 +485,13 @@
                 return;
             }
 
+            var firstDirection = XboxDpadDirection.Left;
+            var secondDirection = XboxDpadDirection.Up;
+            var thirdDirection = XboxDpadDirection.Right;
+            XboxDpadDirection actual = XboxDpadDirection.None;
+
             using (var joyControl = new JoyControl(1))
             {
-                var firstDirection = XboxDpadDirection.Left;
-                var secondDirection = XboxDpadDirection.Up;
-                var thirdDirection = XboxDpadDirection.Right;
-
                 const string KeyboardStrongName = "Keyboard_01";
                 joyControl.SetKeyboard(KeyboardStrongName);
 
@@ -488,12 +502,12 @@
                 KeyboardManager.SetFakeDown(KeyboardStrongName, secondKey);
                 KeyboardManager.SetFakeDown(KeyboardStrongName, thirdKey);
 
-                var result = PovHelper.CalculatePovDirection(joyControl, thirdDirection, KeyState.Down);
-
-                Assert.AreEqual(thirdDirection, result);
+                actual = PovHelper.CalculatePovDirection(joyControl, thirdDirection, KeyState.Down);
 
                 KeyboardManager.ResetFakeStates();
             }
+
+            Assert.AreEqual(thirdDirection, actual);
         }
 
         [TestMethod]
@@ -504,12 +518,13 @@
                 return;
             }
 
+            var firstDirection = XboxDpadDirection.Up;
+            var secondDirection = XboxDpadDirection.Right;
+            var thirdDirection = XboxDpadDirection.Down;
+            XboxDpadDirection actual = XboxDpadDirection.None;
+
             using (var joyControl = new JoyControl(1))
             {
-                var firstDirection = XboxDpadDirection.Up;
-                var secondDirection = XboxDpadDirection.Right;
-                var thirdDirection = XboxDpadDirection.Down;
-
                 const string KeyboardStrongName = "Keyboard_01";
                 joyControl.SetKeyboard(KeyboardStrongName);
 
@@ -520,12 +535,12 @@
                 KeyboardManager.SetFakeDown(KeyboardStrongName, secondKey);
                 KeyboardManager.SetFakeDown(KeyboardStrongName, thirdKey);
 
-                var result = PovHelper.CalculatePovDirection(joyControl, thirdDirection, KeyState.Down);
-
-                Assert.AreEqual(thirdDirection, result);
+                actual = PovHelper.CalculatePovDirection(joyControl, thirdDirection, KeyState.Down);
 
                 KeyboardManager.ResetFakeStates();
             }
+
+            Assert.AreEqual(thirdDirection, actual);
         }
 
         [TestMethod]
@@ -536,12 +551,13 @@
                 return;
             }
 
+            var firstDirection = XboxDpadDirection.Right;
+            var secondDirection = XboxDpadDirection.Down;
+            var thirdDirection = XboxDpadDirection.Left;
+            XboxDpadDirection actual = XboxDpadDirection.None;
+
             using (var joyControl = new JoyControl(1))
             {
-                var firstDirection = XboxDpadDirection.Right;
-                var secondDirection = XboxDpadDirection.Down;
-                var thirdDirection = XboxDpadDirection.Left;
-
                 const string KeyboardStrongName = "Keyboard_01";
                 joyControl.SetKeyboard(KeyboardStrongName);
 
@@ -552,12 +568,12 @@
                 KeyboardManager.SetFakeDown(KeyboardStrongName, secondKey);
                 KeyboardManager.SetFakeDown(KeyboardStrongName, thirdKey);
 
-                var result = PovHelper.CalculatePovDirection(joyControl, thirdDirection, KeyState.Down);
-
-                Assert.AreEqual(thirdDirection, result);
+                actual = PovHelper.CalculatePovDirection(joyControl, thirdDirection, KeyState.Down);
 
                 KeyboardManager.ResetFakeStates();
             }
+
+            Assert.AreEqual(thirdDirection, actual);
         }
 
         [TestMethod]
@@ -568,12 +584,13 @@
                 return;
             }
 
+            var firstDirection = XboxDpadDirection.Down;
+            var secondDirection = XboxDpadDirection.Left;
+            var thirdDirection = XboxDpadDirection.Up;
+            XboxDpadDirection actual = XboxDpadDirection.None;
+
             using (var joyControl = new JoyControl(1))
             {
-                var firstDirection = XboxDpadDirection.Down;
-                var secondDirection = XboxDpadDirection.Left;
-                var thirdDirection = XboxDpadDirection.Up;
-
                 const string KeyboardStrongName = "Keyboard_01";
                 joyControl.SetKeyboard(KeyboardStrongName);
 
@@ -584,12 +601,12 @@
                 KeyboardManager.SetFakeDown(KeyboardStrongName, secondKey);
                 KeyboardManager.SetFakeDown(KeyboardStrongName, thirdKey);
 
-                var result = PovHelper.CalculatePovDirection(joyControl, thirdDirection, KeyState.Down);
-
-                Assert.AreEqual(thirdDirection, result);
+                actual = PovHelper.CalculatePovDirection(joyControl, thirdDirection, KeyState.Down);
 
                 KeyboardManager.ResetFakeStates();
             }
+
+            Assert.AreEqual(thirdDirection, actual);
         }
 
         [TestMethod]
@@ -600,13 +617,14 @@
                 return;
             }
 
+            var firstDirection = XboxDpadDirection.Up;
+            var secondDirection = XboxDpadDirection.Right;
+            var thirdDirection = XboxDpadDirection.Down;
+            var fourthDirection = XboxDpadDirection.Left;
+            XboxDpadDirection actual = XboxDpadDirection.None;
+
             using (var joyControl = new JoyControl(1))
             {
-                var firstDirection = XboxDpadDirection.Up;
-                var secondDirection = XboxDpadDirection.Right;
-                var thirdDirection = XboxDpadDirection.Down;
-                var fourthDirection = XboxDpadDirection.Left;
-
                 const string KeyboardStrongName = "Keyboard_01";
                 joyControl.SetKeyboard(KeyboardStrongName);
 
@@ -619,12 +637,12 @@
                 KeyboardManager.SetFakeDown(KeyboardStrongName, thirdKey);
                 KeyboardManager.SetFakeDown(KeyboardStrongName, fourthKey);
 
-                var result = PovHelper.CalculatePovDirection(joyControl, fourthDirection, KeyState.Down);
-
-                Assert.AreEqual(fourthDirection, result);
+                actual = PovHelper.CalculatePovDirection(joyControl, fourthDirection, KeyState.Down);
 
                 KeyboardManager.ResetFakeStates();
             }
+
+            Assert.AreEqual(fourthDirection, actual);
         }
 
         [TestMethod]
@@ -635,11 +653,12 @@
                 return;
             }
 
+            var firstDirection = XboxDpadDirection.Up;
+            var secondDirection = XboxDpadDirection.Right;
+            XboxDpadDirection actual = XboxDpadDirection.None;
+
             using (var joyControl = new JoyControl(1))
             {
-                var firstDirection = XboxDpadDirection.Up;
-                var secondDirection = XboxDpadDirection.Right;
-
                 const string KeyboardStrongName = "Keyboard_01";
                 joyControl.SetKeyboard(KeyboardStrongName);
 
@@ -647,12 +666,12 @@
                 string secondKey = Preset.Default.Povs.Find(x => x.Direction == secondDirection).KeyboardKey;
                 KeyboardManager.SetFakeDown(KeyboardStrongName, firstKey);
 
-                var result = PovHelper.CalculatePovDirection(joyControl, secondDirection, KeyState.Up);
-
-                Assert.AreEqual(firstDirection, result);
+                actual = PovHelper.CalculatePovDirection(joyControl, secondDirection, KeyState.Up);
 
                 KeyboardManager.ResetFakeStates();
             }
+
+            Assert.AreEqual(firstDirection, actual);
         }
 
         [TestMethod]
@@ -663,11 +682,12 @@
                 return;
             }
 
+            var firstDirection = XboxDpadDirection.Up;
+            var secondDirection = XboxDpadDirection.Down;
+            XboxDpadDirection actual = XboxDpadDirection.None;
+
             using (var joyControl = new JoyControl(1))
             {
-                var firstDirection = XboxDpadDirection.Up;
-                var secondDirection = XboxDpadDirection.Down;
-
                 const string KeyboardStrongName = "Keyboard_01";
                 joyControl.SetKeyboard(KeyboardStrongName);
 
@@ -675,12 +695,12 @@
                 string secondKey = Preset.Default.Povs.Find(x => x.Direction == secondDirection).KeyboardKey;
                 KeyboardManager.SetFakeDown(KeyboardStrongName, firstKey);
 
-                var result = PovHelper.CalculatePovDirection(joyControl, secondDirection, KeyState.Up);
-
-                Assert.AreEqual(firstDirection, result);
+                actual = PovHelper.CalculatePovDirection(joyControl, secondDirection, KeyState.Up);
 
                 KeyboardManager.ResetFakeStates();
             }
+
+            Assert.AreEqual(firstDirection, actual);
         }
 
         [TestMethod]
@@ -691,11 +711,12 @@
                 return;
             }
 
+            var firstDirection = XboxDpadDirection.Up;
+            var secondDirection = XboxDpadDirection.Left;
+            XboxDpadDirection actual = XboxDpadDirection.None;
+
             using (var joyControl = new JoyControl(1))
             {
-                var firstDirection = XboxDpadDirection.Up;
-                var secondDirection = XboxDpadDirection.Left;
-
                 const string KeyboardStrongName = "Keyboard_01";
                 joyControl.SetKeyboard(KeyboardStrongName);
 
@@ -703,12 +724,12 @@
                 string secondKey = Preset.Default.Povs.Find(x => x.Direction == secondDirection).KeyboardKey;
                 KeyboardManager.SetFakeDown(KeyboardStrongName, firstKey);
 
-                var result = PovHelper.CalculatePovDirection(joyControl, secondDirection, KeyState.Up);
-
-                Assert.AreEqual(firstDirection, result);
+                actual = PovHelper.CalculatePovDirection(joyControl, secondDirection, KeyState.Up);
 
                 KeyboardManager.ResetFakeStates();
             }
+
+            Assert.AreEqual(firstDirection, actual);
         }
 
         [TestMethod]
@@ -721,11 +742,12 @@
 
             // up and down and right are pressed.
             // releasing right. Expected result is Dpad.None
+            var firstDirection = XboxDpadDirection.Up;
+            var secondDirection = XboxDpadDirection.Down;
+            XboxDpadDirection actual = XboxDpadDirection.Right;
+
             using (var joyControl = new JoyControl(1))
             {
-                var firstDirection = XboxDpadDirection.Up;
-                var secondDirection = XboxDpadDirection.Down;
-
                 const string KeyboardStrongName = "Keyboard_01";
                 joyControl.SetKeyboard(KeyboardStrongName);
 
@@ -734,12 +756,12 @@
                 KeyboardManager.SetFakeDown(KeyboardStrongName, firstKey);
                 KeyboardManager.SetFakeDown(KeyboardStrongName, secondKey);
 
-                var result = PovHelper.CalculatePovDirection(joyControl, XboxDpadDirection.Right, KeyState.Up);
-
-                Assert.AreEqual(XboxDpadDirection.None, result);
+                actual = PovHelper.CalculatePovDirection(joyControl, XboxDpadDirection.Right, KeyState.Up);
 
                 KeyboardManager.ResetFakeStates();
             }
+
+            Assert.AreEqual(XboxDpadDirection.None, actual);
         }
 
         [TestMethod]
@@ -752,11 +774,13 @@
 
             /// left, right and down are pressed.
             /// releasing down. Expected result is Dpad.None
+            
+            var firstDirection = XboxDpadDirection.Left;
+            var secondDirection = XboxDpadDirection.Right;
+            XboxDpadDirection actual = XboxDpadDirection.Right;
+
             using (var joyControl = new JoyControl(1))
             {
-                var firstDirection = XboxDpadDirection.Left;
-                var secondDirection = XboxDpadDirection.Right;
-
                 const string KeyboardStrongName = "Keyboard_01";
                 joyControl.SetKeyboard(KeyboardStrongName);
 
@@ -765,12 +789,12 @@
                 KeyboardManager.SetFakeDown(KeyboardStrongName, firstKey);
                 KeyboardManager.SetFakeDown(KeyboardStrongName, secondKey);
 
-                var result = PovHelper.CalculatePovDirection(joyControl, XboxDpadDirection.Down, KeyState.Up);
-
-                Assert.AreEqual(XboxDpadDirection.None, result);
+                actual = PovHelper.CalculatePovDirection(joyControl, XboxDpadDirection.Down, KeyState.Up);
 
                 KeyboardManager.ResetFakeStates();
             }
+
+            Assert.AreEqual(XboxDpadDirection.None, actual);
         }
 
         [TestMethod]
@@ -781,12 +805,13 @@
                 return;
             }
 
+            var firstDirection = XboxDpadDirection.Up;
+            var secondDirection = XboxDpadDirection.Down;
+            var thirdDirection = XboxDpadDirection.Right;
+            XboxDpadDirection actual = XboxDpadDirection.Right;
+
             using (var joyControl = new JoyControl(1))
             {
-                var firstDirection = XboxDpadDirection.Up;
-                var secondDirection = XboxDpadDirection.Down;
-                var thirdDirection = XboxDpadDirection.Right;
-
                 const string KeyboardStrongName = "Keyboard_01";
                 joyControl.SetKeyboard(KeyboardStrongName);
 
@@ -798,12 +823,12 @@
                 KeyboardManager.SetFakeDown(KeyboardStrongName, thridKey);
 
                 // releasing the 4th direction
-                var result = PovHelper.CalculatePovDirection(joyControl, XboxDpadDirection.Left, KeyState.Up);
-
-                Assert.AreEqual(XboxDpadDirection.None, result);
+                actual = PovHelper.CalculatePovDirection(joyControl, XboxDpadDirection.Left, KeyState.Up);
 
                 KeyboardManager.ResetFakeStates();
             }
+
+            Assert.AreEqual(XboxDpadDirection.None, actual);
         }
     }
 }

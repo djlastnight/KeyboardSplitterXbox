@@ -20,3 +20,16 @@ C:\Users\djlastnight\Documents\Visual Studio 2013\Projects\KeyboardSplitterXbox\
 C:\Users\djlastnight\Documents\Visual Studio 2013\Projects\KeyboardSplitterXbox\KeyboardSplitterTest\obj\Release\KeyboardSplitterTest.csprojResolveAssemblyReference.cache
 C:\Users\djlastnight\Documents\Visual Studio 2013\Projects\KeyboardSplitterXbox\KeyboardSplitterTest\obj\Release\KeyboardSplitterTest.dll
 C:\Users\djlastnight\Documents\Visual Studio 2013\Projects\KeyboardSplitterXbox\KeyboardSplitterTest\obj\Release\KeyboardSplitterTest.pdb
+C:\Users\djlastnight\Source\Repos\KeyboardSplitterXbox\KeyboardSplitterTest\obj\Release\KeyboardSplitterTest.csprojResolveAssemblyReference.cache
+C:\Users\Vankata\Source\Repos\KeyboardSplitterXbox\KeyboardSplitterTest\obj\Release\KeyboardSplitterTest.csprojResolveAssemblyReference.cache
+C:\Users\Vankata\Source\Repos\KeyboardSplitterXbox\KeyboardSplitterTest\bin\Release\KeyboardSplitterTest.dll.config
+C:\Users\Vankata\Source\Repos\KeyboardSplitterXbox\KeyboardSplitterTest\bin\Release\KeyboardSplitterTest.dll
+C:\Users\Vankata\Source\Repos\KeyboardSplitterXbox\KeyboardSplitterTest\bin\Release\KeyboardSplitterTest.pdb
+C:\Users\Vankata\Source\Repos\KeyboardSplitterXbox\KeyboardSplitterTest\bin\Release\Interceptor.dll
+C:\Users\Vankata\Source\Repos\KeyboardSplitterXbox\KeyboardSplitterTest\bin\Release\KeyboardSplitter.exe
+C:\Users\Vankata\Source\Repos\KeyboardSplitterXbox\KeyboardSplitterTest\bin\Release\XboxInterfaceWrap.dll
+C:\Users\Vankata\Source\Repos\KeyboardSplitterXbox\KeyboardSplitterTest\bin\Release\Interceptor.pdb
+C:\Users\Vankata\Source\Repos\KeyboardSplitterXbox\KeyboardSplitterTest\bin\Release\XboxInterfaceWrap.pdb
+C:\Users\Vankata\Source\Repos\KeyboardSplitterXbox\KeyboardSplitterTest\bin\Release\KeyboardSplitter.pdb
+C:\Users\Vankata\Source\Repos\KeyboardSplitterXbox\KeyboardSplitterTest\obj\Release\KeyboardSplitterTest.dll
+C:\Users\Vankata\Source\Repos\KeyboardSplitterXbox\KeyboardSplitterTest\obj\Release\KeyboardSplitterTest.pdb

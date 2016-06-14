@@ -7,7 +7,8 @@
     [TestClass]
     public class TestAboutDialog
     {
-        public TestAboutDialog()
+        [TestInitialize]
+        public void Init()
         {
             KeyboardSplitter.App.Initialize();
         }

@@ -6,7 +6,8 @@
     [TestClass]
     public class TestMainWindow
     {
-        public TestMainWindow()
+        [TestInitialize]
+        public void Init()
         {
             KeyboardSplitter.App.Initialize();
         }

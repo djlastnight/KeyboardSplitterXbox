@@ -3,7 +3,7 @@
     using System;
     using System.Runtime.InteropServices;
 
-    internal class NativeMethods
+    internal static class NativeMethods
     {
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
         internal static extern IntPtr LoadLibrary(string dllToLoad);
@@ -27,10 +27,10 @@
         internal static extern bool PlugInExt(uint userIndex);
 
         [DllImport("XboxInterfaceNative.dll", EntryPoint = "UnPlug", CallingConvention = CallingConvention.Cdecl)]
-        internal static extern bool UnPlug(uint userIndex);
+        internal static extern bool UnPlugExt(uint userIndex);
 
         [DllImport("XboxInterfaceNative.dll", EntryPoint = "UnPlugForce", CallingConvention = CallingConvention.Cdecl)]
-        internal static extern bool UnPlugForce(uint userIndex);
+        internal static extern bool UnPlugForceExt(uint userIndex);
 
         [DllImport("XboxInterfaceNative.dll", EntryPoint = "SetAxisX", CallingConvention = CallingConvention.Cdecl)]
         internal static extern bool SetAxisX(uint userIndex, short value);

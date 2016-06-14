@@ -4,16 +4,16 @@
 winexe
 C#
 .cs
-C:\Users\djlastnight\Documents\Visual Studio 2013\Projects\KeyboardSplitterXbox\KeyboardSplitter\obj\x86\Release\
+C:\Users\djlastnight\Source\Repos\KeyboardSplitterXbox\KeyboardSplitter\obj\x86\Release\
 KeyboardSplitter
 none
 false
 TRACE;main
-C:\Users\djlastnight\Documents\Visual Studio 2013\Projects\KeyboardSplitterXbox\KeyboardSplitter\App.xaml
+C:\Users\djlastnight\Source\Repos\KeyboardSplitterXbox\KeyboardSplitter\App.xaml
 11465937562
 
 48-1254634220
-17938764804
+17-616669079
 UI\FAQ.xaml;UI\AboutDialog.xaml;UI\AutoHideToolTip.xaml;Detectors\KeyboardDetector.xaml;Controls\JoyControl.xaml;Controls\KeyControl.xaml;Detectors\KeyDetector.xaml;UI\HowItWorks.xaml;UI\UI_Help.xaml;MainWindow.xaml;UI\XboxTester.xaml;
 
 True

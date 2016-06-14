@@ -13,7 +13,8 @@
     [TestClass]
     public class TestEmulationManager
     {
-        public TestEmulationManager()
+        [TestInitialize]
+        public void Init()
         {
             KeyboardSplitter.App.Initialize();
         }
@@ -22,7 +23,6 @@
         [ExpectedException(typeof(ArgumentOutOfRangeException))]
         public void TestEmulationManagerConstructorZero()
         {
-            LogWriter.Write("TestEmulationManagerConstructorZero");
             using (var manager = new EmulationManager(0))
             {
             }
@@ -32,59 +32,79 @@
         [ExpectedException(typeof(ArgumentOutOfRangeException))]
         public void TestEmulationManagerConstructorBigIndex()
         {
-            LogWriter.Write("TestEmulationManagerConstructorBigIndex");
             using (var manager = new EmulationManager(5))
             {
             }
         }
 
         [TestMethod]
-        [ExpectedException(typeof(XboxAccessoriesNotInstalledException))]
         public void TestEmulationManagerAccessoriesNotInstalled()
         {
-            LogWriter.Write("TestEmulationManagerAccessoriesNotInstalled");
             if (!DriversManager.IsXboxAccessoriesInstalled())
             {
-                using (var manager = new EmulationManager(slotsCount: 1))
+                bool catched = false;
+                var manager = new EmulationManager(slotsCount: 1);
+
+                try
                 {
                     manager.Start();
                 }
-            }
-            else
-            {
-                throw new XboxAccessoriesNotInstalledException(null);
-            }
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(KeyboardNotSetException))]
-        public void TestEmulationManagerStartWithoutKeyboardSet()
-        {
-            LogWriter.Write("TestEmulationManagerStartWithoutKeyboardSet");
-            using (var manager = new EmulationManager(slotsCount: 1))
-            {
-                if (manager.JoyControls[0].InvalidateReason ==
-                    KeyboardSplitter.Enums.SlotInvalidationReason.XboxBus_Not_Installed)
+                catch (XboxAccessoriesNotInstalledException)
                 {
-                    throw new KeyboardNotSetException(
-                        "Due to the xbox bus is not installed, this test will always fail.");
+                    catched = true;
+                }
+                finally
+                {
+                    manager.Dispose();
                 }
 
-                // leaving the keyboard unset
-                // manager.JoyControls[0].SetKeyboard("Keyboard_01");
-                manager.Start();
+                Assert.IsTrue(catched);
             }
         }
 
         [TestMethod]
-        [ExpectedException(typeof(SlotInvalidatedException))]
+        public void TestEmulationManagerStartWithoutKeyboardSet()
+        {
+            bool catched = false;
+            var manager = new EmulationManager(slotsCount: 1);
+
+            try
+            {
+                manager.Start();
+            }
+            catch (KeyboardNotSetException)
+            {
+                catched = true;
+            }
+            finally
+            {
+                manager.Dispose();
+            }
+
+            Assert.IsTrue(catched);
+        }
+
+        [TestMethod]
         public void TestEmulationManagerStartWithInvalidatedJoyControl()
         {
-            using (var manager = new EmulationManager(slotsCount: 1))
+            bool catched = false;
+            var manager = new EmulationManager(slotsCount: 1);
+
+            try
             {
                 manager.JoyControls[0].Invalidate(SlotInvalidationReason.Controller_In_Use);
                 manager.Start();
             }
+            catch (SlotInvalidatedException)
+            {
+                catched = true;
+            }
+            finally
+            {
+                manager.Dispose();
+            }
+
+            Assert.IsTrue(catched);
         }
 
         [TestMethod]
@@ -95,155 +115,173 @@
                 return;
             }
 
-            LogWriter.Write("TestEmulationManagerStartNormal");
+            bool controllerOnePlugged = false;
+            bool controllerTwoPlugged = false;
+
             using (var manager = new EmulationManager(2))
             {
-                foreach (var item in manager.JoyControls)
+                foreach (var joyControl in manager.JoyControls)
                 {
-                    item.SetKeyboard("Keyboard_01");
+                    joyControl.SetKeyboard("Keyboard_01");
                 }
 
                 manager.Start();
 
-                Assert.IsTrue(VirtualXboxController.Exists(1));
-                Assert.IsTrue(VirtualXboxController.Exists(2));
-
-                Assert.IsTrue(VirtualXboxController.IsOwned(1));
-                Assert.IsTrue(VirtualXboxController.IsOwned(2));
-
-                manager.Stop();
+                controllerOnePlugged = VirtualXboxController.Exists(1);
+                controllerTwoPlugged = VirtualXboxController.Exists(2);
             }
+
+            Assert.IsTrue(controllerOnePlugged);
+            Assert.IsTrue(controllerTwoPlugged);
         }
 
-        [TestMethod]
-        public void TestEmulationManagerProcessKeyPressButton()
-        {
-            if (!DriversManager.AreBuiltInDriversInstalled())
-            {
-                return;
-            }
+        ////[TestMethod]
+        ////public void TestEmulationManagerProcessKeyPressButton()
+        ////{
+        ////    if (!DriversManager.AreBuiltInDriversInstalled())
+        ////    {
+        ////        return;
+        ////    }
 
-            using (var manager = new EmulationManager(1))
-            {
-                const string KeyboardName = "Keyboard_01";
-                manager.JoyControls[0].SetKeyboard(KeyboardName);
-                manager.Start();
-                XboxButton button = XboxButton.A;
-                string keyName = Preset.Default.Buttons.Find(x => x.Button == button).KeyboardKey;
-                InterceptionKeys key = (InterceptionKeys)Enum.Parse(typeof(InterceptionKeys), keyName);
-                KeyState keyState = KeyState.Down;
+        ////    bool pressed = false;
 
-                var keyEvent = new KeyPressedEventArgs()
-                {
-                    Keyboard = KeyboardManager.GetKeyboards()[0],
-                    Key = key,
-                    State = keyState,
-                    Handled = false,
-                };
+        ////    using (var manager = new EmulationManager(1))
+        ////    {
+        ////        const string KeyboardName = "Keyboard_01";
+        ////        manager.JoyControls[0].SetKeyboard(KeyboardName);
+        ////        manager.Start();
 
-                manager.ProcessKeyPress(keyEvent, blockChoosenKeyboards: true);
+        ////        var button = XboxButton.A;
+        ////        string keyName = Preset.Default.Buttons.Find(x => x.Button == button).KeyboardKey;
+        ////        var key = (InterceptionKeys)Enum.Parse(typeof(InterceptionKeys), keyName);
+        ////        var keyState = KeyState.Down;
 
-                Assert.IsTrue(VirtualXboxController.GetButtonValue(1, button));
-            }
-        }
+        ////        var keyEvent = new KeyPressedEventArgs()
+        ////        {
+        ////            Keyboard = KeyboardManager.GetKeyboards()[0],
+        ////            Key = key,
+        ////            State = keyState,
+        ////            Handled = false,
+        ////        };
 
-        [TestMethod]
-        public void TestEmulationManagerProcessKeyPressTrigger()
-        {
-            if (!DriversManager.AreBuiltInDriversInstalled())
-            {
-                return;
-            }
+        ////        manager.ProcessKeyPress(keyEvent, blockChoosenKeyboards: true);
+        ////        pressed = VirtualXboxController.GetButtonValue(1, button);
+        ////        VirtualXboxController.ResetStates(1);
+        ////    }
 
-            using (var manager = new EmulationManager(1))
-            {
-                const string KeyboardName = "Keyboard_01";
-                manager.JoyControls[0].SetKeyboard(KeyboardName);
-                manager.Start();
-                XboxTrigger trigger = XboxTrigger.RightTrigger;
-                string keyName = Preset.Default.Triggers.Find(x => x.Trigger == trigger).KeyboardKey;
-                InterceptionKeys key = (InterceptionKeys)Enum.Parse(typeof(InterceptionKeys), keyName);
-                KeyState keyState = KeyState.Down;
+        ////    Assert.IsTrue(pressed);
+        ////}
 
-                var keyEvent = new KeyPressedEventArgs()
-                {
-                    Keyboard = KeyboardManager.GetKeyboards()[0],
-                    Key = key,
-                    State = keyState,
-                    Handled = false,
-                };
+        ////[TestMethod]
+        ////public void TestEmulationManagerProcessKeyPressTrigger()
+        ////{
+        ////    if (!DriversManager.AreBuiltInDriversInstalled())
+        ////    {
+        ////        return;
+        ////    }
 
-                manager.ProcessKeyPress(keyEvent, blockChoosenKeyboards: true);
+        ////    byte result;
+        ////    using (var manager = new EmulationManager(1))
+        ////    {
+        ////        const string KeyboardName = "Keyboard_01";
+        ////        manager.JoyControls[0].SetKeyboard(KeyboardName);
+        ////        manager.Start();
+        ////        XboxTrigger trigger = XboxTrigger.RightTrigger;
+        ////        string keyName = Preset.Default.Triggers.Find(x => x.Trigger == trigger).KeyboardKey;
+        ////        InterceptionKeys key = (InterceptionKeys)Enum.Parse(typeof(InterceptionKeys), keyName);
+        ////        KeyState keyState = KeyState.Down;
 
-                Assert.AreEqual(byte.MaxValue, VirtualXboxController.GetTriggerValue(1, trigger));
-            }
-        }
+        ////        var keyEvent = new KeyPressedEventArgs()
+        ////        {
+        ////            Keyboard = KeyboardManager.GetKeyboards()[0],
+        ////            Key = key,
+        ////            State = keyState,
+        ////            Handled = false,
+        ////        };
 
-        [TestMethod]
-        public void TestEmulationManagerProcessKeyPressAxis()
-        {
-            if (!DriversManager.AreBuiltInDriversInstalled())
-            {
-                return;
-            }
+        ////        manager.ProcessKeyPress(keyEvent, blockChoosenKeyboards: true);
+        ////        result = VirtualXboxController.GetTriggerValue(1, trigger);
+        ////        VirtualXboxController.ResetStates(1);
+        ////    }
 
-            using (var manager = new EmulationManager(1))
-            {
-                const string KeyboardName = "Keyboard_01";
-                manager.JoyControls[0].SetKeyboard(KeyboardName);
-                manager.Start();
-                XboxAxis axis = XboxAxis.Y;
-                XboxAxisPosition position = XboxAxisPosition.Min;
-                string keyName = Preset.Default.Axes.Find(x => x.Axis == axis && x.Position == position).KeyboardKey;
-                InterceptionKeys key = (InterceptionKeys)Enum.Parse(typeof(InterceptionKeys), keyName);
-                KeyState keyState = KeyState.Down;
+        ////    Assert.AreEqual(byte.MaxValue, result);
+        ////}
 
-                var keyEvent = new KeyPressedEventArgs()
-                {
-                    Keyboard = KeyboardManager.GetKeyboards()[0],
-                    Key = key,
-                    State = keyState,
-                    Handled = false,
-                };
+        ////[TestMethod]
+        ////public void TestEmulationManagerProcessKeyPressAxis()
+        ////{
+        ////    if (!DriversManager.AreBuiltInDriversInstalled())
+        ////    {
+        ////        return;
+        ////    }
 
-                manager.ProcessKeyPress(keyEvent, blockChoosenKeyboards: true);
+        ////    short result;
+        ////    XboxAxis axis = XboxAxis.Y;
+        ////    XboxAxisPosition position = XboxAxisPosition.Min;
+        ////    string keyName = Preset.Default.Axes.Find(x => x.Axis == axis && x.Position == position).KeyboardKey;
+        ////    InterceptionKeys key = (InterceptionKeys)Enum.Parse(typeof(InterceptionKeys), keyName);
+        ////    KeyState keyState = KeyState.Down;
 
-                Assert.AreEqual((short)position, VirtualXboxController.GetAxisValue(1, axis));
-            }
-        }
+        ////    using (var manager = new EmulationManager(1))
+        ////    {
+        ////        const string KeyboardName = "Keyboard_01";
+        ////        manager.JoyControls[0].SetKeyboard(KeyboardName);
+        ////        manager.Start();
 
-        [TestMethod]
-        public void TestEmulationManagerProcessKeyPressDpad()
-        {
-            if (!DriversManager.AreBuiltInDriversInstalled())
-            {
-                return;
-            }
+        ////        var keyEvent = new KeyPressedEventArgs()
+        ////        {
+        ////            Keyboard = KeyboardManager.GetKeyboards()[0],
+        ////            Key = key,
+        ////            State = keyState,
+        ////            Handled = false,
+        ////        };
 
-            using (var manager = new EmulationManager(1))
-            {
-                const string KeyboardName = "Keyboard_01";
-                manager.JoyControls[0].SetKeyboard(KeyboardName);
-                manager.Start();
-                XboxDpadDirection direction = XboxDpadDirection.Right;
-                string keyName = Preset.Default.Povs.Find(x => x.Direction == direction).KeyboardKey;
-                InterceptionKeys key = (InterceptionKeys)Enum.Parse(typeof(InterceptionKeys), keyName);
-                KeyState keyState = KeyState.Down;
+        ////        manager.ProcessKeyPress(keyEvent, blockChoosenKeyboards: true);
+        ////        result = VirtualXboxController.GetAxisValue(1, axis);
+        ////        VirtualXboxController.ResetStates(1);
+        ////    }
 
-                var keyEvent = new KeyPressedEventArgs()
-                {
-                    Keyboard = KeyboardManager.GetKeyboards()[0],
-                    Key = key,
-                    State = keyState,
-                    Handled = false,
-                };
+        ////    Assert.AreEqual((short)position, result);
+        ////}
 
-                KeyboardManager.SetFakeDown(KeyboardName, keyName);
-                manager.ProcessKeyPress(keyEvent, blockChoosenKeyboards: true);
+        ////[TestMethod]
+        ////public void TestEmulationManagerProcessKeyPressDpad()
+        ////{
+        ////    if (!DriversManager.AreBuiltInDriversInstalled())
+        ////    {
+        ////        return;
+        ////    }
 
-                KeyboardManager.ResetFakeStates();
-                Assert.IsTrue(VirtualXboxController.GetDpadDirectionValue(1, direction));
-            }
-        }
+        ////    XboxDpadDirection direction = XboxDpadDirection.Right;
+        ////    string keyName = Preset.Default.Povs.Find(x => x.Direction == direction).KeyboardKey;
+        ////    InterceptionKeys key = (InterceptionKeys)Enum.Parse(typeof(InterceptionKeys), keyName);
+        ////    KeyState keyState = KeyState.Down;
+        ////    bool pressed = false;
+
+        ////    using (var manager = new EmulationManager(1))
+        ////    {
+        ////        const string KeyboardName = "Keyboard_01";
+        ////        manager.JoyControls[0].SetKeyboard(KeyboardName);
+        ////        manager.Start();
+
+        ////        var keyEvent = new KeyPressedEventArgs()
+        ////        {
+        ////            Keyboard = KeyboardManager.GetKeyboards()[0],
+        ////            Key = key,
+        ////            State = keyState,
+        ////            Handled = false,
+        ////        };
+
+        ////        KeyboardManager.SetFakeDown(KeyboardName, keyName);
+        ////        manager.ProcessKeyPress(keyEvent, blockChoosenKeyboards: true);
+                
+        ////        pressed = VirtualXboxController.GetDpadDirectionValue(1, direction);
+
+        ////        VirtualXboxController.ResetStates(1);
+        ////        KeyboardManager.ResetFakeStates();
+        ////    }
+
+        ////    Assert.IsTrue(pressed);
+        ////}
     }
 }

@@ -6,16 +6,16 @@
 
     public static class VirtualXboxController
     {
-        private static XBoxState[] states;
+        private static ControllerState[] states;
 
         static VirtualXboxController()
         {
-            states = new XBoxState[4]
+            states = new ControllerState[4]
             {
-                new XBoxState(),
-                new XBoxState(),
-                new XBoxState(),
-                new XBoxState()
+                new ControllerState(),
+                new ControllerState(),
+                new ControllerState(),
+                new ControllerState()
             };
         }
 
@@ -53,20 +53,32 @@
             return 0;
         }
 
+        public static void ResetStates(uint userIndex)
+        {
+            if (userIndex >= 1 && userIndex <= 4)
+            {
+                states[userIndex - 1].Reset();
+            }
+        }
+
         public static bool PlugIn(uint userIndex)
         {
+            VirtualXboxController.ResetStates(userIndex);
+
             return NativeMethods.PlugInExt(userIndex);
         }
 
         public static bool UnPlug(uint userIndex, bool force = false)
         {
+            VirtualXboxController.ResetStates(userIndex);
+
             if (force)
             {
-                return NativeMethods.UnPlugForce(userIndex);
+                return NativeMethods.UnPlugForceExt(userIndex);
             }
             else
             {
-                return UnPlug(userIndex);
+                return NativeMethods.UnPlugExt(userIndex);
             }
         }
 
@@ -187,6 +199,7 @@
         public static bool SetDPad(uint userIndex, XboxDpadDirection direction)
         {
             states[(int)userIndex - 1].DpadDirections = direction;
+
             return NativeMethods.SetDpadExt(userIndex, (int)direction);
         }
 
@@ -235,30 +248,6 @@
                     throw new NotImplementedException(
                         "Not implemented xbox axis: " + axis);
             }
-        }
-
-        private class XBoxState
-        {
-            public XBoxState()
-            {
-                this.ButtonsDown = new List<XboxButton>(11);
-            }
-
-            public List<XboxButton> ButtonsDown { get; internal set; }
-
-            public XboxDpadDirection DpadDirections { get; internal set; }
-
-            public byte LeftTriggerValue { get; internal set; }
-
-            public byte RightTriggerValue { get; internal set; }
-
-            public short AxisXValue { get; internal set; }
-
-            public short AxisYValue { get; internal set; }
-
-            public short AxisRxValue { get; internal set; }
-
-            public short AxisRyValue { get; internal set; }
         }
     }
 }
