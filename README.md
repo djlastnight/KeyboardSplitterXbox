@@ -42,7 +42,7 @@ Microsoft's Xbox Accessories Driver found at https://www.microsoft.com/hardware/
 Please read the FAQ section located in application's Help menu.
 
 #Download
-No downloads available yet.
+https://github.com/djlastnight/KeyboardSplitterXbox/releases
 
 #How it works
 
