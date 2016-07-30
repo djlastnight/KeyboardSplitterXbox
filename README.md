@@ -57,7 +57,7 @@ All other projects are build into KeyboardSplitter\Lib folder.
 The main project loads both managed and unmanaged assemblies.
 The managed ones are directly loaded into memory.
 The unmanaged ones are first extracted to user's temp folder
-and then loaded, using LoadLibrary method from user32.dll via PInvoke.
+and then loaded, using LoadLibrary method from kernel32.dll via PInvoke.
 This produces a single fully portable executable file (*.exe).
 
 #Drivers
