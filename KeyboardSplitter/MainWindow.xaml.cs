@@ -446,7 +446,7 @@
         {
             try
             {
-                Process.Start("https://www.microsoft.com/hardware/en-us/d/xbox-360-controller-for-windows");
+                Process.Start("https://www.microsoft.com/accessories/en-us/products/gaming/xbox-360-controller-for-windows/52a-00004#techspecs-connect");
             }
             catch (Exception)
             {
