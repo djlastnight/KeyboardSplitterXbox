@@ -74,6 +74,12 @@ C:\Users\Vankata\Source\Repos\KeyboardSplitterXbox\KeyboardSplitter\bin\Release\
 C:\Users\Vankata\Source\Repos\KeyboardSplitterXbox\KeyboardSplitter\bin\Release\XboxInterfaceWrap.pdb
 C:\Users\Vankata\Source\Repos\KeyboardSplitterXbox\KeyboardSplitter\obj\x86\Release\KeyboardSplitter.exe
 C:\Users\Vankata\Source\Repos\KeyboardSplitterXbox\KeyboardSplitter\obj\x86\Release\KeyboardSplitter.pdb
+C:\Users\djlastnight\Source\Repos\KeyboardSplitterXbox\KeyboardSplitter\bin\Release\KeyboardSplitter.exe
+C:\Users\djlastnight\Source\Repos\KeyboardSplitterXbox\KeyboardSplitter\bin\Release\KeyboardSplitter.pdb
+C:\Users\djlastnight\Source\Repos\KeyboardSplitterXbox\KeyboardSplitter\bin\Release\Interceptor.dll
+C:\Users\djlastnight\Source\Repos\KeyboardSplitterXbox\KeyboardSplitter\bin\Release\XboxInterfaceWrap.dll
+C:\Users\djlastnight\Source\Repos\KeyboardSplitterXbox\KeyboardSplitter\bin\Release\Interceptor.pdb
+C:\Users\djlastnight\Source\Repos\KeyboardSplitterXbox\KeyboardSplitter\bin\Release\XboxInterfaceWrap.pdb
 C:\Users\djlastnight\Source\Repos\KeyboardSplitterXbox\KeyboardSplitter\obj\x86\Release\KeyboardSplitter.csprojResolveAssemblyReference.cache
 C:\Users\djlastnight\Source\Repos\KeyboardSplitterXbox\KeyboardSplitter\obj\x86\Release\UI\FAQ.baml
 C:\Users\djlastnight\Source\Repos\KeyboardSplitterXbox\KeyboardSplitter\obj\x86\Release\UI\AboutDialog.baml
@@ -104,11 +110,5 @@ C:\Users\djlastnight\Source\Repos\KeyboardSplitterXbox\KeyboardSplitter\obj\x86\
 C:\Users\djlastnight\Source\Repos\KeyboardSplitterXbox\KeyboardSplitter\obj\x86\Release\KeyboardSplitter.Properties.Resources.resources
 C:\Users\djlastnight\Source\Repos\KeyboardSplitterXbox\KeyboardSplitter\obj\x86\Release\KeyboardSplitter.Resources.Sounds.resources
 C:\Users\djlastnight\Source\Repos\KeyboardSplitterXbox\KeyboardSplitter\obj\x86\Release\KeyboardSplitter.csproj.GenerateResource.Cache
-C:\Users\djlastnight\Source\Repos\KeyboardSplitterXbox\KeyboardSplitter\bin\Release\KeyboardSplitter.exe
-C:\Users\djlastnight\Source\Repos\KeyboardSplitterXbox\KeyboardSplitter\bin\Release\KeyboardSplitter.pdb
-C:\Users\djlastnight\Source\Repos\KeyboardSplitterXbox\KeyboardSplitter\bin\Release\Interceptor.dll
-C:\Users\djlastnight\Source\Repos\KeyboardSplitterXbox\KeyboardSplitter\bin\Release\XboxInterfaceWrap.dll
-C:\Users\djlastnight\Source\Repos\KeyboardSplitterXbox\KeyboardSplitter\bin\Release\Interceptor.pdb
-C:\Users\djlastnight\Source\Repos\KeyboardSplitterXbox\KeyboardSplitter\bin\Release\XboxInterfaceWrap.pdb
 C:\Users\djlastnight\Source\Repos\KeyboardSplitterXbox\KeyboardSplitter\obj\x86\Release\KeyboardSplitter.exe
 C:\Users\djlastnight\Source\Repos\KeyboardSplitterXbox\KeyboardSplitter\obj\x86\Release\KeyboardSplitter.pdb
