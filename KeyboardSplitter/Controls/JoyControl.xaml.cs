@@ -158,6 +158,12 @@
             }
         }
 
+        public bool IsOnManualMode
+        {
+            get;
+            private set;
+        }
+
         public void Dispose()
         {
             if (this.keyControls != null)
@@ -522,14 +528,25 @@
 
         private void KeyboardDeviceBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            this.keyboardInfoLabel.Content = "n/a";
+            this.bodyGrid.Visibility = System.Windows.Visibility.Visible;
+            this.onScreenController.Visibility = System.Windows.Visibility.Hidden;
+            this.detectKeyboardButton.IsEnabled = true;
+            this.keyboardDeviceBox.IsEnabled = true;
+            this.IsOnManualMode = this.keyboardDeviceBox.SelectedIndex == 0;
+
             if (this.keyboardDeviceBox.SelectedIndex == -1)
             {
-                this.keyboardInfoLabel.Content = "n/a";
+                return;
             }
-            else
+
+            if (this.IsOnManualMode)
             {
-                this.keyboardInfoLabel.Content = this.keyboards[this.keyboardDeviceBox.SelectedIndex].FriendlyName;
+                this.bodyGrid.Visibility = System.Windows.Visibility.Collapsed;
+                this.onScreenController.Visibility = System.Windows.Visibility.Visible;
             }
+
+            this.keyboardInfoLabel.Content = this.keyboards[this.keyboardDeviceBox.SelectedIndex].FriendlyName;
         }
 
         private void PresetsBox_SelectionChanged(object sender, SelectionChangedEventArgs e)

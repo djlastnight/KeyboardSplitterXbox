@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:my="clr-namespace:KeyboardSplitter"
+             xmlns:ui="clr-namespace:KeyboardSplitter.UI"
              mc:Ignorable="d" 
              d:DesignHeight="338" d:DesignWidth="285" MaxWidth="300">
     <Grid>
@@ -38,41 +39,47 @@
                                 VerticalAlignment="Top" Width="20" Click="DetectKeyboardButton_Click" />
                         </Grid>
                     </Border>
-                    <Grid Name="presetGrid" Background="#1F6CF8A4" Height="32" Margin="0,48,0,0" VerticalAlignment="Top">
-                        <Image Name="presetWarningImage" HorizontalAlignment="Left"/>
-                    </Grid>
-                    <Label Height="30" VerticalAlignment="Top" Content="Xbox Function:" Margin="0,105,0,0"/>
-                    <Label Height="30" Content="Keyboard key:" Margin="0,105,25,0" HorizontalAlignment="Right" VerticalAlignment="Top"/>
-                    <StackPanel Name="stackPanel" Orientation="Vertical" x:FieldModifier="private" Margin="0,130,0,0"/>
                     <Label Content="Choose keyboard:" Height="28" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Top" />
                     <Label Content="Keyboard name: " Height="27" HorizontalAlignment="Left" Margin="0,23,0,0" VerticalAlignment="Top" />
                     <Label Content="n/a " Height="27" HorizontalAlignment="Left" Margin="90,23,0,0" VerticalAlignment="Top"
                        Name="keyboardInfoLabel" x:FieldModifier="private"/>
                     <ComboBox Height="23" HorizontalAlignment="Left" Margin="111,3,0,0" Name="keyboardDeviceBox" x:FieldModifier="private" VerticalAlignment="Top"
                           SelectionChanged="KeyboardDeviceBox_SelectionChanged" Width="105" DropDownOpened="KeyboardDeviceBox_DropDownOpened" />
-                    <Label Name="presetLabel" IsHitTestVisible="False" Content="Preset:" Height="23" HorizontalAlignment="Left" Margin="0,52,0,0"
+                    <Grid Name="bodyGrid" Visibility="Collapsed">
+                        <Grid Name="presetGrid" Background="#1F6CF8A4" Height="32" Margin="0,48,0,0" VerticalAlignment="Top">
+                            <Image Name="presetWarningImage" HorizontalAlignment="Left"/>
+                        </Grid>
+                        <Label Height="30" VerticalAlignment="Top" Content="Xbox Function:" Margin="0,105,0,0"/>
+                        <Label Height="30" Content="Keyboard key:" Margin="0,105,25,0" HorizontalAlignment="Right" VerticalAlignment="Top"/>
+                        <StackPanel Name="stackPanel" Orientation="Vertical" x:FieldModifier="private" Margin="0,130,0,0"/>
+
+                        <Label Name="presetLabel" IsHitTestVisible="False" Content="Preset:" Height="23" HorizontalAlignment="Left" Margin="0,52,0,0"
                        VerticalAlignment="Top" Width="50" />
-                    <Button Height="23" HorizontalAlignment="Left" Margin="193,52,0,0" Name="savePresetButton" x:FieldModifier="private" VerticalAlignment="Top"
+                        <Button Height="23" HorizontalAlignment="Left" Margin="193,52,0,0" Name="savePresetButton" x:FieldModifier="private" VerticalAlignment="Top"
                         Width="23" Click="SavePresetButton_Click" ToolTip="Save preset" BorderThickness="1" BorderBrush="Blue"
                             IsEnabled="False" IsEnabledChanged="SavePresetButton_IsEnabledChanged">
-                        <StackPanel>
-                            <Image Source="/KeyboardSplitter;component/Resources/save.png"/>
-                        </StackPanel>
-                    </Button>
-                    <ComboBox Height="23" HorizontalAlignment="Left" Margin="47,52,0,0" Name="presetsBox" x:FieldModifier="private" VerticalAlignment="Top"
+                            <StackPanel>
+                                <Image Source="/KeyboardSplitter;component/Resources/save.png"/>
+                            </StackPanel>
+                        </Button>
+                        <ComboBox Height="23" HorizontalAlignment="Left" Margin="47,52,0,0" Name="presetsBox" x:FieldModifier="private" VerticalAlignment="Top"
                           Width="140" IsEditable="True" KeyUp="PresetsBox_KeyUp"  SelectionChanged="PresetsBox_SelectionChanged"
                           ToolTip="Select existing or type new preset" IsTextSearchEnabled="False" StaysOpenOnEdit="True"/>
-                    <Button Height="23" HorizontalAlignment="Left" Margin="221,52,0,0" Name="deletePresetButton" x:FieldModifier="private" VerticalAlignment="Top"
+                        <Button Height="23" HorizontalAlignment="Left" Margin="221,52,0,0" Name="deletePresetButton" x:FieldModifier="private" VerticalAlignment="Top"
                         Width="23" Click="DeletePresetButton_Click" ToolTip="Delete preset" BorderBrush="Blue" BorderThickness="1" IsEnabled="False">
-                        <StackPanel>
-                            <Image Source="/KeyboardSplitter;component/Resources/delete.png"/>
-                        </StackPanel>
-                    </Button>
-                    <Border Height="25" Margin="0,78,0,0" VerticalAlignment="Top" BorderBrush="Black" BorderThickness="0.1" CornerRadius="5,5,10,10" Background="#40E8E8E8">
-                        <CheckBox Content="Bind Button 'A' to Keyboard 'Enter'" Height="20" HorizontalAlignment="Center" Name="bindEnterCheckBox"
+                            <StackPanel>
+                                <Image Source="/KeyboardSplitter;component/Resources/delete.png"/>
+                            </StackPanel>
+                        </Button>
+                        <Border Height="25" Margin="0,78,0,0" VerticalAlignment="Top" BorderBrush="Black" BorderThickness="0.1" CornerRadius="5,5,10,10" Background="#40E8E8E8">
+                            <CheckBox Content="Bind Button 'A' to Keyboard 'Enter'" Height="20" HorizontalAlignment="Center" Name="bindEnterCheckBox"
                               VerticalAlignment="Top" Margin="0,5,0,0" IsChecked="True" Checked="BindEnterCheckBox_Checked"
                                   Unchecked="BindEnterCheckBox_Unchecked"/>
-                    </Border>
+                        </Border>
+                    </Grid>
+                    <Grid Margin="0,50,0,0">
+                        <ui:OnScreenController x:Name="onScreenController" VerticalAlignment="Top" Visibility="Hidden"></ui:OnScreenController>
+                    </Grid>
                 </Grid>
             </ScrollViewer>
         </Border>

@@ -47,7 +47,12 @@
 
         public static List<InterceptionKeyboard> GetKeyboards()
         {
-            return interceptor.GetKeyboards();
+            var manual = new InterceptionKeyboard(0, string.Empty, "Use mouse to feed the gamepad", "Manual Input");
+            var keyboards = new List<InterceptionKeyboard>();
+            keyboards.Add(manual);
+            keyboards.AddRange(interceptor.GetKeyboards());
+
+            return keyboards;
         }
 
         public static bool IsKeyDown(string keyboardStrongName, string key)

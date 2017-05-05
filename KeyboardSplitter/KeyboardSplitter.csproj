@@ -84,6 +84,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="ApplicationInfo.cs" />
+    <Compile Include="Helpers\ParentFinder.cs" />
     <Compile Include="Managers\DriversManager.cs" />
     <Compile Include="Managers\EmulationManager.cs" />
     <Compile Include="Enums\SlotInvalidationReason.cs" />
@@ -114,6 +115,9 @@
     <Compile Include="Presets\UnsavedPresetsData.cs" />
     <Compile Include="UI\HowItWorks.xaml.cs">
       <DependentUpon>HowItWorks.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\OnScreenController.xaml.cs">
+      <DependentUpon>OnScreenController.xaml</DependentUpon>
     </Compile>
     <Compile Include="UI\ScrollviewerBehavior.cs" />
     <Compile Include="UI\UI_Help.xaml.cs">
@@ -151,6 +155,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="UI\HowItWorks.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\OnScreenController.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

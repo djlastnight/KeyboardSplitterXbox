@@ -10,6 +10,19 @@
 
         public string StrongName { get; internal set; }
 
+        public InterceptionKeyboard()
+        {
+
+        }
+
+        public InterceptionKeyboard(uint deviceID, string hardwareID, string friendlyName, string strongName)
+        {
+            this.DeviceID = deviceID;
+            this.HardwareID = hardwareID;
+            this.FriendlyName = friendlyName;
+            this.StrongName = strongName;
+        }
+
         public bool IsTheSameAs(InterceptionKeyboard keyboardToCompare)
         {
             var props = typeof(InterceptionKeyboard).GetProperties();

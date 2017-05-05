@@ -116,7 +116,7 @@
                     continue;
                 }
 
-                joyControl.IsEnabled = false;
+                joyControl.IsEnabled = joyControl.IsOnManualMode;
                 LogWriter.Write("Plug in device #" + joyControl.UserIndex + " OK");
             }
 
