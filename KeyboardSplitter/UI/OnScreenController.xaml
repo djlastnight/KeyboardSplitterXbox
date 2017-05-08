@@ -6,48 +6,83 @@
              Loaded="UserControl_Loaded"
              mc:Ignorable="d" 
              d:DesignHeight="196" d:DesignWidth="260"
-             Width="260" Height="196">
+             Width="260" Height="196"
+             FontSize="7">
     <Grid>
         <Grid>
-            <Image Source="/Images/controller_test.png"/>
-            <Image Name="imageGuide" Source="/Images/Guide.png" Opacity="0"/>
-            <Image Name="imageA" Source="/Images/A.png" Opacity="0"/>
-            <Image Name="imageB" Source="/Images/B.png" Opacity="0"/>
-            <Image Name="imageX" Source="/Images/X.png" Opacity="0"/>
-            <Image Name="imageY" Source="/Images/Y.png" Opacity="0"/>
-            <Image Name="imageLB" Source="/Images/LBumper.png" Opacity="0"/>
-            <Image Name="imageRB" Source="/Images/RBumper.png" Opacity="0"/>
-            <Image Name="imageBack" Source="/Images/Back.png" Opacity="0"/>
-            <Image Name="imageStart" Source="/Images/Start.png" Opacity="0"/>
-            <Image Name="imageLT" Source="/Images/LTrigger.png" Opacity="0"/>
-            <Image Name="imageRT" Source="/Images/RTrigger.png" Opacity="0"/>
-            <Image Name="imageDpadLeft" Source="/Images/dpad_left.png" Opacity="0"/>
-            <Image Name="imageDpadRight" Source="/Images/dpad_right.png" Opacity="0"/>
-            <Image Name="imageDpadUp" Source="/Images/dpad_up.png" Opacity="0"/>
-            <Image Name="imageDpadDown" Source="/Images/dpad_down.png" Opacity="0"/>
+            <Image Source="/Images/controller_test.png" />
+            <Image Name="imageGuide" Source="/Images/Guide.png" />
+            <Image Name="imageA" Source="/Images/A.png" />
+            <Image Name="imageB" Source="/Images/B.png" />
+            <Image Name="imageX" Source="/Images/X.png" />
+            <Image Name="imageY" Source="/Images/Y.png" />
+            <Image Name="imageLB" Source="/Images/LBumper.png" />
+            <Image Name="imageRB" Source="/Images/RBumper.png" />
+            <Image Name="imageBack" Source="/Images/Back.png" />
+            <Image Name="imageStart" Source="/Images/Start.png" />
+            <Image Name="imageLT" Source="/Images/LTrigger.png" />
+            <Image Name="imageRT" Source="/Images/RTrigger.png" />
+            <Image Name="imageDpadLeft" Source="/Images/dpad_left.png" />
+            <Image Name="imageDpadRight" Source="/Images/dpad_right.png" />
+            <Image Name="imageDpadUp" Source="/Images/dpad_up.png" />
+            <Image Name="imageDpadDown" Source="/Images/dpad_down.png" />
             <!-- thumbs -->
-            <Image Name="imageLeftThumb" Source="/Images/LeftThumb.png" Opacity="0"/>
-            <Image Name="imageRightThumb" Source="/Images/RightThumb.png" Opacity="0"/>
+            <Image Name="imageLeftThumb" Source="/Images/LeftThumb.png" />
+            <Image Name="imageRightThumb" Source="/Images/RightThumb.png" />
             <!-- left strick -->
-            <Image Name="imageLsUp" Source="/Images/ls_up.png" Opacity="0"/>
-            <Image Name="imageLsDown" Source="/Images/ls_down.png" Opacity="0"/>
-            <Image Name="imageLsLeft" Source="/Images/ls_left.png" Opacity="0"/>
-            <Image Name="imageLsRight" Source="/Images/ls_right.png" Opacity="0"/>
+            <Image Name="imageLsUp" Source="/Images/ls_up.png" />
+            <Image Name="imageLsDown" Source="/Images/ls_down.png" />
+            <Image Name="imageLsLeft" Source="/Images/ls_left.png" />
+            <Image Name="imageLsRight" Source="/Images/ls_right.png" />
             <!-- right strick -->
-            <Image Name="imageRsUp" Source="/Images/rs_up.png" Opacity="0"/>
-            <Image Name="imageRsDown" Source="/Images/rs_down.png" Opacity="0"/>
-            <Image Name="imageRsLeft" Source="/Images/rs_left.png" Opacity="0"/>
-            <Image Name="imageRsRight" Source="/Images/rs_right.png" Opacity="0"/>
-            <Button Opacity="0" Width="25" Height="25" Margin="4,0,0,0"
-                    PreviewMouseDown="OnGuideDown"
-                    PreviewMouseUp="OnGuideUp"
-                    MouseEnter="OnGuideEnter"
-                    MouseLeave="OnGuideLeave"></Button>
-            <Button Opacity="0" Width="20" Height="20" Margin="154,31,0,0"
-                    PreviewMouseDown="OnADown"
-                    PreviewMouseUp="OnAUp"
-                    MouseEnter="OnAEnter"
-                    MouseLeave="OnALeave"></Button>
+            <Image Name="imageRsUp" Source="/Images/rs_up.png" />
+            <Image Name="imageRsDown" Source="/Images/rs_down.png" />
+            <Image Name="imageRsLeft" Source="/Images/rs_left.png" />
+            <Image Name="imageRsRight" Source="/Images/rs_right.png" />
+            
+            <Button Name="buttonGuide" Width="28" Height="25" Margin="5,0,0,0" Tag="Guide">Guide</Button>
+            <Button Name="buttonA" Width="20" Height="20" Margin="154,31,0,0" Tag="A">A</Button>
+            <Button Name="buttonB" Width="20" Height="20" Margin="198,-5,0,0" Tag="B">B</Button>
+            <Button Name="buttonX" Width="20" Height="20" Margin="115,0,0,0" Tag="X">X</Button>
+            <Button Name="buttonY" Width="20" Height="20" Margin="159,-35,0,0" Tag="Y">Y</Button>
+            <Button Name="buttonLB" Width="53" Height="15" Margin="-155,-84,0,0" Tag="LeftBumper" Content="LB">
+                <Button.RenderTransform>
+                    <RotateTransform Angle="-8"/>
+                </Button.RenderTransform>
+            </Button>
+            <Button Name="buttonRB" Width="53" Height="15" Margin="165,-99,0,0" Tag="RightBumper" Content="RB">
+                <Button.RenderTransform>
+                    <RotateTransform Angle="6"/>
+                </Button.RenderTransform>
+            </Button>
+            <Button Name="buttonBack" Width="17" Height="13" Margin="-53,1,0,0" Tag="Back">Back</Button>
+            <Button Name="buttonStart" Width="17" Height="13" Margin="59,1,0,0" Tag="Start">Start</Button>
+            <Button Name="buttonLT" Width="25" Height="18" Margin="-94,-141,0,0" Tag="LeftTrigger" Content="LT">
+                <Button.RenderTransform>
+                    <RotateTransform Angle="94"/>
+                </Button.RenderTransform>
+            </Button>
+            <Button Name="buttonRT" Width="25" Height="18" Margin="151,-94,0,0" Tag="RightTrigger" Content="RT">
+                <Button.RenderTransform>
+                    <RotateTransform Angle="-94"/>
+                </Button.RenderTransform>
+            </Button>
+
+            <Button Name="buttonDpadLeft" Width="18" Height="14" Margin="-110,84,0,0" Tag="Dpad_Left" />
+            <Button Name="buttonDpadRight" Width="18" Height="14" Margin="-39,82,0,0" Tag="Dpad_Right" />
+            <Button Name="buttonDpadUp" Width="14" Height="18" Margin="-76,50,0,0" Tag="Dpad_Up" />
+            <Button Name="buttonDpadDown" Width="14" Height="18" Margin="-73,115,0,0" Tag="Dpad_Down" />
+            <Button Name="buttonLeftThumb" Width="20" Height="20" Margin="-153,18,0,0" Tag="LeftThumb" />
+            <Button Name="buttonRightThumb" Width="20" Height="20" Margin="76,92,0,0" Tag="RightThumb" />
+            <Button Name="buttonLsUp" Width="12" Height="18" Margin="-153,-10,0,0" Tag="Y_Max" />
+            <Button Name="buttonLsDown" Width="12" Height="18" Margin="-153,45,0,0" Tag="Y_Min" />
+            <Button Name="buttonLsLeft" Width="18" Height="12" Margin="-181,18,0,0" Tag="X_Min" />
+            <Button Name="buttonLsRight" Width="18" Height="12" Margin="-124,18,0,0" Tag="X_Max" />
+
+            <Button Name="buttonRsUp" Width="12" Height="18" Margin="75,67,0,0" Tag="Ry_Max" />
+            <Button Name="buttonRsDown" Width="12" Height="18" Margin="75,117,0,0" Tag="Ry_Min" />
+            <Button Name="buttonRsLeft" Width="18" Height="12" Margin="46,91,0,0" Tag="Rx_Min" />
+            <Button Name="buttonRsRight" Width="18" Height="12" Margin="106,91,0,0" Tag="Rx_Max" />
         </Grid>
     </Grid>
 </UserControl>

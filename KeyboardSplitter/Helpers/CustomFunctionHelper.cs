@@ -154,5 +154,40 @@
 
             return axis;
         }
+
+        public static bool SetFunctionState(XboxCustomFunction function, uint userIndex, bool newState)
+        {
+            var controlType = GetControlType(function);
+
+            switch (controlType)
+            {
+                case KeyControlType.Button:
+                    var button = GetXboxButton(function);
+                    return VirtualXboxController.SetButton(userIndex, button, newState);
+                case KeyControlType.Axis:
+                    XboxAxisPosition position;
+                    var axis = GetXboxAxis(function, out position);
+
+                    if (newState == false)
+                    {
+                        return VirtualXboxController.SetAxis(userIndex, axis, (short)XboxAxisPosition.Center);
+                    }
+
+                    return VirtualXboxController.SetAxis(userIndex, axis, (short)position);
+                case KeyControlType.Dpad:
+                    if (newState == false)
+                    {
+                        return VirtualXboxController.SetDPad(userIndex, XboxDpadDirection.None);
+                    }
+
+                    var direction = GetDpadDirection(function);
+                    return VirtualXboxController.SetDPad(userIndex, direction);
+                case KeyControlType.Trigger:
+                    var trigger = GetXboxTrigger(function);
+                    return VirtualXboxController.SetTrigger(userIndex, trigger, newState ? (byte)255 : (byte)0);
+                default:
+                    throw new NotImplementedException("Not implemented xbox control type: " + controlType);
+            }
+        }
     }
 }
