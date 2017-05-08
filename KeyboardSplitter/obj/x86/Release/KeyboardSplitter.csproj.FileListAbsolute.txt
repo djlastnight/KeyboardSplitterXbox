@@ -112,3 +112,6 @@ C:\Users\djlastnight\Source\Repos\KeyboardSplitterXbox\KeyboardSplitter\obj\x86\
 C:\Users\djlastnight\Source\Repos\KeyboardSplitterXbox\KeyboardSplitter\obj\x86\Release\KeyboardSplitter.csproj.GenerateResource.Cache
 C:\Users\djlastnight\Source\Repos\KeyboardSplitterXbox\KeyboardSplitter\obj\x86\Release\KeyboardSplitter.exe
 C:\Users\djlastnight\Source\Repos\KeyboardSplitterXbox\KeyboardSplitter\obj\x86\Release\KeyboardSplitter.pdb
+C:\Users\djlastnight\Source\Repos\KeyboardSplitterXbox\KeyboardSplitter\obj\x86\Release\UI\OnScreenController.baml
+C:\Users\djlastnight\Source\Repos\KeyboardSplitterXbox\KeyboardSplitter\obj\x86\Release\UI\OnScreenController.g.cs
+C:\Users\djlastnight\Source\Repos\KeyboardSplitterXbox\KeyboardSplitter\obj\x86\Release\GeneratedInternalTypeHelper.g.cs
