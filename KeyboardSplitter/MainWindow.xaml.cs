@@ -51,13 +51,6 @@
             this.autoCollapseTimer.Interval = this.autoCollapseSpan;
             this.autoCollapseTimer.Tick += new EventHandler(this.AutoCollapseTimer_Tick);
             KeyboardManager.KeyPressed += this.KeyboardManager_KeyPressed;
-            var arr = new bool[4];
-            arr[0] = VirtualXboxController.UnPlug(1, true);
-            arr[1] = VirtualXboxController.UnPlug(2, true);
-            arr[2] = VirtualXboxController.UnPlug(3, true);
-            arr[3] = VirtualXboxController.UnPlug(4, true);
-
-            System.Windows.MessageBox.Show(arr[0].ToString() + arr[1].ToString() + arr[2].ToString() + arr[3].ToString());
         }
 
         public void Dispose()

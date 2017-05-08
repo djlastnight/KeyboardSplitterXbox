@@ -65,7 +65,7 @@
                 var joyControl = new JoyControl(index);
                 if (keyboards != null && keyboards.Length > index - 1)
                 {
-                    joyControl.SetKeyboard(keyboards[index - 1]);
+                    joyControl.SetKeyboard(keyboards[index]);
                 }
 
                 EmulationManager.joyControls.Add(joyControl);
