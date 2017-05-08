@@ -47,7 +47,7 @@
 
         public static List<InterceptionKeyboard> GetKeyboards()
         {
-            var manual = new InterceptionKeyboard(0, string.Empty, "Use mouse to feed the gamepad", "Manual Input");
+            var manual = new InterceptionKeyboard(0, string.Empty, "OnScreen Mouse Feeder", "None");
             var keyboards = new List<InterceptionKeyboard>();
             keyboards.Add(manual);
             keyboards.AddRange(interceptor.GetKeyboards());

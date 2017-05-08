@@ -63,7 +63,7 @@
             for (uint index = 1; index <= EmulationManager.SlotsCount; index++)
             {
                 var joyControl = new JoyControl(index);
-                if (keyboards != null && keyboards.Length > index - 1)
+                if (keyboards != null && keyboards.Length > index)
                 {
                     joyControl.SetKeyboard(keyboards[index]);
                 }

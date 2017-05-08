@@ -32,6 +32,10 @@
             this.presetNameLabel.Content += this.joyControl.CurrentPreset.Name;
             this.xboxDeviceNameLabel.Content += this.joyControl.UserIndex.ToString();
             this.keyboardNameLabel.Content = this.joyControl.CurrentKeyboard;
+            if (control.IsOnManualMode)
+            {
+                this.Opacity = 0.2;
+            }
         }
 
         private XboxTester()
