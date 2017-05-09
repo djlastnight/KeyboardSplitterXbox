@@ -35,16 +35,19 @@
                                     <GradientStop Color="#1BF3B700" Offset="0.438" />
                                 </LinearGradientBrush>
                             </Grid.Background>
-                            <Button ToolTip="Detect keyboard" Content=".." Height="23" HorizontalAlignment="Left" Margin="222,3,0,0" Name="detectKeyboardButton"
-                                VerticalAlignment="Top" Width="20" Click="DetectKeyboardButton_Click" />
                         </Grid>
                     </Border>
-                    <Label Content="Choose keyboard:" Height="28" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Top" />
-                    <Label Content="Keyboard name: " Height="27" HorizontalAlignment="Left" Margin="0,23,0,0" VerticalAlignment="Top" />
-                    <Label Content="n/a " Height="27" HorizontalAlignment="Left" Margin="90,23,0,0" VerticalAlignment="Top"
+                    <Grid Name="keyboardGrid">
+                        <Label Content="Choose keyboard:" Height="28" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Top" />
+                        <Label Content="Keyboard name: " Height="27" HorizontalAlignment="Left" Margin="0,23,0,0" VerticalAlignment="Top" />
+                        <Label Content="n/a " Height="27" HorizontalAlignment="Left" Margin="90,23,0,0" VerticalAlignment="Top"
                        Name="keyboardInfoLabel" x:FieldModifier="private"/>
-                    <ComboBox Height="23" HorizontalAlignment="Left" Margin="111,3,0,0" Name="keyboardDeviceBox" x:FieldModifier="private" VerticalAlignment="Top"
+                        <ComboBox Height="23" HorizontalAlignment="Left" Margin="111,3,0,0" Name="keyboardDeviceBox" x:FieldModifier="private" VerticalAlignment="Top"
                           SelectionChanged="KeyboardDeviceBox_SelectionChanged" Width="105" DropDownOpened="KeyboardDeviceBox_DropDownOpened" />
+                        <Button ToolTip="Detect keyboard" Content=".." Height="23" HorizontalAlignment="Left" Margin="222,3,0,0" Name="detectKeyboardButton"
+                                VerticalAlignment="Top" Width="20" Click="DetectKeyboardButton_Click" />
+                    </Grid>
+
                     <Grid Name="bodyGrid" Visibility="Collapsed">
                         <Grid Name="presetGrid" Background="#1F6CF8A4" Height="32" Margin="0,48,0,0" VerticalAlignment="Top">
                             <Image Name="presetWarningImage" HorizontalAlignment="Left"/>

@@ -116,7 +116,7 @@
                     continue;
                 }
 
-                joyControl.IsEnabled = joyControl.IsOnManualMode;
+                joyControl.Lock();
                 LogWriter.Write("Plug in device #" + joyControl.UserIndex + " OK");
             }
 
@@ -161,7 +161,7 @@
             {
                 foreach (var joyControl in EmulationManager.joyControls)
                 {
-                    joyControl.IsEnabled = true;
+                    joyControl.UnLock();
                 }
 
                 for (uint i = 1; i <= 4; i++)

@@ -366,6 +366,25 @@
             this.IsInvalidated = true;
         }
 
+        public void Lock()
+        {
+            if (this.IsOnManualMode)
+            {
+                this.keyboardGrid.IsEnabled = false;
+            }
+            else
+            {
+                this.IsEnabled = false;
+            }
+            
+        }
+
+        public void UnLock()
+        {
+            this.IsEnabled = true;
+            this.keyboardGrid.IsEnabled = true;
+        }
+
         private void InitializePresetsBox()
         {
             this.presetsBox.ItemsSource = PresetDataManager.Presets;
