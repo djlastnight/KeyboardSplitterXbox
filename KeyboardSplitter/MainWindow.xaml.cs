@@ -25,7 +25,7 @@
 
     public partial class MainWindow : Window, IDisposable
     {
-        private const uint DefaultSlotsCount = 2;
+        //private const uint DefaultSlotsCount = 1;
 
         private DispatcherTimer autoCollapseTimer;
 
@@ -294,10 +294,26 @@
         {
             this.StartUsbWatcher();
             LogWriter.Write("Main window loaded");
-            this.deviceCountBox.ItemsSource = new int[] { 1, 2, 3, 4 };
-            this.deviceCountBox.SelectedIndex = 1;
             this.expander.ToolTip = "Click to expand/collapse the keyboards input monitor.\r\n" +
                 "It will autocollapse after " + this.autoCollapseSpan.TotalSeconds + " seconds to save CPU time.";
+
+            this.deviceCountBox.ItemsSource = new int[] { 1, 2, 3, 4 };
+
+            // Getting keyboards count, but removing 1, because None keyboard is always returned as result.
+            var realKeyboardsCount = KeyboardManager.GetKeyboards().Count - 1;
+            if (realKeyboardsCount <= 0)
+            {
+                // We have some error. No real keyboard was detected!
+                LogWriter.Write("Illegal real keyboards count (" + realKeyboardsCount + "). Terminating application.");
+                MessageBox.Show( 
+                    "No keyboards were detected!\r\nApplication will now close!",
+                    ApplicationInfo.AppName,
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+                Environment.Exit(0);
+            }
+
+            this.deviceCountBox.SelectedValue = Math.Min(realKeyboardsCount, 4);
         }
 
         private void Window_Closing(object sender, CancelEventArgs e)
@@ -326,7 +342,7 @@
         private void Window_Closed(object sender, EventArgs e)
         {
             this.Dispose();
-            LogWriter.Write("Application terminated by user");
+            LogWriter.Write("Application closed");
         }
 
         private void KeyboardManager_KeyPressed(object sender, KeyPressedEventArgs e)
