@@ -9,10 +9,10 @@ The goal is to play any game that supports xbox controllers
 with different keyboards instead of just one. Any application,
 which works with such controllers should be supported too.
 
-#Video
+# Video
 https://www.youtube.com/watch?v=06ZZp-u01kE
 
-#Main Features:
+# Main Features:
 - keyboards input monitor
 - virtual xbox 360 controllers tester
 - customizable mapping presets
@@ -23,7 +23,7 @@ https://www.youtube.com/watch?v=06ZZp-u01kE
 - keyboard input blocker
 - remote blocking/unblocking the keyboards input
 
-#Installation:
+# Installation:
 Run the application, it will ask you to install the built-in drivers.
 Do it and reboot your PC.
 If you use Windows XP, Vista or Seven, you also need the
@@ -31,10 +31,10 @@ Microsoft's Xbox Accessories Driver found at https://www.microsoft.com/accessori
 
 Please read the FAQ section located in application's Help menu.
 
-#Download
+# Download
 https://github.com/djlastnight/KeyboardSplitterXbox/releases
 
-#User Interface
+# User Interface
 The User Interface is very intuitive and does not require
 technical skills.
 
@@ -48,11 +48,11 @@ for different games/applications/players. The presets are kept in
 presets.xml, which the application reads on startup and writes on exit.
 Keyboard Splitter comes with two hardcoded presets called 'default' and 'empty'.
 
-#How it works
+# How it works
 
 ![alt tag](https://raw.githubusercontent.com/djlastnight/KeyboardSplitterXbox/master/how_it_works_diagram.png)
 
-#Internal Build Details
+# Internal Build Details
 The main project is called Keyboard Splitter.
 All other projects are build into KeyboardSplitter\Lib folder.
 The main project loads both managed and unmanaged assemblies.
@@ -61,13 +61,13 @@ The unmanaged ones are first extracted to user's temp folder
 and then loaded, using LoadLibrary method from kernel32.dll via PInvoke.
 This produces a single fully portable executable file (*.exe).
 
-#Drivers
+# Drivers
 Keyboard Splitter required drivers (interception and xbox bus)
 are embedded into the exe file and the user will be prompted to
 install them on first run. The user must install Xbox Accessories
 Driver if he/she uses Windows XP, Vista or Seven.
 
-#Credits (original author's projects)
+# Credits (original author's projects)
 
 https://github.com/oblitum/Interception
 
