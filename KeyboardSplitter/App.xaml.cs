@@ -5,6 +5,7 @@
     using System.Threading;
     using System.Windows;
     using KeyboardSplitter.AssemblyLoaders;
+    using KeyboardSplitter.Managers;
 
     /// <summary>
     /// The main application's App class.
@@ -43,7 +44,7 @@
                 LogWriter.Write("Application started from " +
                     System.Windows.Forms.Application.ExecutablePath);
 
-                LogWriter.Write("OS version: " + Environment.OSVersion.VersionString);
+                LogWriter.Write("OS version: " + Helpers.WindowsHelper.GetCurrentWindowsVersion());
             }
         }
 
@@ -127,8 +128,19 @@
                 LogWriter.Init();
             }
 
+            InputManager.Dispose();
+            EmulationManager.Destroy();
+            
             LogWriter.Write("::: UNHANDLED EXCEPTION DETAILS :::");
             LogWriter.Write(e.Exception.ToString());
+
+            MessageBox.Show(
+                "Unexpected app crash occured. Please refer to " + LogWriter.GetLogFileName + " for more details",
+                ApplicationInfo.AppNameVersion,
+                MessageBoxButton.OK,
+                MessageBoxImage.Error);
+
+            Environment.Exit(0);
         }
     }
 }

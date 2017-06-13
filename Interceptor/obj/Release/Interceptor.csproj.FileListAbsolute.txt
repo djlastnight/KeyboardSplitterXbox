@@ -28,6 +28,6 @@ C:\Users\Vankata\Source\Repos\KeyboardSplitterXbox\KeyboardSplitter\Lib\Intercep
 C:\Users\Vankata\Source\Repos\KeyboardSplitterXbox\KeyboardSplitter\Lib\Interceptor.dll.lastcodeanalysissucceeded
 C:\Users\djlastnight\Source\Repos\KeyboardSplitterXbox\KeyboardSplitter\Lib\Interceptor.dll
 C:\Users\djlastnight\Source\Repos\KeyboardSplitterXbox\KeyboardSplitter\Lib\Interceptor.pdb
+C:\Users\djlastnight\Source\Repos\KeyboardSplitterXbox\Interceptor\obj\Release\Interceptor.csprojResolveAssemblyReference.cache
 C:\Users\djlastnight\Source\Repos\KeyboardSplitterXbox\Interceptor\obj\Release\Interceptor.dll
 C:\Users\djlastnight\Source\Repos\KeyboardSplitterXbox\Interceptor\obj\Release\Interceptor.pdb
-C:\Users\djlastnight\Source\Repos\KeyboardSplitterXbox\Interceptor\obj\Release\Interceptor.csprojResolveAssemblyReference.cache

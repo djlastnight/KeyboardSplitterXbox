@@ -541,7 +541,7 @@
 
         private void UpdateKeyboardsList()
         {
-            this.keyboards = KeyboardManager.GetKeyboards();
+            this.keyboards = InputManager.GetKeyboards();
             this.keyboardDeviceBox.ItemsSource = this.keyboards.Select(x => x.StrongName);
         }
 

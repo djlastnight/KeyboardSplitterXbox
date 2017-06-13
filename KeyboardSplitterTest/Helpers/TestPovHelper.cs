@@ -33,10 +33,10 @@
                 const string KeyboardStrongName = "Keyboard_01";
                 joyControl.SetKeyboard(KeyboardStrongName);
                 string keyGesture = Preset.Default.Povs.Find(x => x.Direction == expected).KeyboardKey;
-                KeyboardManager.SetFakeDown(KeyboardStrongName, keyGesture);
+                InputManager.SetFakeDown(KeyboardStrongName, keyGesture);
 
                 actual = PovHelper.CalculatePovDirection(joyControl, expected, KeyState.Down);
-                KeyboardManager.ResetFakeStates();
+                InputManager.ResetFakeStates();
             }
 
             Assert.AreEqual(expected, actual);
@@ -58,10 +58,10 @@
                 const string KeyboardStrongName = "Keyboard_01";
                 joyControl.SetKeyboard(KeyboardStrongName);
                 string keyGesture = Preset.Default.Povs.Find(x => x.Direction == expected).KeyboardKey;
-                KeyboardManager.SetFakeDown(KeyboardStrongName, keyGesture);
+                InputManager.SetFakeDown(KeyboardStrongName, keyGesture);
 
                 actual = PovHelper.CalculatePovDirection(joyControl, expected, KeyState.Down);
-                KeyboardManager.ResetFakeStates();
+                InputManager.ResetFakeStates();
             }
 
             Assert.AreEqual(expected, actual);
@@ -83,10 +83,10 @@
                 const string KeyboardStrongName = "Keyboard_01";
                 joyControl.SetKeyboard(KeyboardStrongName);
                 string keyGesture = Preset.Default.Povs.Find(x => x.Direction == expected).KeyboardKey;
-                KeyboardManager.SetFakeDown(KeyboardStrongName, keyGesture);
+                InputManager.SetFakeDown(KeyboardStrongName, keyGesture);
 
                 actual = PovHelper.CalculatePovDirection(joyControl, expected, KeyState.Down);
-                KeyboardManager.ResetFakeStates();
+                InputManager.ResetFakeStates();
             }
 
             Assert.AreEqual(expected, actual);
@@ -108,10 +108,10 @@
                 const string KeyboardStrongName = "Keyboard_01";
                 joyControl.SetKeyboard(KeyboardStrongName);
                 string keyGesture = Preset.Default.Povs.Find(x => x.Direction == expected).KeyboardKey;
-                KeyboardManager.SetFakeDown(KeyboardStrongName, keyGesture);
+                InputManager.SetFakeDown(KeyboardStrongName, keyGesture);
 
                 actual = PovHelper.CalculatePovDirection(joyControl, expected, KeyState.Down);
-                KeyboardManager.ResetFakeStates();
+                InputManager.ResetFakeStates();
             }
 
             Assert.AreEqual(expected, actual);
@@ -136,12 +136,12 @@
 
                 string firstKey = Preset.Default.Povs.Find(x => x.Direction == firstDirection).KeyboardKey;
                 string secondKey = Preset.Default.Povs.Find(x => x.Direction == secondDirection).KeyboardKey;
-                KeyboardManager.SetFakeDown(KeyboardStrongName, firstKey);
-                KeyboardManager.SetFakeDown(KeyboardStrongName, secondKey);
+                InputManager.SetFakeDown(KeyboardStrongName, firstKey);
+                InputManager.SetFakeDown(KeyboardStrongName, secondKey);
 
                 actual = PovHelper.CalculatePovDirection(joyControl, secondDirection, KeyState.Down);
 
-                KeyboardManager.ResetFakeStates();
+                InputManager.ResetFakeStates();
             }
 
             Assert.AreEqual(firstDirection | secondDirection, actual);
@@ -166,12 +166,12 @@
 
                 string firstKey = Preset.Default.Povs.Find(x => x.Direction == firstDirection).KeyboardKey;
                 string secondKey = Preset.Default.Povs.Find(x => x.Direction == secondDirection).KeyboardKey;
-                KeyboardManager.SetFakeDown(KeyboardStrongName, firstKey);
-                KeyboardManager.SetFakeDown(KeyboardStrongName, secondKey);
+                InputManager.SetFakeDown(KeyboardStrongName, firstKey);
+                InputManager.SetFakeDown(KeyboardStrongName, secondKey);
 
                 actual = PovHelper.CalculatePovDirection(joyControl, secondDirection, KeyState.Down);
 
-                KeyboardManager.ResetFakeStates();
+                InputManager.ResetFakeStates();
             }
 
             Assert.AreEqual(firstDirection | secondDirection, actual);
@@ -196,12 +196,12 @@
 
                 string firstKey = Preset.Default.Povs.Find(x => x.Direction == firstDirection).KeyboardKey;
                 string secondKey = Preset.Default.Povs.Find(x => x.Direction == secondDirection).KeyboardKey;
-                KeyboardManager.SetFakeDown(KeyboardStrongName, firstKey);
-                KeyboardManager.SetFakeDown(KeyboardStrongName, secondKey);
+                InputManager.SetFakeDown(KeyboardStrongName, firstKey);
+                InputManager.SetFakeDown(KeyboardStrongName, secondKey);
 
                 actual = PovHelper.CalculatePovDirection(joyControl, secondDirection, KeyState.Down);
 
-                KeyboardManager.ResetFakeStates();
+                InputManager.ResetFakeStates();
             }
 
             Assert.AreEqual(secondDirection, actual);
@@ -226,12 +226,12 @@
 
                 string firstKey = Preset.Default.Povs.Find(x => x.Direction == firstDirection).KeyboardKey;
                 string secondKey = Preset.Default.Povs.Find(x => x.Direction == secondDirection).KeyboardKey;
-                KeyboardManager.SetFakeDown(KeyboardStrongName, firstKey);
-                KeyboardManager.SetFakeDown(KeyboardStrongName, secondKey);
+                InputManager.SetFakeDown(KeyboardStrongName, firstKey);
+                InputManager.SetFakeDown(KeyboardStrongName, secondKey);
 
                 actual = PovHelper.CalculatePovDirection(joyControl, secondDirection, KeyState.Down);
 
-                KeyboardManager.ResetFakeStates();
+                InputManager.ResetFakeStates();
             }
 
             Assert.AreEqual(firstDirection | secondDirection, actual);
@@ -256,12 +256,12 @@
 
                 string firstKey = Preset.Default.Povs.Find(x => x.Direction == firstDirection).KeyboardKey;
                 string secondKey = Preset.Default.Povs.Find(x => x.Direction == secondDirection).KeyboardKey;
-                KeyboardManager.SetFakeDown(KeyboardStrongName, firstKey);
-                KeyboardManager.SetFakeDown(KeyboardStrongName, secondKey);
+                InputManager.SetFakeDown(KeyboardStrongName, firstKey);
+                InputManager.SetFakeDown(KeyboardStrongName, secondKey);
 
                 actual = PovHelper.CalculatePovDirection(joyControl, secondDirection, KeyState.Down);
 
-                KeyboardManager.ResetFakeStates();
+                InputManager.ResetFakeStates();
             }
 
             Assert.AreEqual(firstDirection | secondDirection, actual);
@@ -286,12 +286,12 @@
 
                 string firstKey = Preset.Default.Povs.Find(x => x.Direction == firstDirection).KeyboardKey;
                 string secondKey = Preset.Default.Povs.Find(x => x.Direction == secondDirection).KeyboardKey;
-                KeyboardManager.SetFakeDown(KeyboardStrongName, firstKey);
-                KeyboardManager.SetFakeDown(KeyboardStrongName, secondKey);
+                InputManager.SetFakeDown(KeyboardStrongName, firstKey);
+                InputManager.SetFakeDown(KeyboardStrongName, secondKey);
 
                 actual = PovHelper.CalculatePovDirection(joyControl, secondDirection, KeyState.Down);
 
-                KeyboardManager.ResetFakeStates();
+                InputManager.ResetFakeStates();
             }
 
             Assert.AreEqual(secondDirection, actual);
@@ -316,12 +316,12 @@
 
                 string firstKey = Preset.Default.Povs.Find(x => x.Direction == firstDirection).KeyboardKey;
                 string secondKey = Preset.Default.Povs.Find(x => x.Direction == secondDirection).KeyboardKey;
-                KeyboardManager.SetFakeDown(KeyboardStrongName, firstKey);
-                KeyboardManager.SetFakeDown(KeyboardStrongName, secondKey);
+                InputManager.SetFakeDown(KeyboardStrongName, firstKey);
+                InputManager.SetFakeDown(KeyboardStrongName, secondKey);
 
                 actual = PovHelper.CalculatePovDirection(joyControl, secondDirection, KeyState.Down);
 
-                KeyboardManager.ResetFakeStates();
+                InputManager.ResetFakeStates();
             }
 
             Assert.AreEqual(secondDirection, actual);
@@ -346,12 +346,12 @@
 
                 string firstKey = Preset.Default.Povs.Find(x => x.Direction == firstDirection).KeyboardKey;
                 string secondKey = Preset.Default.Povs.Find(x => x.Direction == secondDirection).KeyboardKey;
-                KeyboardManager.SetFakeDown(KeyboardStrongName, firstKey);
-                KeyboardManager.SetFakeDown(KeyboardStrongName, secondKey);
+                InputManager.SetFakeDown(KeyboardStrongName, firstKey);
+                InputManager.SetFakeDown(KeyboardStrongName, secondKey);
 
                 actual = PovHelper.CalculatePovDirection(joyControl, secondDirection, KeyState.Down);
 
-                KeyboardManager.ResetFakeStates();
+                InputManager.ResetFakeStates();
             }
 
             Assert.AreEqual(firstDirection | secondDirection, actual);
@@ -376,12 +376,12 @@
 
                 string firstKey = Preset.Default.Povs.Find(x => x.Direction == firstDirection).KeyboardKey;
                 string secondKey = Preset.Default.Povs.Find(x => x.Direction == secondDirection).KeyboardKey;
-                KeyboardManager.SetFakeDown(KeyboardStrongName, firstKey);
-                KeyboardManager.SetFakeDown(KeyboardStrongName, secondKey);
+                InputManager.SetFakeDown(KeyboardStrongName, firstKey);
+                InputManager.SetFakeDown(KeyboardStrongName, secondKey);
 
                 actual = PovHelper.CalculatePovDirection(joyControl, secondDirection, KeyState.Down);
 
-                KeyboardManager.ResetFakeStates();
+                InputManager.ResetFakeStates();
             }
 
             Assert.AreEqual(firstDirection | secondDirection, actual);
@@ -406,12 +406,12 @@
 
                 string firstKey = Preset.Default.Povs.Find(x => x.Direction == firstDirection).KeyboardKey;
                 string secondKey = Preset.Default.Povs.Find(x => x.Direction == secondDirection).KeyboardKey;
-                KeyboardManager.SetFakeDown(KeyboardStrongName, firstKey);
-                KeyboardManager.SetFakeDown(KeyboardStrongName, secondKey);
+                InputManager.SetFakeDown(KeyboardStrongName, firstKey);
+                InputManager.SetFakeDown(KeyboardStrongName, secondKey);
 
                 actual = PovHelper.CalculatePovDirection(joyControl, secondDirection, KeyState.Down);
 
-                KeyboardManager.ResetFakeStates();
+                InputManager.ResetFakeStates();
             }
 
             Assert.AreEqual(firstDirection | secondDirection, actual);
@@ -436,12 +436,12 @@
 
                 string firstKey = Preset.Default.Povs.Find(x => x.Direction == firstDirection).KeyboardKey;
                 string secondKey = Preset.Default.Povs.Find(x => x.Direction == secondDirection).KeyboardKey;
-                KeyboardManager.SetFakeDown(KeyboardStrongName, firstKey);
-                KeyboardManager.SetFakeDown(KeyboardStrongName, secondKey);
+                InputManager.SetFakeDown(KeyboardStrongName, firstKey);
+                InputManager.SetFakeDown(KeyboardStrongName, secondKey);
 
                 actual = PovHelper.CalculatePovDirection(joyControl, secondDirection, KeyState.Down);
 
-                KeyboardManager.ResetFakeStates();
+                InputManager.ResetFakeStates();
             }
 
             Assert.AreEqual(secondDirection, actual);
@@ -466,12 +466,12 @@
 
                 string firstKey = Preset.Default.Povs.Find(x => x.Direction == firstDirection).KeyboardKey;
                 string secondKey = Preset.Default.Povs.Find(x => x.Direction == secondDirection).KeyboardKey;
-                KeyboardManager.SetFakeDown(KeyboardStrongName, firstKey);
-                KeyboardManager.SetFakeDown(KeyboardStrongName, secondKey);
+                InputManager.SetFakeDown(KeyboardStrongName, firstKey);
+                InputManager.SetFakeDown(KeyboardStrongName, secondKey);
 
                 actual = PovHelper.CalculatePovDirection(joyControl, secondDirection, KeyState.Down);
 
-                KeyboardManager.ResetFakeStates();
+                InputManager.ResetFakeStates();
             }
 
             Assert.AreEqual(firstDirection | secondDirection, actual);
@@ -498,13 +498,13 @@
                 string firstKey = Preset.Default.Povs.Find(x => x.Direction == firstDirection).KeyboardKey;
                 string secondKey = Preset.Default.Povs.Find(x => x.Direction == secondDirection).KeyboardKey;
                 string thirdKey = Preset.Default.Povs.Find(x => x.Direction == thirdDirection).KeyboardKey;
-                KeyboardManager.SetFakeDown(KeyboardStrongName, firstKey);
-                KeyboardManager.SetFakeDown(KeyboardStrongName, secondKey);
-                KeyboardManager.SetFakeDown(KeyboardStrongName, thirdKey);
+                InputManager.SetFakeDown(KeyboardStrongName, firstKey);
+                InputManager.SetFakeDown(KeyboardStrongName, secondKey);
+                InputManager.SetFakeDown(KeyboardStrongName, thirdKey);
 
                 actual = PovHelper.CalculatePovDirection(joyControl, thirdDirection, KeyState.Down);
 
-                KeyboardManager.ResetFakeStates();
+                InputManager.ResetFakeStates();
             }
 
             Assert.AreEqual(thirdDirection, actual);
@@ -531,13 +531,13 @@
                 string firstKey = Preset.Default.Povs.Find(x => x.Direction == firstDirection).KeyboardKey;
                 string secondKey = Preset.Default.Povs.Find(x => x.Direction == secondDirection).KeyboardKey;
                 string thirdKey = Preset.Default.Povs.Find(x => x.Direction == thirdDirection).KeyboardKey;
-                KeyboardManager.SetFakeDown(KeyboardStrongName, firstKey);
-                KeyboardManager.SetFakeDown(KeyboardStrongName, secondKey);
-                KeyboardManager.SetFakeDown(KeyboardStrongName, thirdKey);
+                InputManager.SetFakeDown(KeyboardStrongName, firstKey);
+                InputManager.SetFakeDown(KeyboardStrongName, secondKey);
+                InputManager.SetFakeDown(KeyboardStrongName, thirdKey);
 
                 actual = PovHelper.CalculatePovDirection(joyControl, thirdDirection, KeyState.Down);
 
-                KeyboardManager.ResetFakeStates();
+                InputManager.ResetFakeStates();
             }
 
             Assert.AreEqual(thirdDirection, actual);
@@ -564,13 +564,13 @@
                 string firstKey = Preset.Default.Povs.Find(x => x.Direction == firstDirection).KeyboardKey;
                 string secondKey = Preset.Default.Povs.Find(x => x.Direction == secondDirection).KeyboardKey;
                 string thirdKey = Preset.Default.Povs.Find(x => x.Direction == thirdDirection).KeyboardKey;
-                KeyboardManager.SetFakeDown(KeyboardStrongName, firstKey);
-                KeyboardManager.SetFakeDown(KeyboardStrongName, secondKey);
-                KeyboardManager.SetFakeDown(KeyboardStrongName, thirdKey);
+                InputManager.SetFakeDown(KeyboardStrongName, firstKey);
+                InputManager.SetFakeDown(KeyboardStrongName, secondKey);
+                InputManager.SetFakeDown(KeyboardStrongName, thirdKey);
 
                 actual = PovHelper.CalculatePovDirection(joyControl, thirdDirection, KeyState.Down);
 
-                KeyboardManager.ResetFakeStates();
+                InputManager.ResetFakeStates();
             }
 
             Assert.AreEqual(thirdDirection, actual);
@@ -597,13 +597,13 @@
                 string firstKey = Preset.Default.Povs.Find(x => x.Direction == firstDirection).KeyboardKey;
                 string secondKey = Preset.Default.Povs.Find(x => x.Direction == secondDirection).KeyboardKey;
                 string thirdKey = Preset.Default.Povs.Find(x => x.Direction == thirdDirection).KeyboardKey;
-                KeyboardManager.SetFakeDown(KeyboardStrongName, firstKey);
-                KeyboardManager.SetFakeDown(KeyboardStrongName, secondKey);
-                KeyboardManager.SetFakeDown(KeyboardStrongName, thirdKey);
+                InputManager.SetFakeDown(KeyboardStrongName, firstKey);
+                InputManager.SetFakeDown(KeyboardStrongName, secondKey);
+                InputManager.SetFakeDown(KeyboardStrongName, thirdKey);
 
                 actual = PovHelper.CalculatePovDirection(joyControl, thirdDirection, KeyState.Down);
 
-                KeyboardManager.ResetFakeStates();
+                InputManager.ResetFakeStates();
             }
 
             Assert.AreEqual(thirdDirection, actual);
@@ -632,14 +632,14 @@
                 string secondKey = Preset.Default.Povs.Find(x => x.Direction == secondDirection).KeyboardKey;
                 string thirdKey = Preset.Default.Povs.Find(x => x.Direction == thirdDirection).KeyboardKey;
                 string fourthKey = Preset.Default.Povs.Find(x => x.Direction == fourthDirection).KeyboardKey;
-                KeyboardManager.SetFakeDown(KeyboardStrongName, firstKey);
-                KeyboardManager.SetFakeDown(KeyboardStrongName, secondKey);
-                KeyboardManager.SetFakeDown(KeyboardStrongName, thirdKey);
-                KeyboardManager.SetFakeDown(KeyboardStrongName, fourthKey);
+                InputManager.SetFakeDown(KeyboardStrongName, firstKey);
+                InputManager.SetFakeDown(KeyboardStrongName, secondKey);
+                InputManager.SetFakeDown(KeyboardStrongName, thirdKey);
+                InputManager.SetFakeDown(KeyboardStrongName, fourthKey);
 
                 actual = PovHelper.CalculatePovDirection(joyControl, fourthDirection, KeyState.Down);
 
-                KeyboardManager.ResetFakeStates();
+                InputManager.ResetFakeStates();
             }
 
             Assert.AreEqual(fourthDirection, actual);
@@ -664,11 +664,11 @@
 
                 string firstKey = Preset.Default.Povs.Find(x => x.Direction == firstDirection).KeyboardKey;
                 string secondKey = Preset.Default.Povs.Find(x => x.Direction == secondDirection).KeyboardKey;
-                KeyboardManager.SetFakeDown(KeyboardStrongName, firstKey);
+                InputManager.SetFakeDown(KeyboardStrongName, firstKey);
 
                 actual = PovHelper.CalculatePovDirection(joyControl, secondDirection, KeyState.Up);
 
-                KeyboardManager.ResetFakeStates();
+                InputManager.ResetFakeStates();
             }
 
             Assert.AreEqual(firstDirection, actual);
@@ -693,11 +693,11 @@
 
                 string firstKey = Preset.Default.Povs.Find(x => x.Direction == firstDirection).KeyboardKey;
                 string secondKey = Preset.Default.Povs.Find(x => x.Direction == secondDirection).KeyboardKey;
-                KeyboardManager.SetFakeDown(KeyboardStrongName, firstKey);
+                InputManager.SetFakeDown(KeyboardStrongName, firstKey);
 
                 actual = PovHelper.CalculatePovDirection(joyControl, secondDirection, KeyState.Up);
 
-                KeyboardManager.ResetFakeStates();
+                InputManager.ResetFakeStates();
             }
 
             Assert.AreEqual(firstDirection, actual);
@@ -722,11 +722,11 @@
 
                 string firstKey = Preset.Default.Povs.Find(x => x.Direction == firstDirection).KeyboardKey;
                 string secondKey = Preset.Default.Povs.Find(x => x.Direction == secondDirection).KeyboardKey;
-                KeyboardManager.SetFakeDown(KeyboardStrongName, firstKey);
+                InputManager.SetFakeDown(KeyboardStrongName, firstKey);
 
                 actual = PovHelper.CalculatePovDirection(joyControl, secondDirection, KeyState.Up);
 
-                KeyboardManager.ResetFakeStates();
+                InputManager.ResetFakeStates();
             }
 
             Assert.AreEqual(firstDirection, actual);
@@ -753,12 +753,12 @@
 
                 string firstKey = Preset.Default.Povs.Find(x => x.Direction == firstDirection).KeyboardKey;
                 string secondKey = Preset.Default.Povs.Find(x => x.Direction == secondDirection).KeyboardKey;
-                KeyboardManager.SetFakeDown(KeyboardStrongName, firstKey);
-                KeyboardManager.SetFakeDown(KeyboardStrongName, secondKey);
+                InputManager.SetFakeDown(KeyboardStrongName, firstKey);
+                InputManager.SetFakeDown(KeyboardStrongName, secondKey);
 
                 actual = PovHelper.CalculatePovDirection(joyControl, XboxDpadDirection.Right, KeyState.Up);
 
-                KeyboardManager.ResetFakeStates();
+                InputManager.ResetFakeStates();
             }
 
             Assert.AreEqual(XboxDpadDirection.None, actual);
@@ -786,12 +786,12 @@
 
                 string firstKey = Preset.Default.Povs.Find(x => x.Direction == firstDirection).KeyboardKey;
                 string secondKey = Preset.Default.Povs.Find(x => x.Direction == secondDirection).KeyboardKey;
-                KeyboardManager.SetFakeDown(KeyboardStrongName, firstKey);
-                KeyboardManager.SetFakeDown(KeyboardStrongName, secondKey);
+                InputManager.SetFakeDown(KeyboardStrongName, firstKey);
+                InputManager.SetFakeDown(KeyboardStrongName, secondKey);
 
                 actual = PovHelper.CalculatePovDirection(joyControl, XboxDpadDirection.Down, KeyState.Up);
 
-                KeyboardManager.ResetFakeStates();
+                InputManager.ResetFakeStates();
             }
 
             Assert.AreEqual(XboxDpadDirection.None, actual);
@@ -818,14 +818,14 @@
                 string firstKey = Preset.Default.Povs.Find(x => x.Direction == firstDirection).KeyboardKey;
                 string secondKey = Preset.Default.Povs.Find(x => x.Direction == secondDirection).KeyboardKey;
                 string thridKey = Preset.Default.Povs.Find(x => x.Direction == thirdDirection).KeyboardKey;
-                KeyboardManager.SetFakeDown(KeyboardStrongName, firstKey);
-                KeyboardManager.SetFakeDown(KeyboardStrongName, secondKey);
-                KeyboardManager.SetFakeDown(KeyboardStrongName, thridKey);
+                InputManager.SetFakeDown(KeyboardStrongName, firstKey);
+                InputManager.SetFakeDown(KeyboardStrongName, secondKey);
+                InputManager.SetFakeDown(KeyboardStrongName, thridKey);
 
                 // releasing the 4th direction
                 actual = PovHelper.CalculatePovDirection(joyControl, XboxDpadDirection.Left, KeyState.Up);
 
-                KeyboardManager.ResetFakeStates();
+                InputManager.ResetFakeStates();
             }
 
             Assert.AreEqual(XboxDpadDirection.None, actual);

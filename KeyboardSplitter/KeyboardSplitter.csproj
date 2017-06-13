@@ -84,6 +84,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="ApplicationInfo.cs" />
+    <Compile Include="Helpers\WindowsHelper.cs" />
     <Compile Include="Helpers\ParentFinder.cs" />
     <Compile Include="Managers\DriversManager.cs" />
     <Compile Include="Managers\EmulationManager.cs" />
@@ -95,7 +96,7 @@
     <Compile Include="Exceptions\SlotsCountMismatchException.cs" />
     <Compile Include="Exceptions\XboxAccessoriesNotInstalledException.cs" />
     <Compile Include="Helpers\CustomFunctionHelper.cs" />
-    <Compile Include="Managers\KeyboardManager.cs" />
+    <Compile Include="Managers\InputManager.cs" />
     <Compile Include="LogWriter.cs" />
     <Compile Include="NativeMethods.cs" />
     <Compile Include="Presets\Preset.cs" />

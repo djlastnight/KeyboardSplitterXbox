@@ -142,5 +142,9 @@
         Break = 10018,
         Pause = 10019,
         NumpadEnter = 10021,
+
+        // Mouse Gestures
+        MouseLeftButton = 20001,
+        MouseRightButton = 20002,
     }
 }

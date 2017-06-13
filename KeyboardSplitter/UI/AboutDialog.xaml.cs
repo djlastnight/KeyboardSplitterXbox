@@ -13,18 +13,22 @@
         {
             this.InitializeComponent();
             StringBuilder sb = new StringBuilder();
-            sb.AppendLine("This application is based on:");
-            sb.AppendLine("-Interception driver, author: oblitum");
-            sb.AppendLine("-ScpVbus, authors: nefarius, shauleiz");
-            sb.AppendLine("-vXboxInterface, author: shauleiz");
+            sb.AppendLine("This application is based on the following open source github projects:");
+            sb.AppendLine("-Interception C++ keyboard driver, author: Francisco Lopes (oblitum)");
+            sb.AppendLine("-C# wrapper for Interception driver, author: Jason Pang (jasonpang)");
+            sb.AppendLine("-ScpVbus, authors: Benjamin Höglinger (nefarius), Shaul Eizikovich (shauleiz)");
+            sb.AppendLine("-vXboxInterface, author: Shaul Eizikovich (shauleiz)");
             sb.AppendLine();
             sb.AppendLine("Requirements:");
-            sb.AppendLine("- .NET Framework 4");
+            sb.AppendLine("- Microsoft Windows Xp/Vista/7/8/8.1/10");
+            sb.AppendLine("- .NET Framework 4 or newer");
+            sb.AppendLine("- Visual C++ Redistributable Packages for Visual Studio 2013");
             sb.AppendLine("- Xbox 360 Accessories Software (Xbox 360 Controller Driver)");
+            sb.AppendLine("* Windows 8 and newer has xbox driver installed by default");
             sb.AppendLine();
-            sb.AppendLine("This application comes AS IS, with no warranty!");
-            sb.AppendLine("Use on your own risk!");
-            sb.AppendLine("djlastnight, 2016");
+            sb.AppendLine("This application comes AS IS, with no warranty of any kind!");
+            sb.AppendLine("Use it on your own risk!");
+            sb.AppendLine("Ivan Yankov (djlastnight), 2017");
 
             this.textBox.Text = sb.ToString();
         }

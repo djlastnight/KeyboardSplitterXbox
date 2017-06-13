@@ -31,7 +31,7 @@
                 this.WindowStartupLocation = WindowStartupLocation.CenterOwner;
             }
 
-            KeyboardManager.KeyPressed += this.KeyboardManager_KeyPressed;
+            InputManager.KeyPressed += this.KeyboardManager_KeyPressed;
         }
 
         private KeyDetector()
@@ -45,7 +45,7 @@
         {
             if (!this.disposed)
             {
-                KeyboardManager.KeyPressed -= this.KeyboardManager_KeyPressed;
+                InputManager.KeyPressed -= this.KeyboardManager_KeyPressed;
                 this.KeyDetected = null;
                 this.disposed = true;
             }

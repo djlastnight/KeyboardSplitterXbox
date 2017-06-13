@@ -50,7 +50,8 @@
             this.autoCollapseTimer = new DispatcherTimer();
             this.autoCollapseTimer.Interval = this.autoCollapseSpan;
             this.autoCollapseTimer.Tick += new EventHandler(this.AutoCollapseTimer_Tick);
-            KeyboardManager.KeyPressed += this.KeyboardManager_KeyPressed;
+            InputManager.KeyPressed += this.InputManagerKeyPressed;
+            InputManager.MousePressed += this.InputManagerMousePressed;
         }
 
         public void Dispose()
@@ -117,7 +118,7 @@
         {
             this.emergencyHitDownCount = 0;
             this.wrapPanel.Children.Clear();
-            this.initialKeyboards = KeyboardManager.GetKeyboards();
+            this.initialKeyboards = InputManager.GetKeyboards();
 
             uint slotsCount = Convert.ToUInt32(this.deviceCountBox.SelectedItem);
             EmulationManager.Create(slotsCount, this.initialKeyboards.Select(x => x.StrongName).ToArray());
@@ -300,12 +301,12 @@
             this.deviceCountBox.ItemsSource = new int[] { 1, 2, 3, 4 };
 
             // Getting keyboards count, but removing 1, because None keyboard is always returned as result.
-            var realKeyboardsCount = KeyboardManager.GetKeyboards().Count - 1;
+            var realKeyboardsCount = InputManager.GetKeyboards().Count - 1;
             if (realKeyboardsCount <= 0)
             {
                 // We have some error. No real keyboard was detected!
                 LogWriter.Write("Illegal real keyboards count (" + realKeyboardsCount + "). Terminating application.");
-                MessageBox.Show( 
+                MessageBox.Show(
                     "No keyboards were detected!\r\nApplication will now close!",
                     ApplicationInfo.AppName,
                     MessageBoxButton.OK,
@@ -345,7 +346,7 @@
             LogWriter.Write("Application closed");
         }
 
-        private void KeyboardManager_KeyPressed(object sender, KeyPressedEventArgs e)
+        private void InputManagerKeyPressed(object sender, KeyPressedEventArgs e)
         {
             this.Dispatcher.Invoke((Action)delegate
             {
@@ -360,6 +361,14 @@
 
                 bool blockChoosenKeyboards = this.blockKeyboardCheckbox.IsChecked == true;
                 EmulationManager.ProcessKeyPress(e, blockChoosenKeyboards);
+            });
+        }
+
+        private void InputManagerMousePressed(object sender, MousePressedEventArgs e)
+        {
+            this.Dispatcher.Invoke((Action)delegate
+            {
+                EmulationManager.ProcessMousePress(e, this.blockMouseCheckbox.IsChecked == true);
             });
         }
 
@@ -556,7 +565,7 @@
         {
             Dispatcher.Invoke((Action)delegate
             {
-                var newKeyboards = KeyboardManager.GetKeyboards();
+                var newKeyboards = InputManager.GetKeyboards();
                 switch (e.NewEvent.ClassPath.ClassName)
                 {
                     case "__InstanceDeletionEvent":

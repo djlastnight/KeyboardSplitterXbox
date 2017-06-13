@@ -37,12 +37,12 @@
                 string maxKey = Preset.Default.Axes.Find(x => x.Axis == testAxis &&
                     x.Position == XboxAxisPosition.Max).KeyboardKey;
 
-                KeyboardManager.SetFakeDown(keyboardStrongName, maxKey);
+                InputManager.SetFakeDown(keyboardStrongName, maxKey);
 
                 result = AxisHelper.CalculateAxisValue(
                     joyControl, testAxis, XboxAxisPosition.Min, KeyState.Up);
 
-                KeyboardManager.ResetFakeStates();
+                InputManager.ResetFakeStates();
             }
 
             Assert.AreEqual(short.MaxValue, result);
@@ -67,12 +67,12 @@
                 string minKey = Preset.Default.Axes.Find(x => x.Axis == testAxis &&
                     x.Position == XboxAxisPosition.Min).KeyboardKey;
 
-                KeyboardManager.SetFakeDown(keyboardStrongName, minKey);
+                InputManager.SetFakeDown(keyboardStrongName, minKey);
 
                 result = AxisHelper.CalculateAxisValue(
                     joyControl, testAxis, XboxAxisPosition.Max, KeyState.Up);
 
-                KeyboardManager.ResetFakeStates();
+                InputManager.ResetFakeStates();
             }
 
             Assert.AreEqual(short.MinValue, result);
@@ -258,12 +258,12 @@
                 string minKey = Preset.Default.Axes.Find(x => x.Axis == testAxis &&
                     x.Position == XboxAxisPosition.Min).KeyboardKey;
 
-                KeyboardManager.SetFakeDown(KeyboardStrongName, minKey);
+                InputManager.SetFakeDown(KeyboardStrongName, minKey);
 
                 result = AxisHelper.CalculateAxisValue(
                     joyControl, testAxis, XboxAxisPosition.Max, KeyState.Down);
 
-                KeyboardManager.ResetFakeStates();
+                InputManager.ResetFakeStates();
             }
 
             Assert.AreEqual(short.MaxValue, result);
@@ -286,7 +286,7 @@
                 string maxKey = Preset.Default.Axes.Find(
                     x => x.Axis == testAxis && x.Position == XboxAxisPosition.Max).KeyboardKey;
 
-                KeyboardManager.SetFakeDown(KeyboardStrongName, maxKey);
+                InputManager.SetFakeDown(KeyboardStrongName, maxKey);
 
                 result = AxisHelper.CalculateAxisValue(
                     joyControl,
@@ -294,7 +294,7 @@
                     XboxAxisPosition.Min,
                     KeyState.Down);
 
-                KeyboardManager.ResetFakeStates();
+                InputManager.ResetFakeStates();
             }
 
             Assert.AreEqual(short.MinValue, result);
@@ -316,8 +316,8 @@
                 string maxKey = Preset.Default.Axes.Find(x => x.Axis == testAxis &&
                     x.Position == XboxAxisPosition.Max).KeyboardKey;
 
-                KeyboardManager.SetFakeDown(keyboardStrongName, minKey);
-                KeyboardManager.SetFakeDown(keyboardStrongName, maxKey);
+                InputManager.SetFakeDown(keyboardStrongName, minKey);
+                InputManager.SetFakeDown(keyboardStrongName, maxKey);
 
                 // sending up state to fail the function
                 try
@@ -334,7 +334,7 @@
                 }
                 finally
                 {
-                    KeyboardManager.ResetFakeStates();
+                    InputManager.ResetFakeStates();
                 }
             }
 

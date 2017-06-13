@@ -28,7 +28,7 @@
             }
 
             this.joyControl = control;
-            KeyboardManager.KeyPressed += this.KeyboardManager_KeyPressed;
+            InputManager.KeyPressed += this.KeyboardManager_KeyPressed;
             this.presetNameLabel.Content += this.joyControl.CurrentPreset.Name;
             this.xboxDeviceNameLabel.Content += this.joyControl.UserIndex.ToString();
             this.keyboardNameLabel.Content = this.joyControl.CurrentKeyboard;
@@ -115,7 +115,7 @@
 
         public void Dispose()
         {
-            KeyboardManager.KeyPressed -= this.KeyboardManager_KeyPressed;
+            InputManager.KeyPressed -= this.KeyboardManager_KeyPressed;
         }
 
         private void HighlightButton(XboxButton button)

@@ -225,6 +225,64 @@
             }
         }
 
+        public static void ProcessMousePress(MousePressedEventArgs e, bool handled)
+        {
+            if (!EmulationManager.IsCreated)
+            {
+                return;
+            }
+
+            if (!EmulationManager.IsRunning)
+            {
+                return;
+            }
+
+            bool isDown = e.State == MouseState.LeftDown || e.State == MouseState.RightDown;
+            bool isUp = e.State == MouseState.LeftUp || e.State == MouseState.RightUp;
+            bool isLeft = e.State == MouseState.LeftDown || e.State == MouseState.LeftUp;
+            bool isRight = e.State == MouseState.RightDown || e.State == MouseState.RightUp;
+
+            if (isDown || isUp)
+            {
+                foreach (var joyControl in EmulationManager.joyControls)
+                {
+                    if (joyControl.IsInvalidated)
+                    {
+                        continue;
+                    }
+
+                    if (!VirtualXboxController.Exists(joyControl.UserIndex))
+                    {
+                        joyControl.Invalidate(SlotInvalidationReason.Controller_Unplugged);
+                        continue;
+                    }
+
+                    foreach (KeyControl keyControl in joyControl.Children)
+                    {
+                        var args = new KeyPressedEventArgs()
+                        {
+                            Handled = false,
+                            Keyboard = InputManager.GetKeyboards().Find(x => x.StrongName == joyControl.CurrentKeyboard),
+                            State = isDown ? KeyState.Down : KeyState.Up,
+                        };
+
+                        if (isLeft && keyControl.KeyGesture == InterceptionKeys.MouseLeftButton.ToString())
+                        {
+                            args.Key = InterceptionKeys.MouseLeftButton;
+                            FeedXboxController(keyControl, args);
+                            e.Handled = handled;
+                        }
+                        else if (isRight && keyControl.KeyGesture == InterceptionKeys.MouseRightButton.ToString())
+                        {
+                            args.Key = InterceptionKeys.MouseRightButton;
+                            FeedXboxController(keyControl, args);
+                            e.Handled = handled;
+                        }
+                    }
+                }
+            }
+        }
+
         private static void FeedXboxController(KeyControl keyControl, KeyPressedEventArgs e)
         {
             bool isKeyDown = e.State == KeyState.Down || e.State == KeyState.E0;
@@ -238,7 +296,7 @@
                             var similarKeyControls = keyControl.JoyParent.Children.FindAll(
                                 x => x.ControlType == KeyControlType.Button && x != keyControl && x.Button == keyControl.Button);
 
-                            if (!similarKeyControls.TrueForAll(x => KeyboardManager.IsKeyDown(x.JoyParent.CurrentKeyboard, x.KeyGesture) == false))
+                            if (!similarKeyControls.TrueForAll(x => InputManager.IsKeyDown(x.JoyParent.CurrentKeyboard, x.KeyGesture) == false))
                             {
                                 // not all keys, mapped to current xbox button are released
                                 // leaving the xbox button pressed
@@ -272,7 +330,7 @@
                             var similarKeyControls = keyControl.JoyParent.Children.FindAll(
                                 x => x.ControlType == KeyControlType.Trigger && x != keyControl && x.Trigger == keyControl.Trigger);
 
-                            if (!similarKeyControls.TrueForAll(x => KeyboardManager.IsKeyDown(x.JoyParent.CurrentKeyboard, x.KeyGesture) == false))
+                            if (!similarKeyControls.TrueForAll(x => InputManager.IsKeyDown(x.JoyParent.CurrentKeyboard, x.KeyGesture) == false))
                             {
                                 // not all keys, mapped to current xbox trigger are released
                                 // leaving the xbox trigger pressed

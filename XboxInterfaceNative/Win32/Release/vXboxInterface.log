@@ -1,5 +1,5 @@
-﻿Build started 09 май 2017 г. 12:50:28 ч..
-     1>Project "C:\Users\djlastnight\Source\Repos\KeyboardSplitterXbox\XboxInterfaceNative\vXboxInterface.vcxproj" on node 2 (Build target(s)).
+﻿Build started 31 май 2017 г. 12:42:25 ч..
+     1>Project "C:\Users\djlastnight\Source\Repos\KeyboardSplitterXbox\XboxInterfaceNative\vXboxInterface.vcxproj" on node 3 (Build target(s)).
      1>ClCompile:
          C:\Program Files\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /Zi /nologo /W3 /WX- /sdl /O2 /Oi /Oy- /GL /D WIN32 /D NDEBUG /D _WINDOWS /D _USRDLL /D VXBOXINTERFACE_EXPORTS /D _WINDLL /D _UNICODE /D UNICODE /D VXBOX_EXPORTS /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Yc"stdafx.h" /Fp"Win32\Release\XboxInterfaceNative.pch" /Fo"Win32\Release\\" /Fd"Win32\Release\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt stdafx.cpp
          stdafx.cpp
@@ -19,4 +19,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:09.40
+Time Elapsed 00:00:08.41

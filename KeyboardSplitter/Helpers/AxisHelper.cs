@@ -28,8 +28,8 @@
             var maxKeys = parent.Children.Where(x => x.ControlType == KeyControlType.Axis &&
                 x.Axis == axis && x.Position == XboxAxisPosition.Max).Select(x => x.KeyGesture);
 
-            bool isMinDown = minKeys.Any(x => KeyboardManager.IsKeyDown(parent.CurrentKeyboard, x));
-            bool isMaxDown = maxKeys.Any(x => KeyboardManager.IsKeyDown(parent.CurrentKeyboard, x));
+            bool isMinDown = minKeys.Any(x => InputManager.IsKeyDown(parent.CurrentKeyboard, x));
+            bool isMaxDown = maxKeys.Any(x => InputManager.IsKeyDown(parent.CurrentKeyboard, x));
 
             if (!isMinDown && !isMaxDown)
             {

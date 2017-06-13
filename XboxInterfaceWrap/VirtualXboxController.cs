@@ -53,32 +53,38 @@
             return 0;
         }
 
-        public static void ResetStates(uint userIndex)
-        {
-            if (userIndex >= 1 && userIndex <= 4)
-            {
-                states[userIndex - 1].Reset();
-            }
-        }
-
         public static bool PlugIn(uint userIndex)
         {
-            VirtualXboxController.ResetStates(userIndex);
+            if (NativeMethods.PlugInExt(userIndex))
+            {
+                VirtualXboxController.ResetStates(userIndex);
+                return true;
+            }
 
-            return NativeMethods.PlugInExt(userIndex);
+            return false;
         }
 
         public static bool UnPlug(uint userIndex, bool force = false)
         {
-            VirtualXboxController.ResetStates(userIndex);
-
             if (force)
             {
-                return NativeMethods.UnPlugForceExt(userIndex);
+                if (NativeMethods.UnPlugForceExt(userIndex))
+                {
+                    VirtualXboxController.ResetStates(userIndex);
+                    return true;
+                }
+
+                return false;
             }
             else
             {
-                return NativeMethods.UnPlugExt(userIndex);
+                if (NativeMethods.UnPlugExt(userIndex))
+                {
+                    VirtualXboxController.ResetStates(userIndex);
+                    return true;
+                }
+
+                return false;
             }
         }
 
@@ -88,26 +94,46 @@
             {
                 case XboxAxis.X:
                     {
-                        states[(int)userIndex - 1].AxisXValue = value;
-                        return NativeMethods.SetAxisX(userIndex, value);
+                        if (NativeMethods.SetAxisX(userIndex, value))
+                        {
+                            states[(int)userIndex - 1].AxisXValue = value;
+                            return true;
+                        }
+
+                        return false;
                     }
 
                 case XboxAxis.Y:
                     {
-                        states[(int)userIndex - 1].AxisYValue = value;
-                        return NativeMethods.SetAxisY(userIndex, value);
+                        if (NativeMethods.SetAxisY(userIndex, value))
+                        {
+                            states[(int)userIndex - 1].AxisYValue = value;
+                            return true;
+                        }
+
+                        return false;
                     }
 
                 case XboxAxis.Rx:
                     {
-                        states[(int)userIndex - 1].AxisRxValue = value;
-                        return NativeMethods.SetAxisRx(userIndex, value);
+                        if (NativeMethods.SetAxisRx(userIndex, value))
+                        {
+                            states[(int)userIndex - 1].AxisRxValue = value;
+                            return true;
+                        }
+
+                        return false;
                     }
 
                 case XboxAxis.Ry:
                     {
-                        states[(int)userIndex - 1].AxisRyValue = value;
-                        return NativeMethods.SetAxisRy(userIndex, value);
+                        if (NativeMethods.SetAxisRy(userIndex, value))
+                        {
+                            states[(int)userIndex - 1].AxisRyValue = value;
+                            return true;
+                        }
+
+                        return false;
                     }
 
                 default:
@@ -118,50 +144,68 @@
 
         public static bool SetButton(uint userIndex, XboxButton button, bool value)
         {
-            var buttonStates = states[(int)userIndex - 1].ButtonsDown;
-            if (value == true)
-            {
-                if (!buttonStates.Contains(button))
-                {
-                    buttonStates.Add(button);
-                }
-            }
-            else
-            {
-                if (buttonStates.Contains(button))
-                {
-                    buttonStates.Remove(button);
-                }
-            }
+            bool isButtonSet;
 
             switch (button)
             {
                 case XboxButton.Guide:
-                    return NativeMethods.SetBtnGuide(userIndex, value);
+                    isButtonSet = NativeMethods.SetBtnGuide(userIndex, value);
+                    break;
                 case XboxButton.A:
-                    return NativeMethods.SetBtnA(userIndex, value);
+                    isButtonSet = NativeMethods.SetBtnA(userIndex, value);
+                    break;
                 case XboxButton.B:
-                    return NativeMethods.SetBtnB(userIndex, value);
+                    isButtonSet = NativeMethods.SetBtnB(userIndex, value);
+                    break;
                 case XboxButton.X:
-                    return NativeMethods.SetBtnX(userIndex, value);
+                    isButtonSet = NativeMethods.SetBtnX(userIndex, value);
+                    break;
                 case XboxButton.Y:
-                    return NativeMethods.SetBtnY(userIndex, value);
+                    isButtonSet = NativeMethods.SetBtnY(userIndex, value);
+                    break;
                 case XboxButton.Start:
-                    return NativeMethods.SetBtnStart(userIndex, value);
+                    isButtonSet = NativeMethods.SetBtnStart(userIndex, value);
+                    break;
                 case XboxButton.Back:
-                    return NativeMethods.SetBtnBack(userIndex, value);
+                    isButtonSet = NativeMethods.SetBtnBack(userIndex, value);
+                    break;
                 case XboxButton.LeftThumb:
-                    return NativeMethods.SetBtnLT(userIndex, value);
+                    isButtonSet = NativeMethods.SetBtnLT(userIndex, value);
+                    break;
                 case XboxButton.RightThumb:
-                    return NativeMethods.SetBtnRT(userIndex, value);
+                    isButtonSet = NativeMethods.SetBtnRT(userIndex, value);
+                    break;
                 case XboxButton.LeftBumper:
-                    return NativeMethods.SetBtnLB(userIndex, value);
+                    isButtonSet = NativeMethods.SetBtnLB(userIndex, value);
+                    break;
                 case XboxButton.RightBumper:
-                    return NativeMethods.SetBtnRB(userIndex, value);
+                    isButtonSet = NativeMethods.SetBtnRB(userIndex, value);
+                    break;
                 default:
                     throw new NotImplementedException(
                         "Not implemented Xbox button: " + button);
             }
+
+            if (isButtonSet)
+            {
+                var buttonStates = states[(int)userIndex - 1].ButtonsDown;
+                if (value == true)
+                {
+                    if (!buttonStates.Contains(button))
+                    {
+                        buttonStates.Add(button);
+                    }
+                }
+                else
+                {
+                    if (buttonStates.Contains(button))
+                    {
+                        buttonStates.Remove(button);
+                    }
+                }
+            }
+
+            return isButtonSet;
         }
 
         public static bool SetTrigger(uint userIndex, XboxTrigger trigger, byte value)
@@ -198,9 +242,13 @@
 
         public static bool SetDPad(uint userIndex, XboxDpadDirection direction)
         {
-            states[(int)userIndex - 1].DpadDirections = direction;
+            if (NativeMethods.SetDpadExt(userIndex, (int)direction))
+            {
+                states[(int)userIndex - 1].DpadDirections = direction;
+                return true;
+            }
 
-            return NativeMethods.SetDpadExt(userIndex, (int)direction);
+            return false;
         }
 
         public static bool GetButtonValue(uint userIndex, XboxButton button)
@@ -247,6 +295,14 @@
                 default:
                     throw new NotImplementedException(
                         "Not implemented xbox axis: " + axis);
+            }
+        }
+
+        private static void ResetStates(uint userIndex)
+        {
+            if (userIndex >= 1 && userIndex <= 4)
+            {
+                states[userIndex - 1].Reset();
             }
         }
     }

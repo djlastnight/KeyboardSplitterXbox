@@ -78,10 +78,10 @@
 
             PovKeyInfo povKeyInfo = new PovKeyInfo();
 
-            povKeyInfo.IsUpKeyPressed = povUpKeys.Any(x => KeyboardManager.IsKeyDown(parent.CurrentKeyboard, x));
-            povKeyInfo.IsDownKeyPressed = povDownKeys.Any(x => KeyboardManager.IsKeyDown(parent.CurrentKeyboard, x));
-            povKeyInfo.IsLeftKeyPressed = povLeftKeys.Any(x => KeyboardManager.IsKeyDown(parent.CurrentKeyboard, x));
-            povKeyInfo.IsRightKeyPressed = povRightKeys.Any(x => KeyboardManager.IsKeyDown(parent.CurrentKeyboard, x));
+            povKeyInfo.IsUpKeyPressed = povUpKeys.Any(x => InputManager.IsKeyDown(parent.CurrentKeyboard, x));
+            povKeyInfo.IsDownKeyPressed = povDownKeys.Any(x => InputManager.IsKeyDown(parent.CurrentKeyboard, x));
+            povKeyInfo.IsLeftKeyPressed = povLeftKeys.Any(x => InputManager.IsKeyDown(parent.CurrentKeyboard, x));
+            povKeyInfo.IsRightKeyPressed = povRightKeys.Any(x => InputManager.IsKeyDown(parent.CurrentKeyboard, x));
 
             return povKeyInfo;
         }

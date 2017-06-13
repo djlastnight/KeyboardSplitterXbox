@@ -44,9 +44,12 @@
                        ToolTip="Determines the virtual xbox 360 gamepads count"/>
                 <ComboBox Height="23" HorizontalAlignment="Left" Margin="70,12,0,0" Name="deviceCountBox" VerticalAlignment="Top"
                           Width="35" SelectionChanged="DeviceCountBox_SelectionChanged"/>
-                <CheckBox Content="Block choosen keyboards" Height="16" HorizontalAlignment="Left" Margin="111,15,0,0"
+                <CheckBox Content="Block keyboards" Height="16" HorizontalAlignment="Left" Margin="111,15,0,0"
                           Name="blockKeyboardCheckbox" VerticalAlignment="Top" IsChecked="True"
                           ToolTip="Determines whether Windows OS will receive the assigned keyboards input"/>
+                <CheckBox Content="Block mouse" Height="16" HorizontalAlignment="Left" Margin="241,15,0,0"
+                          Name="blockMouseCheckbox" VerticalAlignment="Top" IsChecked="False"
+                          ToolTip="Determines whether Windows OS will receive the mouse input"/>
                 <Button Name="startButton" Content="Start" Width="75" Height="23" HorizontalAlignment="Left" VerticalAlignment="Top"
                         Margin="389,12,0,0" Click="StartButton_Click" ToolTip="Starts the emulation process" />
                 <Button Name="stopButton" Content="Stop" Width="75" Height="23" HorizontalAlignment="Left" VerticalAlignment="Top"
