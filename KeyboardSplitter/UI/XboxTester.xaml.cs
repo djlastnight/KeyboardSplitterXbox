@@ -28,7 +28,7 @@
             }
 
             this.joyControl = control;
-            InputManager.KeyPressed += this.KeyboardManager_KeyPressed;
+            InputManager.KeyPressed += new EventHandler(this.KeyboardManager_KeyPressed);
             this.presetNameLabel.Content += this.joyControl.CurrentPreset.Name;
             this.xboxDeviceNameLabel.Content += this.joyControl.UserIndex.ToString();
             this.keyboardNameLabel.Content = this.joyControl.CurrentKeyboard;
@@ -363,9 +363,9 @@
             return targetImage;
         }
 
-        private void KeyboardManager_KeyPressed(object sender, KeyPressedEventArgs e)
+        private void KeyboardManager_KeyPressed(object sender, EventArgs e)
         {
-            if (e.Keyboard.StrongName == this.joyControl.CurrentKeyboard)
+            if ((e as KeyPressedEventArgs).Keyboard.StrongName == this.joyControl.CurrentKeyboard)
             {
                 this.UpdateHighlights();
             }

@@ -42,9 +42,9 @@
 
         public delegate void MousePressedEventHandler(object sender, MousePressedEventArgs e);
 
-        public static event KeyPressedEventHandler KeyPressed;
+        public static event EventHandler KeyPressed;
 
-        public static event MousePressedEventHandler MousePressed;
+        public static event EventHandler MousePressed;
 
         public static void Dispose()
         {

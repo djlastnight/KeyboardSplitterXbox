@@ -53,7 +53,7 @@
                             <Image Name="presetWarningImage" HorizontalAlignment="Left"/>
                         </Grid>
                         <Label Height="30" VerticalAlignment="Top" Content="Xbox Function:" Margin="0,105,0,0"/>
-                        <Label Height="30" Content="Keyboard key:" Margin="0,105,25,0" HorizontalAlignment="Right" VerticalAlignment="Top"/>
+                        <Label Height="30" Content="Keyboard/Mouse key:" Margin="0,105,10,0" HorizontalAlignment="Right" VerticalAlignment="Top"/>
                         <StackPanel Name="stackPanel" Orientation="Vertical" x:FieldModifier="private" Margin="0,130,0,0"/>
 
                         <Label Name="presetLabel" IsHitTestVisible="False" Content="Preset:" Height="23" HorizontalAlignment="Left" Margin="0,52,0,0"

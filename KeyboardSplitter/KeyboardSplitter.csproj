@@ -84,6 +84,9 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="ApplicationInfo.cs" />
+    <Compile Include="Commands\RelayCommand.cs" />
+    <Compile Include="Controls\ScrollingTextBox.cs" />
+    <Compile Include="Converters\BoolToReversedBoolConverter.cs" />
     <Compile Include="Helpers\WindowsHelper.cs" />
     <Compile Include="Helpers\ParentFinder.cs" />
     <Compile Include="Managers\DriversManager.cs" />

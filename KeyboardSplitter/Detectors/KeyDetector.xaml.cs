@@ -31,7 +31,7 @@
                 this.WindowStartupLocation = WindowStartupLocation.CenterOwner;
             }
 
-            InputManager.KeyPressed += this.KeyboardManager_KeyPressed;
+            InputManager.KeyPressed += new EventHandler(this.KeyboardManager_KeyPressed);
         }
 
         private KeyDetector()
@@ -51,19 +51,20 @@
             }
         }
 
-        private void KeyboardManager_KeyPressed(object sender, KeyPressedEventArgs e)
+        private void KeyboardManager_KeyPressed(object sender, EventArgs e)
         {
             this.Dispatcher.Invoke((Action)delegate
             {
+                var args = e as KeyPressedEventArgs;
                 if (this.currentKeyboard != null &&
-                    this.currentKeyboard != e.Keyboard.StrongName)
+                    this.currentKeyboard != args.Keyboard.StrongName)
                 {
                     // returning, because we need to
                     // ignore the input from 'foreign' keyboard
                     return;
                 }
 
-                this.OnKeyDetected(e);
+                this.OnKeyDetected(args);
             });
         }
 

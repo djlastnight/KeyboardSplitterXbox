@@ -18,7 +18,7 @@
                 this.WindowStartupLocation = WindowStartupLocation.CenterOwner;
             }
 
-            InputManager.KeyPressed += this.KeyboardManager_KeyPressed;
+            InputManager.KeyPressed += new EventHandler(this.KeyboardManager_KeyPressed);
         }
 
         public event EventHandler KeyboardDetected;
@@ -41,11 +41,11 @@
             }
         }
 
-        private void KeyboardManager_KeyPressed(object sender, KeyPressedEventArgs e)
+        private void KeyboardManager_KeyPressed(object sender, EventArgs e)
         {
             this.Dispatcher.Invoke((Action)delegate
             {
-                this.OnKeyboardDetected(e);
+                this.OnKeyboardDetected(e as KeyPressedEventArgs);
                 this.Close();
             });
         }

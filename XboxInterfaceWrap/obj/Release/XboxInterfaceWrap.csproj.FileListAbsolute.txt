@@ -21,4 +21,3 @@ C:\Users\djlastnight\Source\Repos\KeyboardSplitterXbox\KeyboardSplitter\Lib\Xbox
 C:\Users\djlastnight\Source\Repos\KeyboardSplitterXbox\KeyboardSplitter\Lib\XboxInterfaceWrap.pdb
 C:\Users\djlastnight\Source\Repos\KeyboardSplitterXbox\XboxInterfaceWrap\obj\Release\XboxInterfaceWrap.dll
 C:\Users\djlastnight\Source\Repos\KeyboardSplitterXbox\XboxInterfaceWrap\obj\Release\XboxInterfaceWrap.pdb
-C:\Users\djlastnight\Source\Repos\KeyboardSplitterXbox\XboxInterfaceWrap\obj\Release\XboxInterfaceWrap.csprojResolveAssemblyReference.cache
