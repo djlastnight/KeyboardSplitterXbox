@@ -38,10 +38,6 @@
             };
         }
 
-        //public delegate void KeyPressedEventHandler(object sender, KeyPressedEventArgs e);
-
-        //public delegate void MousePressedEventHandler(object sender, MousePressedEventArgs e);
-
         public static event EventHandler KeyPressed;
 
         public static event EventHandler MousePressed;

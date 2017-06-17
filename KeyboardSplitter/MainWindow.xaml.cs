@@ -2,9 +2,9 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.ComponentModel;
     using System.Diagnostics;
-    using System.IO;
     using System.Linq;
     using System.Management;
     using System.Media;
@@ -14,6 +14,7 @@
     using System.Windows.Interop;
     using System.Windows.Threading;
     using Interceptor;
+    using KeyboardSplitter.Commands;
     using KeyboardSplitter.Controls;
     using KeyboardSplitter.Enums;
     using KeyboardSplitter.Exceptions;
@@ -22,8 +23,6 @@
     using KeyboardSplitter.Resources;
     using KeyboardSplitter.UI;
     using XboxInterfaceWrap;
-    using KeyboardSplitter.Commands;
-    using System.Collections.ObjectModel;
 
     public partial class MainWindow : Window, IDisposable
     {
@@ -90,19 +89,12 @@
             typeof(MainWindow),
             new PropertyMetadata(string.Empty));
 
-
-
-        public string EmulationInformation
-        {
-            get { return (string)GetValue(EmulationInformationProperty); }
-            set { SetValue(EmulationInformationProperty, value); }
-        }
-
-        // Using a DependencyProperty as the backing store for EmulationInformation.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty EmulationInformationProperty =
-            DependencyProperty.Register("EmulationInformation", typeof(string), typeof(MainWindow), new PropertyMetadata(string.Empty));
-
-        
+            DependencyProperty.Register(
+            "EmulationInformation",
+            typeof(string),
+            typeof(MainWindow),
+            new PropertyMetadata(string.Empty));
 
         private bool disposed;
 
@@ -145,8 +137,8 @@
 
         public bool ShouldBlockMouse
         {
-            get { return (bool)GetValue(ShouldBlockMouseProperty); }
-            set { SetValue(ShouldBlockMouseProperty, value); }
+            get { return (bool)this.GetValue(ShouldBlockMouseProperty); }
+            set { this.SetValue(ShouldBlockMouseProperty, value); }
         }
 
         public bool IsEmulationStarted
@@ -191,6 +183,12 @@
             set { this.SetValue(InputMonitorTooltipProperty, value); }
         }
 
+        public string EmulationInformation
+        {
+            get { return (string)this.GetValue(EmulationInformationProperty); }
+            set { this.SetValue(EmulationInformationProperty, value); }
+        }
+
         public System.Windows.Input.ICommand StartEmulationCommand
         {
             get
@@ -219,7 +217,7 @@
 
         public void Dispose()
         {
-            if (disposed)
+            if (this.disposed)
             {
                 return;
             }
@@ -494,7 +492,7 @@
                 
                 if (this.IsInputMonitorExpanded)
                 {
-                    //Adding the pressed key to the monitor
+                    // Adding the pressed key to the monitor
                     if (this.InputMonitorHistory.Length > 10000)
                     {
                         this.InputMonitorHistory = string.Empty;

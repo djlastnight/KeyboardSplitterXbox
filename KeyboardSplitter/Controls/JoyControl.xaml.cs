@@ -376,7 +376,6 @@
             {
                 this.IsEnabled = false;
             }
-            
         }
 
         public void UnLock()

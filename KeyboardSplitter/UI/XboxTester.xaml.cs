@@ -3,11 +3,9 @@
     using System;
     using System.Windows;
     using System.Windows.Controls;
-    using Interceptor;
-    using KeyboardSplitter.Controls;
-    using KeyboardSplitter.Managers;
-    using XboxInterfaceWrap;
     using System.Windows.Threading;
+    using KeyboardSplitter.Controls;
+    using XboxInterfaceWrap;
 
     public partial class XboxTester : UserControl, IDisposable
     {
@@ -41,7 +39,7 @@
 
             this.timer = new DispatcherTimer();
             this.timer.Interval = TimeSpan.FromMilliseconds(10);
-            this.timer.Tick += OnTimerTick;
+            this.timer.Tick += this.OnTimerTick;
             this.timer.Start();
         }
 

@@ -1,16 +1,16 @@
-﻿using KeyboardSplitter.Controls;
-using KeyboardSplitter.Enums;
-using KeyboardSplitter.Helpers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Input;
-using XboxInterfaceWrap;
-
-namespace KeyboardSplitter.UI
+﻿namespace KeyboardSplitter.UI
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Windows;
+    using System.Windows.Controls;
+    using System.Windows.Input;
+    using KeyboardSplitter.Controls;
+    using KeyboardSplitter.Enums;
+    using KeyboardSplitter.Helpers;
+    using XboxInterfaceWrap;
+
     /// <summary>
     /// Interaction logic for OnScreenController.xaml
     /// </summary>
@@ -20,7 +20,7 @@ namespace KeyboardSplitter.UI
 
         public OnScreenController()
         {
-            InitializeComponent();
+            this.InitializeComponent();
             this.pairs = new Dictionary<Button, Image>();
             this.pairs.Add(this.buttonGuide, this.imageGuide);
             this.pairs.Add(this.buttonA, this.imageA);
@@ -48,7 +48,7 @@ namespace KeyboardSplitter.UI
             this.pairs.Add(this.buttonRsUp, this.imageRsUp);
             this.pairs.Add(this.buttonRsDown, this.imageRsDown);
 
-            foreach (var pair in pairs)
+            foreach (var pair in this.pairs)
             {
                 var button = pair.Key;
                 var image = pair.Value;
@@ -80,7 +80,7 @@ namespace KeyboardSplitter.UI
         private void OnButtonDown(object sender, MouseButtonEventArgs e)
         {
             var button = sender as Button;
-            var image = pairs.First(x => x.Key == button).Value;
+            var image = this.pairs.First(x => x.Key == button).Value;
             var function = (XboxCustomFunction)Enum.Parse(typeof(XboxCustomFunction), button.Tag as string);
             this.SetFunctionState(image, function, true);
         }
@@ -88,7 +88,7 @@ namespace KeyboardSplitter.UI
         private void OnButtonUp(object sender, MouseButtonEventArgs e)
         {
             var button = sender as Button;
-            var image = pairs.First(x => x.Key == button).Value;
+            var image = this.pairs.First(x => x.Key == button).Value;
             var function = (XboxCustomFunction)Enum.Parse(typeof(XboxCustomFunction), button.Tag as string);
             this.SetFunctionState(image, function, false);
         }
@@ -96,14 +96,14 @@ namespace KeyboardSplitter.UI
         private void OnButtonEnter(object sender, MouseEventArgs e)
         {
             var button = sender as Button;
-            var image = pairs.First(x => x.Key == button).Value;
+            var image = this.pairs.First(x => x.Key == button).Value;
             image.Opacity = 0.3;
         }
 
         private void OnButtonLeave(object sender, MouseEventArgs e)
         {
             var button = sender as Button;
-            var image = pairs.First(x => x.Key == button).Value;
+            var image = this.pairs.First(x => x.Key == button).Value;
             image.Opacity = 0;
         }
 
