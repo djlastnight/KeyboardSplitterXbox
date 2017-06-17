@@ -7,10 +7,13 @@
     using KeyboardSplitter.Controls;
     using KeyboardSplitter.Managers;
     using XboxInterfaceWrap;
+    using System.Windows.Threading;
 
     public partial class XboxTester : UserControl, IDisposable
     {
         private readonly JoyControl joyControl;
+
+        private DispatcherTimer timer;
 
         public XboxTester(JoyControl control)
             : this()
@@ -28,7 +31,6 @@
             }
 
             this.joyControl = control;
-            InputManager.KeyPressed += new EventHandler(this.KeyboardManager_KeyPressed);
             this.presetNameLabel.Content += this.joyControl.CurrentPreset.Name;
             this.xboxDeviceNameLabel.Content += this.joyControl.UserIndex.ToString();
             this.keyboardNameLabel.Content = this.joyControl.CurrentKeyboard;
@@ -36,6 +38,11 @@
             {
                 this.Opacity = 0.2;
             }
+
+            this.timer = new DispatcherTimer();
+            this.timer.Interval = TimeSpan.FromMilliseconds(10);
+            this.timer.Tick += OnTimerTick;
+            this.timer.Start();
         }
 
         private XboxTester()
@@ -43,33 +50,44 @@
             this.InitializeComponent();
         }
 
-        public void UpdateHighlights()
+        public void Dispose()
         {
-            Dispatcher.Invoke((Action)delegate
+            if (this.timer != null)
             {
-                foreach (XboxButton button in Enum.GetValues(typeof(XboxButton)))
+                if (this.timer.IsEnabled)
                 {
-                    this.HighlightButton(button);
+                    this.timer.Stop();
                 }
 
-                foreach (XboxTrigger trigger in Enum.GetValues(typeof(XboxTrigger)))
-                {
-                    this.HighlightTrigger(trigger);
-                }
-
-                foreach (XboxDpadDirection direction in Enum.GetValues(typeof(XboxDpadDirection)))
-                {
-                    this.HighlightDpad(direction);
-                }
-
-                foreach (XboxAxis axis in Enum.GetValues(typeof(XboxAxis)))
-                {
-                    this.HighlightAxis(axis);
-                }
-            });
+                this.timer.Tick -= this.OnTimerTick;
+                this.timer = null;
+            }
         }
 
-        public bool IsButtonHighlighted(XboxButton button)
+        private void UpdateHighlights()
+        {
+            foreach (XboxButton button in Enum.GetValues(typeof(XboxButton)))
+            {
+                this.HighlightButton(button);
+            }
+
+            foreach (XboxTrigger trigger in Enum.GetValues(typeof(XboxTrigger)))
+            {
+                this.HighlightTrigger(trigger);
+            }
+
+            foreach (XboxDpadDirection direction in Enum.GetValues(typeof(XboxDpadDirection)))
+            {
+                this.HighlightDpad(direction);
+            }
+
+            foreach (XboxAxis axis in Enum.GetValues(typeof(XboxAxis)))
+            {
+                this.HighlightAxis(axis);
+            }
+        }
+
+        private bool IsButtonHighlighted(XboxButton button)
         {
             var buttonImage = this.GetButtonImage(button);
             if (buttonImage != null)
@@ -80,7 +98,7 @@
             return false;
         }
 
-        public bool IsTriggerHighlighted(XboxTrigger trigger)
+        private bool IsTriggerHighlighted(XboxTrigger trigger)
         {
             var triggerImage = this.GetTriggerImage(trigger);
             if (triggerImage != null)
@@ -91,7 +109,7 @@
             return false;
         }
 
-        public bool IsDpadHightlighted(XboxDpadDirection direction)
+        private bool IsDpadHightlighted(XboxDpadDirection direction)
         {
             var dpadImage = this.GetDpadImage(direction);
             if (dpadImage != null)
@@ -102,7 +120,7 @@
             return false;
         }
 
-        public bool IsAxisHighlighted(XboxAxis axis, XboxAxisPosition position)
+        private bool IsAxisHighlighted(XboxAxis axis, XboxAxisPosition position)
         {
             var axisImage = this.GetAxisImage(axis, position);
             if (axisImage != null)
@@ -111,11 +129,6 @@
             }
 
             return false;
-        }
-
-        public void Dispose()
-        {
-            InputManager.KeyPressed -= this.KeyboardManager_KeyPressed;
         }
 
         private void HighlightButton(XboxButton button)
@@ -363,12 +376,9 @@
             return targetImage;
         }
 
-        private void KeyboardManager_KeyPressed(object sender, EventArgs e)
+        private void OnTimerTick(object sender, EventArgs e)
         {
-            if ((e as KeyPressedEventArgs).Keyboard.StrongName == this.joyControl.CurrentKeyboard)
-            {
-                this.UpdateHighlights();
-            }
+            this.UpdateHighlights();
         }
 
         private void UserControl_Unloaded(object sender, RoutedEventArgs e)

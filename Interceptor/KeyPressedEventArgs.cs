@@ -1,8 +1,6 @@
 ﻿namespace Interceptor
 {
     using System;
-    using System.Linq;
-    using System.Windows.Forms;
 
     public class KeyPressedEventArgs : EventArgs
     {

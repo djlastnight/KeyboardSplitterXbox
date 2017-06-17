@@ -19,6 +19,5 @@ namespace KeyboardSplitter.Controls
             CaretIndex = Text.Length;
             ScrollToEnd();
         }
-
     }
 }

@@ -269,16 +269,12 @@
                         if (isLeft && keyControl.KeyGesture == InterceptionKeys.MouseLeftButton.ToString())
                         {
                             args.Key = InterceptionKeys.MouseLeftButton;
-                            // InputManager.SetFakeDown(args.Keyboard.StrongName, args.Key.ToString());
-
                             FeedXboxController(keyControl, args);
                             e.Handled = handled;
-                            LogWriter.Write(e.Handled.ToString());
                         }
                         else if (isRight && keyControl.KeyGesture == InterceptionKeys.MouseRightButton.ToString())
                         {
                             args.Key = InterceptionKeys.MouseRightButton;
-                            // InputManager.SetFakeDown(args.Keyboard.StrongName, args.Key.ToString());
                             FeedXboxController(keyControl, args);
                             e.Handled = handled;
                         }
