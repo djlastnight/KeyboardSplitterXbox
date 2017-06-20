@@ -19,5 +19,30 @@
                 return KeysHelper.GetCorrectedKeyName(this.Key, this.State);
             }
         }
+
+        public bool IsMouseKey
+        {
+            get
+            {
+                return (ushort)this.Key > 20000;
+            }
+        }
+
+        public override string ToString()
+        {
+            if (!IsMouseKey)
+            {
+                return string.Format(
+                    "Source: {0} {1} {2}",
+                    this.Keyboard.StrongName,
+                    this.CorrectedKey,
+                    this.State);
+            }
+
+            return string.Format(
+                "Source: {0} {1}",
+                this.CorrectedKey,
+                this.State);
+        }
     }
 }

@@ -50,9 +50,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DriverState.cs" />
+    <Compile Include="InterceptionDevice.cs" />
     <Compile Include="InterceptionDriver.cs" />
     <Compile Include="Input.cs" />
     <Compile Include="InterceptionKeyboard.cs" />
+    <Compile Include="InterceptionMouse.cs" />
     <Compile Include="KeyboardFilterMode.cs" />
     <Compile Include="KeyPressedEventArgs.cs" />
     <Compile Include="InterceptionKeys.cs" />

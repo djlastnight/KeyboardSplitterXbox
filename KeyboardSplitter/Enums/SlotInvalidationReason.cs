@@ -22,6 +22,11 @@
         Keyboard_Unplugged,
 
         /// <summary>
+        /// The associated to the slot (JoyControl) mouse is unplugged from the system.
+        /// </summary>
+        Mouse_Unplugged,
+
+        /// <summary>
         /// The associated to the slot (JoyControl) virtual xbox controller is unplugged.
         /// </summary>
         Controller_Unplugged,

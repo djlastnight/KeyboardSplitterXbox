@@ -208,14 +208,14 @@
 
             mouseStroke.State = state;
 
-            if (state == MouseState.ScrollUp)
-            {
-                mouseStroke.Rolling = 120;
-            }
-            else if (state == MouseState.ScrollDown)
-            {
-                mouseStroke.Rolling = -120;
-            }
+            //if (state == MouseState.ScrollUp)
+            //{
+            //    mouseStroke.Rolling = 120;
+            //}
+            //else if (state == MouseState.ScrollDown)
+            //{
+            //    mouseStroke.Rolling = -120;
+            //}
 
             stroke.Mouse = mouseStroke;
 
@@ -236,18 +236,18 @@
             this.SendMouseEvent(MouseState.RightUp);
         }
 
-        public void ScrollMouse(ScrollDirection direction)
-        {
-            switch (direction)
-            {
-                case ScrollDirection.Down:
-                    this.SendMouseEvent(MouseState.ScrollDown);
-                    break;
-                case ScrollDirection.Up:
-                    this.SendMouseEvent(MouseState.ScrollUp);
-                    break;
-            }
-        }
+        //public void ScrollMouse(ScrollDirection direction)
+        //{
+        //    switch (direction)
+        //    {
+        //        case ScrollDirection.Down:
+        //            this.SendMouseEvent(MouseState.ScrollDown);
+        //            break;
+        //        case ScrollDirection.Up:
+        //            this.SendMouseEvent(MouseState.ScrollUp);
+        //            break;
+        //    }
+        //}
 
         /// <summary>
         /// Gets list of all connected keyboards.
@@ -266,8 +266,28 @@
                     {
                         DeviceID = (uint)i,
                         HardwareID = hwid,
-                        FriendlyName = this.GetKeyboardFriendlyName(hwid),
                         StrongName = "Keyboard_" + i.ToString().PadLeft(2, '0'),
+                    });
+                }
+            }
+
+            return output;
+        }
+
+        public List<InterceptionMouse> GetMouses()
+        {
+            var output = new List<InterceptionMouse>();
+
+            for (int i = 11; i < 20; i++)
+            {
+                string hwid = this.GetHardwareID(i);
+                if (hwid != null)
+                {
+                    output.Add(new InterceptionMouse()
+                    {
+                        DeviceID = (uint)i,
+                        HardwareID = hwid,
+                        StrongName = "Mouse_" + (i - 10).ToString().PadLeft(2, '0'),
                     });
                 }
             }
@@ -440,60 +460,6 @@
             return null;
         }
 
-        private string GetKeyboardFriendlyName(string hardwareID)
-        {
-            try
-            {
-                if (hardwareID.Contains("REV"))
-                {
-                    // removing the revision from the hardware id
-                    int revision_index = hardwareID.IndexOf("REV");
-                    int apersandIndex = hardwareID.IndexOf("&", revision_index);
-                    hardwareID = hardwareID.Substring(0, revision_index) + hardwareID.Substring(apersandIndex + 1);
-                }
-
-                using (var rootKey = Registry.LocalMachine.OpenSubKey(@"System\CurrentControlSet\Enum\" + hardwareID))
-                {
-                    var subKeys = this.GetAllSubKeys(rootKey).Where(x => x.GetValue("Class") != null && x.GetValue("Class").ToString() == "Keyboard");
-
-                    var fullDescription = subKeys.Select(x => x.GetValue("DeviceDesc")).First().ToString();
-                    foreach (var subkey in subKeys)
-                    {
-                        subkey.Dispose();
-                    }
-
-                    string friendlyName = fullDescription.Substring(fullDescription.ToString().IndexOf(';') + 1);
-
-                    return friendlyName;
-                }
-            }
-            catch (Exception)
-            {
-                return "n/a";
-            }
-        }
-
-        private List<RegistryKey> GetAllSubKeys(RegistryKey rootKey, bool recursive = false)
-        {
-            List<RegistryKey> allKeys = new List<RegistryKey>();
-            foreach (var subkeyName in rootKey.GetSubKeyNames())
-            {
-                if (subkeyName == "Properties")
-                {
-                    continue;
-                }
-
-                var subkey = rootKey.OpenSubKey(subkeyName);
-                if (subkey != null)
-                {
-                    allKeys.Add(subkey);
-                    allKeys.AddRange(this.GetAllSubKeys(subkey, true));
-                }
-            }
-
-            return allKeys;
-        }
-
         private void Dispose(bool disposing)
         {
             if (disposing)
@@ -522,7 +488,8 @@
                             X = stroke.Mouse.X,
                             Y = stroke.Mouse.Y,
                             State = stroke.Mouse.State,
-                            Rolling = stroke.Mouse.Rolling
+                            Rolling = stroke.Mouse.Rolling,
+                            DeviceID = this.deviceId
                         };
 
                         this.OnMousePressed(this, args);
@@ -544,17 +511,18 @@
                     if (this.OnKeyPressed != null)
                     {
                         string hardwareID = this.GetHardwareID(this.deviceId);
+                        var keyboard = new InterceptionKeyboard()
+                            {
+                                HardwareID = hardwareID,
+                                DeviceID = (uint)this.deviceId,
+                                StrongName = "Keyboard_" + this.deviceId.ToString().PadLeft(2, '0'),
+                            };
+
                         var args = new KeyPressedEventArgs()
                         {
                             Key = stroke.Key.Code,
                             State = stroke.Key.State,
-                            Keyboard = new InterceptionKeyboard()
-                            {
-                                HardwareID = hardwareID,
-                                DeviceID = (uint)this.deviceId,
-                                FriendlyName = this.GetKeyboardFriendlyName(hardwareID),
-                                StrongName = "Keyboard_" + this.deviceId.ToString().PadLeft(2, '0'),
-                            }
+                            Keyboard = keyboard,
                         };
 
                         this.OnKeyPressed(this, args);

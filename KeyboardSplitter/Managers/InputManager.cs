@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using Interceptor;
+    using KeyboardSplitter.Helpers;
 
     public static class InputManager
     {
@@ -13,7 +14,8 @@
 
         static InputManager()
         {
-            var mouseFilter = MouseFilterMode.LeftDown | MouseFilterMode.RightDown | MouseFilterMode.LeftUp | MouseFilterMode.RightUp;
+            // All flags, except mouse move
+            var mouseFilter = MouseFilterMode.All &~MouseFilterMode.MouseMove;
             interceptor = new Input(KeyboardFilterMode.All, mouseFilter);
             if (!interceptor.Load())
             {
@@ -49,7 +51,7 @@
 
         public static List<InterceptionKeyboard> GetKeyboards()
         {
-            var manual = new InterceptionKeyboard(0, string.Empty, "OnScreen Mouse Feeder", "None");
+            var manual = new InterceptionKeyboard(0, string.Empty, "None");
             var keyboards = new List<InterceptionKeyboard>();
             keyboards.Add(manual);
             keyboards.AddRange(interceptor.GetKeyboards());
@@ -57,8 +59,24 @@
             return keyboards;
         }
 
+        public static List<InterceptionMouse> GetMouses()
+        {
+            var mouses = interceptor.GetMouses();
+            foreach (var mouse in mouses)
+            {
+                LogWriter.Write(mouse.StrongName + " " + mouse.FriendlyName + " " + mouse.HardwareID);
+            }
+
+            return interceptor.GetMouses();
+        }
+
         public static bool IsKeyDown(string keyboardStrongName, string key)
         {
+            if (keyboardStrongName == "None")
+            {
+                return false;
+            }
+
             var info = keyboardsInfo.FirstOrDefault(x => x.KeyboardSource == keyboardStrongName);
             if (info == null)
             {
@@ -107,18 +125,42 @@
 
         private static void Interceptor_OnMousePressed(object sender, MousePressedEventArgs e)
         {
-            bool isDown = e.State == MouseState.LeftDown || e.State == MouseState.RightDown;
-            bool isLeft = e.State == MouseState.LeftDown || e.State == MouseState.LeftUp;
-            var key = isLeft ? InterceptionKeys.MouseLeftButton : InterceptionKeys.MouseRightButton;
-            var state = isDown ? KeyState.Down : KeyState.Up;
+            var state = e.IsDown ? KeyState.Down : KeyState.Up;
 
             foreach (var keyboardInfo in keyboardsInfo)
             {
-                keyboardInfo.SetKeyState(key.ToString(), state);
+                keyboardInfo.SetKeyState(e.Key.ToString(), state);
             }
 
+            OnMousePressed(sender, e);
+            if (e.Rolling != 0)
+            {
+                var action = new Action(() =>
+                {
+                    var newArgs = new MousePressedEventArgs()
+                    {
+                        Handled = e.Handled,
+                        Rolling = 0,
+                        State = e.State,
+                        X = e.X,
+                        Y = e.Y,
+                        DelayedKey = e.Key
+                    };
+
+                    InputManager.OnMousePressed(sender, newArgs);
+                });
+
+                var task = new DelayedTask(action, TimeSpan.FromMilliseconds(100));
+                task.Run();
+            }
+        }
+
+        private static void OnMousePressed(object sender, EventArgs e)
+        {
             if (InputManager.MousePressed != null)
             {
+                var args = e as MousePressedEventArgs;
+                LogWriter.Write("Firing MousePressed " + args.Key + " " + args.IsDown);
                 InputManager.MousePressed(sender, e);
             }
         }

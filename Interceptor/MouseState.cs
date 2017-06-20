@@ -5,6 +5,7 @@
     [Flags]
     public enum MouseState : ushort
     {
+        None = 0x00,
         LeftDown = 0x01,
         LeftUp = 0x02,
         RightDown = 0x04,
@@ -15,11 +16,7 @@
         LeftExtraUp = 0x80,
         RightExtraDown = 0x100,
         RightExtraUp = 0x200,
-        ScrollVertical = 0x400,
-        ScrollUp = 0x400,
-        ScrollDown = 0x400,
-        ScrollHorizontal = 0x800,
-        ScrollLeft = 0x800,
-        ScrollRight = 0x800,
+        Wheel = 0x400,
+        HWheel = 0x800
     }
 }

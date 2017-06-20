@@ -227,6 +227,7 @@
 
         public static void ProcessMousePress(MousePressedEventArgs e, bool handled)
         {
+            LogWriter.Write("Mouse press on " + e.DeviceID);
             if (!EmulationManager.IsCreated)
             {
                 return;
@@ -237,47 +238,33 @@
                 return;
             }
 
-            bool isDown = e.State == MouseState.LeftDown || e.State == MouseState.RightDown;
-            bool isUp = e.State == MouseState.LeftUp || e.State == MouseState.RightUp;
-            bool isLeft = e.State == MouseState.LeftDown || e.State == MouseState.LeftUp;
-            bool isRight = e.State == MouseState.RightDown || e.State == MouseState.RightUp;
-
-            if (isDown || isUp)
+            foreach (var joyControl in EmulationManager.joyControls)
             {
-                foreach (var joyControl in EmulationManager.joyControls)
+                if (joyControl.IsInvalidated)
                 {
-                    if (joyControl.IsInvalidated)
-                    {
-                        continue;
-                    }
+                    continue;
+                }
 
-                    if (!VirtualXboxController.Exists(joyControl.UserIndex))
-                    {
-                        joyControl.Invalidate(SlotInvalidationReason.Controller_Unplugged);
-                        continue;
-                    }
+                if (!VirtualXboxController.Exists(joyControl.UserIndex))
+                {
+                    joyControl.Invalidate(SlotInvalidationReason.Controller_Unplugged);
+                    continue;
+                }
 
-                    foreach (KeyControl keyControl in joyControl.Children)
+                foreach (KeyControl keyControl in joyControl.Children)
+                {
+                    if (keyControl.KeyGesture == e.Key.ToString())
                     {
                         var args = new KeyPressedEventArgs()
                         {
                             Handled = false,
                             Keyboard = InputManager.GetKeyboards().Find(x => x.StrongName == joyControl.CurrentKeyboard),
-                            State = isDown ? KeyState.Down : KeyState.Up,
+                            State = e.IsDown ? KeyState.Down : KeyState.Up,
+                            Key = e.Key
                         };
 
-                        if (isLeft && keyControl.KeyGesture == InterceptionKeys.MouseLeftButton.ToString())
-                        {
-                            args.Key = InterceptionKeys.MouseLeftButton;
-                            FeedXboxController(keyControl, args);
-                            e.Handled = handled;
-                        }
-                        else if (isRight && keyControl.KeyGesture == InterceptionKeys.MouseRightButton.ToString())
-                        {
-                            args.Key = InterceptionKeys.MouseRightButton;
-                            FeedXboxController(keyControl, args);
-                            e.Handled = handled;
-                        }
+                        FeedXboxController(keyControl, args);
+                        e.Handled = handled;
                     }
                 }
             }
@@ -304,6 +291,13 @@
                             }
                         }
 
+                        var buttonLog = string.Format(
+                            "Feeding XBC#{0} Button {1} [{2}]",
+                            keyControl.JoyParent.UserIndex,
+                            keyControl.Button,
+                            e);
+
+                        LogWriter.Write(buttonLog);
                         VirtualXboxController.SetButton(keyControl.JoyParent.UserIndex, keyControl.Button, isKeyDown);
                     }
 

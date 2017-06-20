@@ -29,11 +29,14 @@
 
         private List<InterceptionKeyboard> keyboards;
 
+        private List<InterceptionMouse> mouses;
+
         private Button addCustomFunctionButton;
 
         private KeyControl bindEnterKeyControl;
 
         private SlotInvalidationReason invalidateReason;
+
 
         public JoyControl(uint userIndex)
             : this()
@@ -147,6 +150,25 @@
             private set
             {
                 this.keyboardDeviceBox.SelectedItem = value;
+            }
+        }
+
+        public string CurrentMouse
+        {
+            get
+            {
+                string output = string.Empty;
+                Dispatcher.Invoke((Action)delegate
+                {
+                    output = this.mouseDeviceBox.SelectedItem as string;
+                });
+
+                return output;
+            }
+
+            private set
+            {
+                this.mouseDeviceBox.SelectedItem = value;
             }
         }
 
@@ -296,7 +318,12 @@
                         // unplugging the virtual joystick too
                         VirtualXboxController.UnPlug(this.UserIndex, true);
                     }
+                    break;
+                case SlotInvalidationReason.Mouse_Unplugged:
+                    errorMsg = this.CurrentMouse + " was unplugged!";
+                    this.mouseDeviceBox.SelectedIndex = -1;
 
+                    VirtualXboxController.UnPlug(this.UserIndex, true);
                     break;
                 case SlotInvalidationReason.Controller_Unplugged:
                     errorMsg = string.Format("Controller #{0} is not plugged-in!", this.userIndex);
@@ -544,6 +571,12 @@
             this.keyboardDeviceBox.ItemsSource = this.keyboards.Select(x => x.StrongName);
         }
 
+        private void UpdateMousesList()
+        {
+            this.mouses = InputManager.GetMouses();
+            this.mouseDeviceBox.ItemsSource = this.mouses.Select(x => x.StrongName);
+        }
+
         private void KeyboardDeviceBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             this.keyboardInfoLabel.Content = "n/a";
@@ -565,6 +598,11 @@
             }
 
             this.keyboardInfoLabel.Content = this.keyboards[this.keyboardDeviceBox.SelectedIndex].FriendlyName;
+        }
+
+        private void MouseDeviceBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            MessageBox.Show("mouse changed to " + this.mouses[this.mouseDeviceBox.SelectedIndex].FriendlyName);
         }
 
         private void PresetsBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -666,6 +704,11 @@
         private void KeyboardDeviceBox_DropDownOpened(object sender, EventArgs e)
         {
             this.UpdateKeyboardsList();
+        }
+
+        private void MouseDeviceBox_DropDownOpened(object sender, EventArgs e)
+        {
+            this.UpdateMousesList();
         }
 
         private void BindEnterCheckBox_Checked(object sender, RoutedEventArgs e)

@@ -1,43 +1,23 @@
 ﻿namespace Interceptor
 {
-    public class InterceptionKeyboard
+    public class InterceptionKeyboard : InterceptionDevice
     {
-        public uint DeviceID { get; internal set; }
-
-        public string HardwareID { get; internal set; }
-
-        public string FriendlyName { get; internal set; }
-
-        public string StrongName { get; internal set; }
 
         public InterceptionKeyboard()
         {
 
         }
 
-        public InterceptionKeyboard(uint deviceID, string hardwareID, string friendlyName, string strongName)
+        public InterceptionKeyboard(uint deviceID, string hardwareID, string strongName)
         {
-            this.DeviceID = deviceID;
-            this.HardwareID = hardwareID;
-            this.FriendlyName = friendlyName;
-            this.StrongName = strongName;
+            base.DeviceID = deviceID;
+            base.HardwareID = hardwareID;
+            base.StrongName = strongName;
         }
 
-        public bool IsTheSameAs(InterceptionKeyboard keyboardToCompare)
+        public override bool IsKeyboard
         {
-            var props = typeof(InterceptionKeyboard).GetProperties();
-
-            foreach (var property in props)
-            {
-                var v1 = property.GetValue(this, null);
-                var v2 = property.GetValue(keyboardToCompare, null);
-                if (!v1.Equals(v2))
-                {
-                    return false;
-                }
-            }
-
-            return true;
+            get { return true; }
         }
     }
 }

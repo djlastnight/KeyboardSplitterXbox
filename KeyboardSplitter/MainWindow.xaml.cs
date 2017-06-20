@@ -23,6 +23,7 @@
     using KeyboardSplitter.Resources;
     using KeyboardSplitter.UI;
     using XboxInterfaceWrap;
+    using System.Threading;
 
     public partial class MainWindow : Window, IDisposable
     {
@@ -103,6 +104,8 @@
         private TimeSpan autoCollapseSpan = TimeSpan.FromSeconds(60);
 
         private List<InterceptionKeyboard> initialKeyboards;
+
+        private List<InterceptionMouse> initialMouses;
 
         private string emergencyKey = InterceptionKeys.LeftControl.ToString();
 
@@ -232,6 +235,7 @@
             if (disposing)
             {
                 this.StopUsbWatcher();
+                Thread.Sleep(100);
                 EmulationManager.Destroy();
                 PresetDataManager.ExportToFile();
                 LogWriter.Write("Main window disposed");
@@ -286,6 +290,7 @@
             this.emergencyHitDownCount = 0;
             this.JoyControls.Clear();
             this.initialKeyboards = InputManager.GetKeyboards();
+            this.initialMouses = InputManager.GetMouses();
 
             EmulationManager.Create((uint)this.SlotsCount, this.initialKeyboards.Select(x => x.StrongName).ToArray());
 
@@ -489,7 +494,7 @@
             this.Dispatcher.Invoke((Action)delegate
             {
                 var args = e as KeyPressedEventArgs;
-                
+
                 if (this.IsInputMonitorExpanded)
                 {
                     // Adding the pressed key to the monitor
@@ -698,43 +703,64 @@
             fac.ShowDialog();
         }
 
+        private object usbLockObject = new object();
+
         private void OnUsbPlugUnplug(object sender, EventArrivedEventArgs e)
         {
-            if (this.disposed || EmulationManager.JoyControls == null)
+            lock (this.usbLockObject)
             {
-                return;
-            }
-
-            Dispatcher.Invoke((Action)delegate
-            {
-                var newKeyboards = InputManager.GetKeyboards();
-                switch (e.NewEvent.ClassPath.ClassName)
+                if (this.disposed || EmulationManager.JoyControls == null)
                 {
-                    case "__InstanceDeletionEvent":
-                        {
-                            foreach (var joyControl in EmulationManager.JoyControls)
-                            {
-                                if (joyControl.CurrentKeyboard == null)
-                                {
-                                    continue;
-                                }
+                    return;
+                }
 
-                                var joyKeyboard = this.initialKeyboards.Find(x => x.StrongName == joyControl.CurrentKeyboard);
-                                if (newKeyboards.FirstOrDefault(x => x.IsTheSameAs(joyKeyboard)) == null)
+                Dispatcher.Invoke((Action)delegate
+                {
+                    var newKeyboards = InputManager.GetKeyboards();
+                    var newMouses = InputManager.GetMouses();
+
+                    switch (e.NewEvent.ClassPath.ClassName)
+                    {
+                        case "__InstanceDeletionEvent":
+                            {
+                                foreach (var joyControl in EmulationManager.JoyControls)
                                 {
-                                    // joycontrol's keyboard was unplugged
-                                    joyControl.Invalidate(SlotInvalidationReason.Keyboard_Unplugged);
+                                    if (joyControl.CurrentKeyboard == null)
+                                    {
+                                        continue;
+                                    }
+
+                                    var joyKeyboard = this.initialKeyboards.Find(x => x.StrongName == joyControl.CurrentKeyboard);
+                                    if (newKeyboards.FirstOrDefault(x => x.IsTheSameAs(joyKeyboard)) == null)
+                                    {
+                                        // joycontrol's keyboard was unplugged
+                                        joyControl.Invalidate(SlotInvalidationReason.Keyboard_Unplugged);
+                                        continue;
+                                    }
+
+                                    if (joyControl.CurrentMouse == null)
+                                    {
+                                        continue;
+                                    }
+
+                                    var joyMouse = this.initialMouses.Find(x => x.StrongName == joyControl.CurrentMouse);
+                                    if (newMouses.FirstOrDefault(x => x.IsTheSameAs(joyMouse)) == null)
+                                    {
+                                        // joycontrol's mouse was unplugged
+                                        joyControl.Invalidate(SlotInvalidationReason.Mouse_Unplugged);
+                                        continue;
+                                    }
                                 }
                             }
-                        }
 
-                        break;
-                    case "__InstanceCreationEvent":
-                        break;
-                    default:
-                        break;
-                }
-            });
+                            break;
+                        case "__InstanceCreationEvent":
+                            break;
+                        default:
+                            break;
+                    }
+                });
+            }
         }
 
         private void OnStartEmulationRequested(object parameter)

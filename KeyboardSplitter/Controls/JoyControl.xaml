@@ -44,6 +44,10 @@
                        Name="keyboardInfoLabel" x:FieldModifier="private"/>
                         <ComboBox Height="23" HorizontalAlignment="Left" Margin="111,3,0,0" Name="keyboardDeviceBox" x:FieldModifier="private" VerticalAlignment="Top"
                           SelectionChanged="KeyboardDeviceBox_SelectionChanged" Width="105" DropDownOpened="KeyboardDeviceBox_DropDownOpened" />
+                        
+                        <ComboBox Height="23" HorizontalAlignment="Left" Margin="111,20,0,0" Name="mouseDeviceBox" x:FieldModifier="private" VerticalAlignment="Top"
+                          SelectionChanged="MouseDeviceBox_SelectionChanged" Width="105" DropDownOpened="MouseDeviceBox_DropDownOpened" />
+                        
                         <Button ToolTip="Detect keyboard" Content=".." Height="23" HorizontalAlignment="Left" Margin="222,3,0,0" Name="detectKeyboardButton"
                                 VerticalAlignment="Top" Width="20" Click="DetectKeyboardButton_Click" />
                     </Grid>

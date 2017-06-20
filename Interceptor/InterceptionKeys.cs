@@ -146,5 +146,12 @@
         // Mouse Gestures
         MouseLeftButton = 20001,
         MouseRightButton = 20002,
+        MouseMiddleButton = 20003,
+        MouseExtraLeft = 20004,
+        MouseExtraRight = 20005,
+        MouseWheelUp = 20006,
+        MouseWheelDown = 20007,
+        MouseWheelLeft = 20008,
+        MouseWheelRight = 20009
     }
 }
