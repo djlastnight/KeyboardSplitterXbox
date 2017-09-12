@@ -1,30 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Interceptor
+﻿namespace Interceptor
 {
+    using Interceptor.Enums;
+
     public class InterceptionMouse : InterceptionDevice
     {
-        public InterceptionMouse()
+        internal InterceptionMouse(uint deviceID, string hardwareId)
+            : base(deviceID, hardwareId)
         {
-
         }
 
-        public InterceptionMouse(uint deviceId, string hardwareId, string strongName)
+        public override InterceptionDeviceType DeviceType
         {
-            this.DeviceID = deviceId;
-            this.HardwareID = hardwareId;
-            this.StrongName = strongName;
-        }
-
-        public override bool IsKeyboard
-        {
-            get
-            {
-                return false;
-            }
+            get { return InterceptionDeviceType.Mouse; }
         }
     }
 }

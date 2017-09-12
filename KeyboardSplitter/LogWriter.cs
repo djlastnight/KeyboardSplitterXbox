@@ -8,7 +8,7 @@
 
     public static class LogWriter
     {
-        private static string logFileName = "log.txt";
+        private static string logFileName = "splitter_log.txt";
 
         private static string logFilePath = System.Windows.Forms.Application.StartupPath + "/" + logFileName;
 
@@ -54,13 +54,10 @@
             {
                 using (var writer = new StreamWriter(logFilePath, true, Encoding.Unicode))
                 {
-                    var memoryUsage = Math.Round(Process.GetCurrentProcess().PrivateMemorySize64 / 1024f / 1024, 0);
+                    double memoryUsage = Math.Round(Process.GetCurrentProcess().PrivateMemorySize64 / 1024f / 1024, 0);
                     string memStamp = "[Mem: " + memoryUsage + " MB] - ";
                     string timeStamp = DateTime.Now.ToString("[ddd] dd MMM, yyyy [HH:mm:ss] ", CultureInfo.InvariantCulture);
-                    writer.Write(timeStamp);
-                    writer.Write(memStamp);
-                    writer.Write(logMessage);
-                    writer.WriteLine(string.Empty);
+                    writer.WriteLine(timeStamp + memStamp + logMessage);
                 }
             }
             catch (Exception)

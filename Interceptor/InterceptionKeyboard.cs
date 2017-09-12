@@ -1,23 +1,17 @@
 ﻿namespace Interceptor
 {
+    using Interceptor.Enums;
+
     public class InterceptionKeyboard : InterceptionDevice
     {
-
-        public InterceptionKeyboard()
+        internal InterceptionKeyboard(uint deviceID, string hardwareID)
+            : base(deviceID, hardwareID)
         {
-
         }
 
-        public InterceptionKeyboard(uint deviceID, string hardwareID, string strongName)
+        public override InterceptionDeviceType DeviceType
         {
-            base.DeviceID = deviceID;
-            base.HardwareID = hardwareID;
-            base.StrongName = strongName;
-        }
-
-        public override bool IsKeyboard
-        {
-            get { return true; }
+            get { return InterceptionDeviceType.Keyboard; }
         }
     }
 }

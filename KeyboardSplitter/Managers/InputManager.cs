@@ -3,165 +3,400 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Text;
+    using System.Windows;
     using Interceptor;
+    using Interceptor.Enums;
     using KeyboardSplitter.Helpers;
+    using SplitterCore.Input;
 
-    public static class InputManager
+    public class InputManager : DependencyObject, IInputManager, IDisposable
     {
-        private static Input interceptor;
+        public const InputKey EmergencyLeftKey = InputKey.LeftControl;
 
-        private static KeyboardKeyStateInfo[] keyboardsInfo;
+        public const InputKey EmergencyRightKey = InputKey.RightControl;
 
-        static InputManager()
+        public static readonly DependencyProperty KeyboardsProperty =
+            DependencyProperty.Register(
+            "Keyboards",
+            typeof(List<Keyboard>),
+            typeof(InputManager),
+            new PropertyMetadata(null));
+
+        public static readonly DependencyProperty MiceProperty =
+            DependencyProperty.Register(
+            "Mice",
+            typeof(List<Mouse>),
+            typeof(InputManager),
+            new PropertyMetadata(null));
+
+        public static readonly DependencyProperty InputMonitorHistoryProperty =
+            DependencyProperty.Register(
+            "InputMonitorHistory",
+            typeof(string),
+            typeof(InputManager),
+            new PropertyMetadata(string.Empty));
+
+        private Interception interceptor;
+
+        private int emergencyLeftDownCount;
+
+        private int emergencyLeftUpCount;
+
+        private int emergencyRightDownCount;
+
+        private int emergencyRightUpCount;
+
+        public InputManager()
         {
-            // All flags, except mouse move
-            var mouseFilter = MouseFilterMode.All &~MouseFilterMode.MouseMove;
-            interceptor = new Input(KeyboardFilterMode.All, mouseFilter);
-            if (!interceptor.Load())
+            this.CheckKeysEnumerations();
+            LogWriter.Write("Creating input manager");
+            this.interceptor = new Interception(KeyboardFilterMode.All, MouseFilterMode.None);
+            if (!this.interceptor.Load())
             {
                 LogWriter.Write("Interceptor.Load() failed!");
                 throw new Exception("Interceptor failed to load!");
             }
 
-            interceptor.OnKeyPressed += new EventHandler<KeyPressedEventArgs>(Interceptor_OnKeyPressed);
-            interceptor.OnMousePressed += new EventHandler<MousePressedEventArgs>(Interceptor_OnMousePressed);
-            keyboardsInfo = new KeyboardKeyStateInfo[10]
+            this.interceptor.InputActivity += this.OnInterceptionInputActivity;
+            this.interceptor.InputDeviceConnectionChanged += this.OnInterceptionInputDeviceConnectionChanged;
+            LogWriter.Write("Gathering keyboards");
+            this.Keyboards = this.GetInterceptionKeyboards();
+            LogWriter.Write("Gathering mice");
+            this.Mice = this.GetInterceptionMice();
+        }
+
+        public event EventHandler<InputEventArgs> InputActivity;
+
+        public event EventHandler<InputDeviceChangedEventArgs> InputDeviceChanged;
+
+        public event EventHandler EmergencyLeft;
+
+        public event EventHandler EmergencyRight;
+
+        public event EventHandler EmergencyStop;
+
+        public static List<InputDevice> ConnectedInputDevices
+        {
+            get
             {
-                new KeyboardKeyStateInfo("Keyboard_01"),
-                new KeyboardKeyStateInfo("Keyboard_02"),
-                new KeyboardKeyStateInfo("Keyboard_03"),
-                new KeyboardKeyStateInfo("Keyboard_04"),
-                new KeyboardKeyStateInfo("Keyboard_05"),
-                new KeyboardKeyStateInfo("Keyboard_06"),
-                new KeyboardKeyStateInfo("Keyboard_07"),
-                new KeyboardKeyStateInfo("Keyboard_08"),
-                new KeyboardKeyStateInfo("Keyboard_09"),
-                new KeyboardKeyStateInfo("Keyboard_10"),
-            };
+                var interceptionDevices = Interception.ConnectedInputDevices;
+                var list = new List<InputDevice>();
+                foreach (var interceptionDevice in interceptionDevices)
+                {
+                    list.Add(Helpers.InputHelper.ToInputDevice(interceptionDevice));
+                }
+
+                return list;
+            }
         }
 
-        public static event EventHandler KeyPressed;
-
-        public static event EventHandler MousePressed;
-
-        public static void Dispose()
+        public List<Keyboard> Keyboards
         {
-            interceptor.Unload();
+            get { return (List<Keyboard>)this.GetValue(KeyboardsProperty); }
+            set { this.SetValue(KeyboardsProperty, value); }
         }
 
-        public static List<InterceptionKeyboard> GetKeyboards()
+        public List<Mouse> Mice
         {
-            var manual = new InterceptionKeyboard(0, string.Empty, "None");
-            var keyboards = new List<InterceptionKeyboard>();
-            keyboards.Add(manual);
-            keyboards.AddRange(interceptor.GetKeyboards());
-
-            return keyboards;
+            get { return (List<Mouse>)this.GetValue(MiceProperty); }
+            set { this.SetValue(MiceProperty, value); }
         }
 
-        public static List<InterceptionMouse> GetMouses()
+        public string InputMonitorHistory
         {
-            var mouses = interceptor.GetMouses();
-            foreach (var mouse in mouses)
+            get { return (string)this.GetValue(InputMonitorHistoryProperty); }
+            set { this.SetValue(InputMonitorHistoryProperty, value); }
+        }
+
+        protected bool IsDestroyed { get; set; }
+
+        public void ClearInputMonitorHistory()
+        {
+            this.InputMonitorHistory = string.Empty;
+        }
+
+        public bool IsKeyDown(InputDevice inputDevice, InputKey key)
+        {
+            if (inputDevice == null)
             {
-                LogWriter.Write(mouse.StrongName + " " + mouse.FriendlyName + " " + mouse.HardwareID);
+                throw new ArgumentNullException("inputDevice");
             }
 
-            return interceptor.GetMouses();
-        }
-
-        public static bool IsKeyDown(string keyboardStrongName, string key)
-        {
-            if (keyboardStrongName == "None")
+            var interceptionDevice = InputHelper.ToInterceptionDevice(inputDevice);
+            if (interceptionDevice == null)
             {
                 return false;
             }
 
-            var info = keyboardsInfo.FirstOrDefault(x => x.KeyboardSource == keyboardStrongName);
-            if (info == null)
-            {
-                var allowed = "Allowed values are in range 'Keyboard_01' to 'Keyboard_10'";
+            var interceptionKey = InputHelper.ToInterceptionKey(key);
 
-                throw new InvalidOperationException(
-                    string.Format("Invalid keyboard strong name: '{0}'. {1}", keyboardStrongName, allowed));
-            }
-
-            return info.IsKeyDown(key);
+            return this.interceptor.IsKeyDown(interceptionDevice, interceptionKey);
         }
 
-        public static void SetFakeDown(string keyboardStrongName, string key)
+        public void Destroy()
         {
-            var info = keyboardsInfo.FirstOrDefault(x => x.KeyboardSource == keyboardStrongName);
-            if (info == null)
+            if (this.IsDestroyed)
             {
-                var allowed = "Allowed values are in range 'Keyboard_01' to 'Keyboard_10'";
-                throw new InvalidOperationException(
-                    string.Format("Invalid keyboard strong name: '{0}'. {1}", keyboardStrongName, allowed));
+                return;
             }
 
-            info.SetKeyState(key, KeyState.Down);
+            this.interceptor.InputActivity -= this.OnInterceptionInputActivity;
+            this.interceptor.Unload();
+            this.InputActivity = null;
+            this.InputDeviceChanged = null;
+            this.IsDestroyed = true;
         }
 
-        public static void ResetFakeStates()
+        public void Dispose()
         {
-            foreach (var info in keyboardsInfo)
+            this.Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
             {
-                foreach (var key in Enum.GetValues(typeof(InterceptionKeys)))
+                if (this.interceptor != null)
                 {
-                    info.SetKeyState(key.ToString(), KeyState.Up);
+                    this.interceptor.Dispose();
                 }
             }
         }
 
-        private static void Interceptor_OnKeyPressed(object sender, KeyPressedEventArgs e)
+        private void CheckKeysEnumerations()
         {
-            keyboardsInfo[e.Keyboard.DeviceID - 1].SetKeyState(e.CorrectedKey, e.State);
+            // Checking both keys enumerations
+            var intercetionKeys = Enum.GetValues(typeof(InterceptionKey));
+            var inputKeys = Enum.GetValues(typeof(InputKey));
 
-            if (InputManager.KeyPressed != null)
+            if (intercetionKeys.Length != inputKeys.Length)
             {
-                InputManager.KeyPressed(sender, e);
-            }
-        }
-
-        private static void Interceptor_OnMousePressed(object sender, MousePressedEventArgs e)
-        {
-            var state = e.IsDown ? KeyState.Down : KeyState.Up;
-
-            foreach (var keyboardInfo in keyboardsInfo)
-            {
-                keyboardInfo.SetKeyState(e.Key.ToString(), state);
+                throw new InvalidProgramException(
+                    "InterceptionKey enum and InputKey enum elements count mismatch!");
             }
 
-            OnMousePressed(sender, e);
-            if (e.Rolling != 0)
+            if (Enum.GetUnderlyingType(typeof(InterceptionKey)) != typeof(ushort))
             {
-                var action = new Action(() =>
+                throw new InvalidProgramException("InterceptionKey enumeration's underlaying type must be ushort!");
+            }
+
+            if (Enum.GetUnderlyingType(typeof(InputKey)) != typeof(ushort))
+            {
+                throw new InvalidProgramException("InputKey enumeration's underlaying type must be ushort!");
+            }
+
+            foreach (InterceptionKey interceptionKey in intercetionKeys)
+            {
+                bool foundMatch = false;
+                foreach (InputKey inputKey in inputKeys)
                 {
-                    var newArgs = new MousePressedEventArgs()
+                    if ((ushort)interceptionKey == (ushort)inputKey &&
+                        interceptionKey.ToString() == inputKey.ToString())
                     {
-                        Handled = e.Handled,
-                        Rolling = 0,
-                        State = e.State,
-                        X = e.X,
-                        Y = e.Y,
-                        DelayedKey = e.Key
-                    };
+                        foundMatch = true;
+                        break;
+                    }
+                }
 
-                    InputManager.OnMousePressed(sender, newArgs);
-                });
-
-                var task = new DelayedTask(action, TimeSpan.FromMilliseconds(100));
-                task.Run();
+                if (!foundMatch)
+                {
+                    throw new InvalidProgramException(
+                        string.Format(
+                        "Can not find '{0}' corresponding element at InputKey enumeration",
+                        interceptionKey.ToString()));
+                }
             }
         }
 
-        private static void OnMousePressed(object sender, EventArgs e)
+        private List<Keyboard> GetInterceptionKeyboards()
         {
-            if (InputManager.MousePressed != null)
+            var keyboards = new List<Keyboard>();
+            keyboards.Add(Keyboard.None);
+
+            foreach (var interceptionKeyboard in this.interceptor.GetKeyboards())
             {
-                var args = e as MousePressedEventArgs;
-                LogWriter.Write("Firing MousePressed " + args.Key + " " + args.IsDown);
-                InputManager.MousePressed(sender, e);
+                var keyboard = (Keyboard)InputHelper.ToInputDevice(interceptionKeyboard);
+                keyboards.Add(keyboard);
+            }
+
+            return keyboards;
+        }
+
+        private List<Mouse> GetInterceptionMice()
+        {
+            var mice = new List<Mouse>();
+            mice.Add(Mouse.None);
+            foreach (var interceptionMouse in this.interceptor.GetMice())
+            {
+                var mouse = (Mouse)InputHelper.ToInputDevice(interceptionMouse);
+                mice.Add(mouse);
+            }
+
+            return mice;
+        }
+
+        private void OnInterceptionInputActivity(object sender, InterceptionEventArgs e)
+        {
+            var action = new Action(() =>
+            {
+                foreach (var keyInfo in e.KeyInfos)
+                {
+                    var device = InputHelper.ToInputDevice(e.Device);
+                    var key = InputHelper.ToInputKey(keyInfo.Key);
+                    var args = new InputEventArgs(device, key, keyInfo.IsDown, e.Handled);
+
+                    if (this.InputActivity != null)
+                    {
+                        this.InputActivity(this, args);
+                        e.Handled = args.Handled;
+                    }
+
+                    if (!KeysHelper.IsMouseMoveKey(keyInfo.Key))
+                    {
+                        var sb = new StringBuilder(this.InputMonitorHistory);
+                        sb.AppendLine(args.ToString());
+                        this.InputMonitorHistory = sb.ToString();
+                    }
+                }
+
+                this.CheckForEmergencyHit(e);
+            });
+
+            bool isMouseClick = e.Device.DeviceType == InterceptionDeviceType.Mouse && e.KeyInfos.Any(x => KeysHelper.IsMouseClickKey(x.Key));
+            
+            // App.IsFocused is maybe too slow and the ui freezes the splitter main window
+            if (isMouseClick && GlobalSettings.IsMainWindowActivated)
+            {
+                this.Dispatcher.BeginInvoke(action);
+            }
+            else
+            {
+                this.Dispatcher.Invoke(action);
+            }
+
+            if (GlobalSettings.IsMainWindowActivated)
+            {
+                e.Handled = false;
+            }
+        }
+
+        private void OnInterceptionInputDeviceConnectionChanged(object sender, InterceptionDeviceEventArgs e)
+        {
+            this.Dispatcher.BeginInvoke((Action)delegate
+            {
+                if (e.Device.DeviceType == InterceptionDeviceType.Keyboard)
+                {
+                    this.Keyboards = this.GetInterceptionKeyboards();
+                }
+                else
+                {
+                    this.Mice = this.GetInterceptionMice();
+                }
+
+                this.OnInputDeviceChanged(Helpers.InputHelper.ToInputDevice(e.Device), e.IsRemoved);
+            });
+        }
+
+        private void CheckForEmergencyHit(InterceptionEventArgs e)
+        {
+            bool isCtrlDown = this.interceptor.IsKeyDown(e.Device, InterceptionKey.LeftControl) || this.interceptor.IsKeyDown(e.Device, InterceptionKey.RightControl);
+            bool isAltDown = this.interceptor.IsKeyDown(e.Device, InterceptionKey.LeftAlt) || this.interceptor.IsKeyDown(e.Device, InterceptionKey.RightAlt);
+            bool isDeleteDown = this.interceptor.IsKeyDown(e.Device, InterceptionKey.Delete) || this.interceptor.IsKeyDown(e.Device, InterceptionKey.NumpadDelete);
+
+            if (isCtrlDown && isAltDown && isDeleteDown)
+            {
+                if (this.EmergencyStop != null)
+                {
+                    this.EmergencyStop(this, EventArgs.Empty);
+                }
+
+                this.ResetEmergency();
+                return;
+            }
+
+            foreach (var keyInfo in e.KeyInfos)
+            {
+                if (keyInfo.Key == InputHelper.ToInterceptionKey(InputManager.EmergencyLeftKey))
+                {
+                    if (keyInfo.IsDown)
+                    {
+                        this.emergencyLeftDownCount++;
+                    }
+                    else
+                    {
+                        this.emergencyLeftUpCount++;
+                    }
+                }
+                else if (keyInfo.Key == InputHelper.ToInterceptionKey(InputManager.EmergencyRightKey))
+                {
+                    if (keyInfo.IsDown)
+                    {
+                        this.emergencyRightDownCount++;
+                    }
+                    else
+                    {
+                        this.emergencyRightUpCount++;
+                    }
+                }
+                else
+                {
+                    this.ResetEmergency();
+                    return;
+                }
+            }
+
+            if (this.emergencyLeftDownCount >= 5 && this.emergencyLeftUpCount >= 5)
+            {
+                this.OnEmergencyDetected(InputManager.EmergencyLeftKey);
+            }
+            else if (this.emergencyRightDownCount >= 5 && this.emergencyRightUpCount >= 5)
+            {
+                this.OnEmergencyDetected(InputManager.EmergencyRightKey);
+            }
+        }
+
+        private void ResetEmergency()
+        {
+            this.emergencyLeftDownCount = 0;
+            this.emergencyLeftUpCount = 0;
+            this.emergencyRightDownCount = 0;
+            this.emergencyRightUpCount = 0;
+        }
+
+        private void OnInputDeviceChanged(InputDevice device, bool isRemoved)
+        {
+            // Refreshing the devices
+            this.Dispatcher.BeginInvoke((Action)delegate
+            {
+                this.Keyboards = this.GetInterceptionKeyboards();
+                this.Mice = this.GetInterceptionMice();
+
+                if (this.InputDeviceChanged != null)
+                {
+                    this.InputDeviceChanged(this, new InputDeviceChangedEventArgs(device, isRemoved));
+                }
+            });
+        }
+
+        private void OnEmergencyDetected(InputKey key)
+        {
+            if (key == InputManager.EmergencyLeftKey)
+            {
+                if (this.EmergencyLeft != null)
+                {
+                    this.EmergencyLeft(this, EventArgs.Empty);
+                    this.ResetEmergency();
+                }
+            }
+            else if (key == InputManager.EmergencyRightKey)
+            {
+                if (this.EmergencyRight != null)
+                {
+                    this.EmergencyRight(this, EventArgs.Empty);
+                    this.ResetEmergency();
+                }
             }
         }
     }

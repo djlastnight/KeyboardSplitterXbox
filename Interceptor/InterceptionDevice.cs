@@ -1,19 +1,59 @@
-﻿using Microsoft.Win32;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace Interceptor
+﻿namespace Interceptor
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using Interceptor.Enums;
+    using Microsoft.Win32;
+
     public abstract class InterceptionDevice
     {
+        private const string FallbackDeviceFriendlyName = "n/a";
+
         private string friendlyName;
 
-        public uint DeviceID { get; internal set; }
+        private string strongName;
 
-        public string HardwareID { get; internal set; }
+        protected InterceptionDevice(uint deviceId, string hardwareId)
+        {
+            if (hardwareId == null)
+            {
+                throw new ArgumentNullException("hardwareId");
+            }
 
-        public string StrongName { get; internal set; }
+            this.DeviceID = deviceId;
+            this.HardwareID = hardwareId;
+        }
+
+        public abstract InterceptionDeviceType DeviceType { get; }
+
+        public uint DeviceID { get; private set; }
+
+        public string HardwareID { get; private set; }
+
+        public string StrongName
+        {
+            get
+            {
+                if (this.strongName != null)
+                {
+                    return this.strongName;
+                }
+
+                if (this.DeviceID < 1 ||
+                    this.DeviceID > Interception.MaxDeviceCount ||
+                    this.HardwareID == string.Empty)
+                {
+                    this.strongName = "Unknown";
+                    return this.strongName;
+                }
+
+                var seqientialNumber = this.DeviceType == InterceptionDeviceType.Keyboard ? this.DeviceID : this.DeviceID - 10;
+                this.strongName = this.DeviceType + "_" + seqientialNumber.ToString().PadLeft(2, '0');
+
+                return this.strongName;
+            }
+        }
 
         public string FriendlyName
         {
@@ -24,26 +64,20 @@ namespace Interceptor
                     return this.friendlyName;
                 }
 
-                if (this.StrongName == "None")
-                {
-                    return "OnScreen Mouse Feeder";
-                }
-
                 try
                 {
-                    string hardwareID = this.HardwareID;
-                    if (hardwareID.Contains("REV"))
+                    string guid = this.HardwareID;
+                    if (guid.Contains("REV"))
                     {
                         // removing the revision from the hardware id
-                        int revision_index = hardwareID.IndexOf("REV");
-                        int ampersandIndex = hardwareID.IndexOf("&", revision_index);
-                        hardwareID = hardwareID.Substring(0, revision_index) + hardwareID.Substring(ampersandIndex + 1);
+                        int revision_index = guid.IndexOf("REV");
+                        int ampersandIndex = guid.IndexOf("&", revision_index);
+                        guid = guid.Substring(0, revision_index) + guid.Substring(ampersandIndex + 1);
                     }
 
-                    using (var rootKey = Registry.LocalMachine.OpenSubKey(@"System\CurrentControlSet\Enum\" + hardwareID))
+                    using (var rootKey = Registry.LocalMachine.OpenSubKey(@"System\CurrentControlSet\Enum\" + guid))
                     {
-                        var deviceType = this.IsKeyboard ? "Keyboard" : "Mouse";
-                        var subKeys = this.GetAllSubKeys(rootKey).Where(x => x.GetValue("Class") != null && x.GetValue("Class").ToString() == deviceType);
+                        var subKeys = this.GetAllSubKeys(rootKey).Where(x => x.GetValue("Class") != null && x.GetValue("Class").ToString() == this.DeviceType.ToString());
 
                         var fullDescription = subKeys.Select(x => x.GetValue("DeviceDesc")).First().ToString();
                         foreach (var subkey in subKeys)
@@ -58,16 +92,14 @@ namespace Interceptor
                 }
                 catch (Exception)
                 {
-                    this.friendlyName = "n/a";
+                    this.friendlyName = InterceptionDevice.FallbackDeviceFriendlyName;
                 }
 
                 return this.friendlyName;
             }
         }
 
-        public abstract bool IsKeyboard { get; }
-
-        public virtual bool IsTheSameAs(InterceptionDevice deviceToCompare)
+        public virtual bool HasTheSamePropertiesAs(InterceptionDevice deviceToCompare)
         {
             var props = deviceToCompare.GetType().GetProperties();
 

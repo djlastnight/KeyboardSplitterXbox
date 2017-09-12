@@ -1,0 +1,10 @@
+﻿<UI:CustomWindow x:Class="KeyboardSplitter.UI.FaqWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:UI="clr-namespace:KeyboardSplitter.UI"
+        Title="FAQ" Height="600" Width="800">
+    <ScrollViewer>
+        <TextBox Name="textBox" TextWrapping="Wrap" IsReadOnly="True" FontSize="16">
+        </TextBox>
+    </ScrollViewer>
+</UI:CustomWindow>

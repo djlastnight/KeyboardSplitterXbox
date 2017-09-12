@@ -22,7 +22,7 @@
         internal static extern void GetFilter(IntPtr context, int device);
 
         [DllImport("interception.dll", EntryPoint = "interception_set_filter", CallingConvention = CallingConvention.Cdecl)]
-        internal static extern void SetFilter(IntPtr context, Predicate predicate, int keyboardFilterMode);
+        internal static extern void SetFilter(IntPtr context, Predicate predicate, int filterMode);
 
         [DllImport("interception.dll", EntryPoint = "interception_wait", CallingConvention = CallingConvention.Cdecl)]
         internal static extern int Wait(IntPtr context);

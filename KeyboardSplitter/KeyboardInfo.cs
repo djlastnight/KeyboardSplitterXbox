@@ -30,36 +30,24 @@
             return this.keysDownCollection.Contains(key);
         }
 
-        public void SetKeyState(string key, KeyState state)
+        public void SetKeyState(string key, bool isDown)
         {
             bool stateExsists = this.keysDownCollection.Contains(key);
-            switch (state)
+            if (isDown)
             {
-                case KeyState.E0:
-                case KeyState.Down:
-                    {
-                        if (!stateExsists)
-                        {
-                            this.keysDownCollection.Add(key);
-                        }
-                    }
+                if (!stateExsists)
+                {
+                    this.keysDownCollection.Add(key);
+                }
+            }
+            else
+            {
+                if (!stateExsists)
+                {
+                    return;
+                }
 
-                    break;
-                case KeyState.Up | KeyState.E0:
-                case KeyState.Up:
-                    {
-                        if (!stateExsists)
-                        {
-                            return;
-                        }
-
-                        this.keysDownCollection.Remove(key);
-                    }
-
-                    break;
-                default:
-                    throw new NotImplementedException(
-                        "Not implemented key state: " + state);
+                this.keysDownCollection.Remove(key);
             }
         }
     }

@@ -1,17 +1,18 @@
 ﻿namespace KeyboardSplitter
 {
     using System;
+    using SplitterCore.Input;
 
     public delegate void KeyGestureChangedHandler(object sender, KeyGestureChangedEventArgs e);
 
     public class KeyGestureChangedEventArgs : EventArgs
     {
-        public KeyGestureChangedEventArgs(string newKey)
+        public KeyGestureChangedEventArgs(InputKey newKey)
         {
             this.NewKey = newKey;
         }
 
-        public string NewKey
+        public InputKey NewKey
         {
             get;
             private set;

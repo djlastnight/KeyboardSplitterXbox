@@ -30,4 +30,3 @@ C:\Users\djlastnight\Source\Repos\KeyboardSplitterXbox\KeyboardSplitter\Lib\Inte
 C:\Users\djlastnight\Source\Repos\KeyboardSplitterXbox\KeyboardSplitter\Lib\Interceptor.pdb
 C:\Users\djlastnight\Source\Repos\KeyboardSplitterXbox\Interceptor\obj\Release\Interceptor.dll
 C:\Users\djlastnight\Source\Repos\KeyboardSplitterXbox\Interceptor\obj\Release\Interceptor.pdb
-C:\Users\djlastnight\Source\Repos\KeyboardSplitterXbox\Interceptor\obj\Release\Interceptor.csprojResolveAssemblyReference.cache

@@ -1,0 +1,81 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{C25D1435-780B-41BA-9097-1B4A296F0603}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>VirtualXbox</RootNamespace>
+    <AssemblyName>VirtualXbox</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\KeyboardSplitter\Lib\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\KeyboardSplitter\Lib\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="NativeMethods.cs" />
+    <Compile Include="ResourceExtractor.cs" />
+    <Compile Include="VirtualXboxController.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Enums\XboxAxis.cs" />
+    <Compile Include="Enums\XboxAxisPosition.cs" />
+    <Compile Include="Enums\XboxButton.cs" />
+    <Compile Include="VirtualXboxBus.cs" />
+    <Compile Include="Enums\XboxCustomFunction.cs" />
+    <Compile Include="Enums\XboxDpadDirection.cs" />
+    <Compile Include="ControllerState.cs" />
+    <Compile Include="Enums\XboxTrigger.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Driver\x64\devcon.exe" />
+    <EmbeddedResource Include="Driver\x64\ScpVBus.inf" />
+    <EmbeddedResource Include="Driver\x64\WdfCoinstaller01009.dll" />
+    <EmbeddedResource Include="Driver\x86\devcon.exe" />
+    <EmbeddedResource Include="Driver\x86\ScpVBus.inf" />
+    <EmbeddedResource Include="Driver\x86\WdfCoinstaller01009.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Driver\x64\scpvbus.cat" />
+    <EmbeddedResource Include="Driver\x64\ScpVBus.sys" />
+    <EmbeddedResource Include="Driver\x86\scpvbus.cat" />
+    <EmbeddedResource Include="Driver\x86\ScpVBus.sys" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

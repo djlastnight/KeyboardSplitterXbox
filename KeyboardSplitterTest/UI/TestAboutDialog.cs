@@ -7,23 +7,17 @@
     [TestClass]
     public class TestAboutDialog
     {
-        [TestInitialize]
-        public void Init()
-        {
-            KeyboardSplitter.App.Initialize();
-        }
-
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public void TestAboutDialogConstructorNull()
         {
-            AboutDialog about = new AboutDialog(null);
+            AboutWindow about = new AboutWindow(null);
         }
 
         [TestMethod]
         public void TestAboutDialogConstructor()
         {
-            AboutDialog about = new AboutDialog("some Title");
+            AboutWindow about = new AboutWindow("some Title");
         }
     }
 }

@@ -1,22 +1,22 @@
-﻿Build started 19 юни 2017 г. 16:28:19 ч..
-     1>Project "C:\Users\djlastnight\Source\Repos\KeyboardSplitterXbox\XboxInterfaceNative\vXboxInterface.vcxproj" on node 3 (Rebuild target(s)).
+﻿Build started 9/12/2017 3:11:10 PM.
+     1>Project "C:\Users\djlastnight\Source\Repos\KeyboardSplitterXbox\XboxInterfaceNative\vXboxInterface.vcxproj" on node 5 (Rebuild target(s)).
      1>ClCompile:
-         C:\Program Files\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /Zi /nologo /W3 /WX- /sdl /O2 /Oi /Oy- /GL /D WIN32 /D NDEBUG /D _WINDOWS /D _USRDLL /D VXBOXINTERFACE_EXPORTS /D _WINDLL /D _UNICODE /D UNICODE /D VXBOX_EXPORTS /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Yc"stdafx.h" /Fp"Win32\Release\XboxInterfaceNative.pch" /Fo"Win32\Release\\" /Fd"Win32\Release\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt stdafx.cpp
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /Zi /nologo /W3 /WX- /sdl /O2 /Oi /Oy- /GL /D WIN32 /D NDEBUG /D _WINDOWS /D _USRDLL /D VXBOXINTERFACE_EXPORTS /D _WINDLL /D _UNICODE /D UNICODE /D VXBOX_EXPORTS /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Yc"stdafx.h" /Fp"Win32\Release\VirtualXboxNative.pch" /Fo"Win32\Release\\" /Fd"Win32\Release\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt stdafx.cpp
          stdafx.cpp
-         C:\Program Files\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /Zi /nologo /W3 /WX- /sdl /O2 /Oi /Oy- /GL /D WIN32 /D NDEBUG /D _WINDOWS /D _USRDLL /D VXBOXINTERFACE_EXPORTS /D _WINDLL /D _UNICODE /D UNICODE /D VXBOX_EXPORTS /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Win32\Release\\" /Fd"Win32\Release\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt dllmain.cpp
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /Zi /nologo /W3 /WX- /sdl /O2 /Oi /Oy- /GL /D WIN32 /D NDEBUG /D _WINDOWS /D _USRDLL /D VXBOXINTERFACE_EXPORTS /D _WINDLL /D _UNICODE /D UNICODE /D VXBOX_EXPORTS /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Win32\Release\\" /Fd"Win32\Release\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt dllmain.cpp
          dllmain.cpp
-         C:\Program Files\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /Zi /nologo /W3 /WX- /sdl /O2 /Oi /Oy- /GL /D WIN32 /D NDEBUG /D _WINDOWS /D _USRDLL /D VXBOXINTERFACE_EXPORTS /D _WINDLL /D _UNICODE /D UNICODE /D VXBOX_EXPORTS /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Yu"stdafx.h" /Fp"Win32\Release\XboxInterfaceNative.pch" /Fo"Win32\Release\\" /Fd"Win32\Release\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt vXboxInterface.cpp
-         vXboxInterface.cpp
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /Zi /nologo /W3 /WX- /sdl /O2 /Oi /Oy- /GL /D WIN32 /D NDEBUG /D _WINDOWS /D _USRDLL /D VXBOXINTERFACE_EXPORTS /D _WINDLL /D _UNICODE /D UNICODE /D VXBOX_EXPORTS /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Yu"stdafx.h" /Fp"Win32\Release\VirtualXboxNative.pch" /Fo"Win32\Release\\" /Fd"Win32\Release\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt virtualXbox.cpp
+         virtualXbox.cpp
        Link:
-         C:\Program Files\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\djlastnight\Source\Repos\KeyboardSplitterXbox\\KeyboardSplitter\Lib\XboxInterfaceNative.dll" /INCREMENTAL:NO /NOLOGO setupapi.lib hid.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\djlastnight\Source\Repos\KeyboardSplitterXbox\\KeyboardSplitter\Lib\XboxInterfaceNative.pdb" /SUBSYSTEM:WINDOWS /OPT:REF /OPT:ICF /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\djlastnight\Source\Repos\KeyboardSplitterXbox\\KeyboardSplitter\Lib\XboxInterfaceNative.lib" /MACHINE:X86 /SAFESEH /DLL Win32\Release\dllmain.obj
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\djlastnight\Source\Repos\KeyboardSplitterXbox\\KeyboardSplitter\Lib\VirtualXboxNative.dll" /INCREMENTAL:NO /NOLOGO setupapi.lib hid.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\djlastnight\Source\Repos\KeyboardSplitterXbox\\KeyboardSplitter\Lib\VirtualXboxNative.pdb" /SUBSYSTEM:WINDOWS /OPT:REF /OPT:ICF /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\djlastnight\Source\Repos\KeyboardSplitterXbox\\KeyboardSplitter\Lib\VirtualXboxNative.lib" /MACHINE:X86 /SAFESEH /DLL Win32\Release\dllmain.obj
          Win32\Release\stdafx.obj
-         Win32\Release\vXboxInterface.obj
-            Creating library C:\Users\djlastnight\Source\Repos\KeyboardSplitterXbox\\KeyboardSplitter\Lib\XboxInterfaceNative.lib and object C:\Users\djlastnight\Source\Repos\KeyboardSplitterXbox\\KeyboardSplitter\Lib\XboxInterfaceNative.exp
+         Win32\Release\virtualXbox.obj
+            Creating library C:\Users\djlastnight\Source\Repos\KeyboardSplitterXbox\\KeyboardSplitter\Lib\VirtualXboxNative.lib and object C:\Users\djlastnight\Source\Repos\KeyboardSplitterXbox\\KeyboardSplitter\Lib\VirtualXboxNative.exp
          Generating code
          Finished generating code
-         vXboxInterface.vcxproj -> C:\Users\djlastnight\Source\Repos\KeyboardSplitterXbox\\KeyboardSplitter\Lib\XboxInterfaceNative.dll
+         vXboxInterface.vcxproj -> C:\Users\djlastnight\Source\Repos\KeyboardSplitterXbox\\KeyboardSplitter\Lib\VirtualXboxNative.dll
      1>Done Building Project "C:\Users\djlastnight\Source\Repos\KeyboardSplitterXbox\XboxInterfaceNative\vXboxInterface.vcxproj" (Rebuild target(s)).
 
 Build succeeded.
 
-Time Elapsed 00:00:04.80
+Time Elapsed 00:00:02.29

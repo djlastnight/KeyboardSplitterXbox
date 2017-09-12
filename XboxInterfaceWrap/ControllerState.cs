@@ -1,6 +1,7 @@
-﻿namespace XboxInterfaceWrap
+﻿namespace VirtualXbox
 {
     using System.Collections.Generic;
+    using VirtualXbox.Enums;
 
     internal class ControllerState
     {
@@ -28,7 +29,7 @@
         public void Reset()
         {
             this.ButtonsDown = new List<XboxButton>(11);
-            this.DpadDirections = XboxDpadDirection.None;
+            this.DpadDirections = XboxDpadDirection.Off;
             this.LeftTriggerValue = 0;
             this.RightTriggerValue = 0;
             this.AxisXValue = 0;

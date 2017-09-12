@@ -26,7 +26,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
-    <Optimize>false</Optimize>
+    <Optimize>true</Optimize>
     <OutputPath>..\KeyboardSplitter\Lib\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
@@ -49,28 +49,30 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DriverState.cs" />
+    <Compile Include="DelayedTask.cs" />
+    <Compile Include="Enums\InterceptionDriverState.cs" />
     <Compile Include="InterceptionDevice.cs" />
+    <Compile Include="Enums\InterceptionDeviceType.cs" />
+    <Compile Include="InterceptionDeviceEventArgs.cs" />
     <Compile Include="InterceptionDriver.cs" />
-    <Compile Include="Input.cs" />
+    <Compile Include="Interception.cs" />
+    <Compile Include="InterceptionEventArgs.cs" />
     <Compile Include="InterceptionKeyboard.cs" />
     <Compile Include="InterceptionMouse.cs" />
-    <Compile Include="KeyboardFilterMode.cs" />
-    <Compile Include="KeyPressedEventArgs.cs" />
-    <Compile Include="InterceptionKeys.cs" />
+    <Compile Include="Enums\KeyboardFilterMode.cs" />
+    <Compile Include="KeyInfo.cs" />
+    <Compile Include="Enums\InterceptionKey.cs" />
     <Compile Include="KeysHelper.cs" />
-    <Compile Include="KeyState.cs" />
-    <Compile Include="KeyStroke.cs" />
-    <Compile Include="MouseFilterMode.cs" />
-    <Compile Include="MouseFlags.cs" />
-    <Compile Include="MousePressedEventArgs.cs" />
-    <Compile Include="MouseState.cs" />
-    <Compile Include="MouseStroke.cs" />
+    <Compile Include="Enums\KeyState.cs" />
+    <Compile Include="Structs\KeyStroke.cs" />
+    <Compile Include="Enums\MouseFilterMode.cs" />
+    <Compile Include="Enums\MouseFlags.cs" />
+    <Compile Include="Enums\MouseState.cs" />
+    <Compile Include="Structs\MouseStroke.cs" />
     <Compile Include="NativeMethods.cs" />
     <Compile Include="Predicate.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ScrollDirection.cs" />
-    <Compile Include="Stroke.cs" />
+    <Compile Include="Structs\Stroke.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

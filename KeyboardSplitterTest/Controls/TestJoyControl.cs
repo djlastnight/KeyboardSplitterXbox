@@ -9,7 +9,7 @@
 ////    using KeyboardSplitter.Managers;
 ////    using KeyboardSplitter.Presets;
 ////    using Microsoft.VisualStudio.TestTools.UnitTesting;
-////    using XboxInterfaceWrap;
+////    using XboxAPI;
 
 ////    [TestClass]
 ////    public class TestJoyControl

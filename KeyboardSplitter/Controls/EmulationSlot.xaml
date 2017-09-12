@@ -1,0 +1,221 @@
+﻿<CoreEmulation:EmulationSlotBase x:Class="KeyboardSplitter.Controls.EmulationSlot"
+                                 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                                 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+                                 xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+                                 xmlns:CoreEmulation="clr-namespace:SplitterCore.Emulation;assembly=SplitterCore"
+                                 xmlns:Controls="clr-namespace:KeyboardSplitter.Controls"
+                                 xmlns:Converters="clr-namespace:KeyboardSplitter.Converters"
+                                 xmlns:my="clr-namespace:KeyboardSplitter"
+                                 xmlns:ui="clr-namespace:KeyboardSplitter.UI"
+                                 mc:Ignorable="d" 
+                                 d:DesignHeight="350"
+                                 d:DesignWidth="285"
+                                 MaxWidth="295"
+                                 DataContext="{Binding RelativeSource={RelativeSource Self}}">
+    <CoreEmulation:EmulationSlotBase.Resources>
+        <Style TargetType="TextBlock" x:Key="HeaderTextBoxStyle">
+            <Setter Property="Foreground" Value="#FFA292C4" />
+            <Setter Property="FontSize" Value="11" />
+        </Style>
+        <Converters:BoolToReversedBoolConverter x:Key="ReversedBoolConverter" />
+        <Converters:BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+    </CoreEmulation:EmulationSlotBase.Resources>
+    <CoreEmulation:EmulationSlotBase.Style>
+        <Style TargetType="CoreEmulation:EmulationSlotBase">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="CoreEmulation:EmulationSlotBase">
+                        <Grid Margin="5">
+                            <!-- Header / Slot information -->
+                            <Border CornerRadius="20,20,0,0"
+                                    Height="30"
+                                    VerticalAlignment="Top"
+                                    HorizontalAlignment="Stretch"
+                                    BorderBrush="Black"
+                                    BorderThickness="0.1">
+                                <Border.Background>
+                                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                        <GradientStop Color="#14868686" Offset="0" />
+                                        <GradientStop Color="#2DFFFFFF" Offset="0.713" />
+                                        <GradientStop Color="#1D969696" Offset="1" />
+                                    </LinearGradientBrush>
+                                </Border.Background>
+                                <StackPanel Orientation="Vertical">
+                                    <!-- Slot title -->
+                                    <StackPanel Orientation="Horizontal" Height="15" HorizontalAlignment="Center">
+                                        <TextBlock Text="{Binding SlotNumber, StringFormat={}Slot# {0}}"
+                                                   Style="{StaticResource HeaderTextBoxStyle}"
+                                                   HorizontalAlignment="Right" />
+                                        <TextBlock Text=" - "
+                                                   Style="{StaticResource HeaderTextBoxStyle}"
+                                                   HorizontalAlignment="Center" />
+                                        <TextBlock Text="{Binding Gamepad.FriendlyName}"
+                                                   Style="{StaticResource HeaderTextBoxStyle}"
+                                                   HorizontalAlignment="Left" />
+                                    </StackPanel>
+                                    <!-- Led indicator -->
+                                    <Controls:LedIndicator LedNumber="{Binding Gamepad.LedNumber}"
+                                                           ToolTip="Xinput Controller Led Number" />
+                                </StackPanel>
+                            </Border>
+
+                            <!-- Main content -->
+                            <Border BorderBrush="Gray"
+                                    BorderThickness="0.5"
+                                    CornerRadius="0,0,12,12"
+                                    Margin="0,30,0,0">
+                                <ScrollViewer VerticalScrollBarVisibility="Auto"
+                                              Margin="3"
+                                              Padding="2">
+                                    <Grid>
+                                        <StackPanel>
+                                            <!-- Input devices control wrapper -->
+                                            <Border Height="100"
+                                                VerticalAlignment="Top"
+                                                BorderBrush="Black"
+                                                BorderThickness="0.5"
+                                                CornerRadius="6,6,6,6"
+                                                Padding="5"
+                                                IsEnabled="{Binding IsLocked, Converter={StaticResource ReversedBoolConverter}}">
+                                                <Border.Background>
+                                                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                                        <GradientStop Color="Transparent" Offset="0" />
+                                                        <GradientStop Color="#39FFE300" Offset="0.823" />
+                                                        <GradientStop Color="White" Offset="1" />
+                                                        <GradientStop Color="#17EBFF00" Offset="0.138" />
+                                                        <GradientStop Color="#1BF3B700" Offset="0.438" />
+                                                    </LinearGradientBrush>
+                                                </Border.Background>
+                                                <!-- Input device control -->
+                                                <Grid>
+                                                    <Grid.RowDefinitions>
+                                                        <RowDefinition MinHeight="23" />
+                                                        <RowDefinition />
+                                                        <RowDefinition Height="5" />
+                                                        <RowDefinition MinHeight="23" />
+                                                        <RowDefinition />
+                                                    </Grid.RowDefinitions>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="95"/>
+                                                        <ColumnDefinition />
+                                                        <ColumnDefinition Width="20" />
+                                                    </Grid.ColumnDefinitions>
+                                                    <!-- Row 1 -->
+                                                    <TextBlock Text="Choose keyboard:"
+                                                               Grid.Row="0"
+                                                               Grid.Column="0"
+                                                               VerticalAlignment="Center" />
+                                                    <ComboBox Grid.Row="0"
+                                                              Grid.Column="1"
+                                                              Margin="5,0"
+                                                              ItemsSource="{Binding RelativeSource={RelativeSource AncestorType=my:MainWindow}, Path=Splitter.InputManager.Keyboards}"
+                                                              SelectedItem="{Binding Keyboard}"
+                                                              SelectionChanged="KeyboardOrMouseChanged"
+                                                              VerticalAlignment="Center" />
+                                                    <Button Grid.Row="0"
+                                                            Grid.Column="2"
+                                                            ToolTip="Detect keyboard"
+                                                            Content=".."
+                                                            Command="{Binding DetectKeyboardCommand}"
+                                                            VerticalAlignment="Center" />
+                                                    <!-- Row 2 -->
+                                                    <TextBlock
+                                                        Grid.Row="1"
+                                                        Grid.Column="0"
+                                                        Text="Keyboard name: "
+                                                        VerticalAlignment="Center" />
+                                                    <TextBlock Grid.Row="1"
+                                                               Grid.Column="1"
+                                                               Grid.ColumnSpan="2"
+                                                               Text="{Binding Keyboard.FriendlyName}"
+                                                               ToolTip="{Binding Keyboard.FriendlyName}"
+                                                               VerticalAlignment="Center" />
+                                                    <!-- Row 3 -->
+                                                    <Separator Grid.Row="2"
+                                                               Grid.Column="0"
+                                                               Grid.ColumnSpan="3"
+                                                               VerticalAlignment="Center" />
+                                                    <!-- Row 4 -->
+                                                    <TextBlock Grid.Row="3"
+                                                               Grid.Column="0"
+                                                               Text="Choose mouse:"
+                                                               VerticalAlignment="Center" />
+                                                    <ComboBox Grid.Row="3"
+                                                              Grid.Column="1"
+                                                              Margin="5,0"
+                                                              ItemsSource="{Binding RelativeSource={RelativeSource AncestorType=my:MainWindow}, Path=Splitter.InputManager.Mice}"
+                                                              SelectedItem="{Binding Mouse}"
+                                                              SelectionChanged="KeyboardOrMouseChanged"
+                                                              VerticalAlignment="Center" />
+                                                    <Button Grid.Row="3"
+                                                            Grid.Column="2"
+                                                            ToolTip="Detect mouse"
+                                                            Content=".."
+                                                            Command="{Binding DetectMouseCommand}"
+                                                            VerticalAlignment="Center" />
+                                                    <!-- Row 5 -->
+                                                    <TextBlock Grid.Row="4"
+                                                               Grid.Column="0"
+                                                               Text="Mouse name: "
+                                                               VerticalAlignment="Center" />
+                                                    <TextBlock Grid.Row="4"
+                                                               Grid.Column="1"
+                                                               Grid.ColumnSpan="2"
+                                                               Text="{Binding Mouse.FriendlyName}"
+                                                               ToolTip="{Binding Mouse.FriendlyName}"
+                                                               VerticalAlignment="Center" />
+                                                </Grid>
+                                            </Border>
+
+                                            <!-- Preset control or OnScreenGamepad control -->
+                                            <Grid>
+                                                <Grid>
+                                                    <Controls:PresetControl Preset="{Binding Preset, Mode=TwoWay}"
+                                                                            Visibility="{Binding IsOnScreenControllerActive, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=true}"
+                                                                            IsEnabled="{Binding IsLocked, Converter={StaticResource ReversedBoolConverter}}" />
+                                                </Grid>
+                                                <Controls:OnScreenController Visibility="{Binding IsOnScreenControllerActive, Converter={StaticResource BoolToVisibilityConverter}}"
+                                                                       VerticalAlignment="Top"
+                                                                       HorizontalAlignment="Stretch"
+                                                                       UserIndex="{Binding Gamepad.UserIndex}" />
+                                            </Grid>
+                                        </StackPanel>
+                                        
+                                        <!-- Invalidate overlay -->
+                                        <Border Visibility="{Binding IsInvalidated, Converter={StaticResource BoolToVisibilityConverter}}">
+                                            <Border.Background>
+                                                <ImageBrush ImageSource="/KeyboardSplitter;component/Resources/warning.png"
+                                                            Stretch="Uniform"
+                                                            TileMode="Tile"
+                                                            AlignmentY="Top"
+                                                            AlignmentX="Center" />
+                                            </Border.Background>
+                                            <StackPanel Orientation="Vertical"
+                                                        Background="#33000000"
+                                                        TextBlock.TextAlignment="Center">
+                                                <TextBlock Text="Slot is invalidated"
+                                                           Foreground="Red"
+                                                           Background="Orange" />
+                                                <TextBlock Text="{Binding InvalidateReason}"
+                                                           Foreground="White"
+                                                           Background="Orange" />
+                                                <Separator />
+                                                <Button Content="Try reset"
+                                                        IsEnabled="{Binding IsLocked, Converter={StaticResource ReversedBoolConverter}}"
+                                                        Command="{Binding ResetSlotCommand}"
+                                                        HorizontalAlignment="Center"
+                                                        Width="100"
+                                                        Height="25" />
+                                            </StackPanel>
+                                        </Border>
+                                    </Grid>
+                                </ScrollViewer>
+                            </Border>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </CoreEmulation:EmulationSlotBase.Style>
+</CoreEmulation:EmulationSlotBase>
