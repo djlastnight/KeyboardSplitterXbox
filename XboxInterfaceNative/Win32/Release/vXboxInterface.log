@@ -1,10 +1,6 @@
-﻿Build started 9/12/2017 3:11:10 PM.
-     1>Project "C:\Users\djlastnight\Source\Repos\KeyboardSplitterXbox\XboxInterfaceNative\vXboxInterface.vcxproj" on node 5 (Rebuild target(s)).
+﻿Build started 9/12/2017 3:56:31 PM.
+     1>Project "C:\Users\djlastnight\Source\Repos\KeyboardSplitterXbox\XboxInterfaceNative\vXboxInterface.vcxproj" on node 5 (Build target(s)).
      1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /Zi /nologo /W3 /WX- /sdl /O2 /Oi /Oy- /GL /D WIN32 /D NDEBUG /D _WINDOWS /D _USRDLL /D VXBOXINTERFACE_EXPORTS /D _WINDLL /D _UNICODE /D UNICODE /D VXBOX_EXPORTS /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Yc"stdafx.h" /Fp"Win32\Release\VirtualXboxNative.pch" /Fo"Win32\Release\\" /Fd"Win32\Release\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt stdafx.cpp
-         stdafx.cpp
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /Zi /nologo /W3 /WX- /sdl /O2 /Oi /Oy- /GL /D WIN32 /D NDEBUG /D _WINDOWS /D _USRDLL /D VXBOXINTERFACE_EXPORTS /D _WINDLL /D _UNICODE /D UNICODE /D VXBOX_EXPORTS /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Win32\Release\\" /Fd"Win32\Release\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt dllmain.cpp
-         dllmain.cpp
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /Zi /nologo /W3 /WX- /sdl /O2 /Oi /Oy- /GL /D WIN32 /D NDEBUG /D _WINDOWS /D _USRDLL /D VXBOXINTERFACE_EXPORTS /D _WINDLL /D _UNICODE /D UNICODE /D VXBOX_EXPORTS /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Yu"stdafx.h" /Fp"Win32\Release\VirtualXboxNative.pch" /Fo"Win32\Release\\" /Fd"Win32\Release\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt virtualXbox.cpp
          virtualXbox.cpp
        Link:
@@ -15,8 +11,8 @@
          Generating code
          Finished generating code
          vXboxInterface.vcxproj -> C:\Users\djlastnight\Source\Repos\KeyboardSplitterXbox\\KeyboardSplitter\Lib\VirtualXboxNative.dll
-     1>Done Building Project "C:\Users\djlastnight\Source\Repos\KeyboardSplitterXbox\XboxInterfaceNative\vXboxInterface.vcxproj" (Rebuild target(s)).
+     1>Done Building Project "C:\Users\djlastnight\Source\Repos\KeyboardSplitterXbox\XboxInterfaceNative\vXboxInterface.vcxproj" (Build target(s)).
 
 Build succeeded.
 
-Time Elapsed 00:00:02.29
+Time Elapsed 00:00:02.95
