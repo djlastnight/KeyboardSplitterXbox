@@ -1,24 +1,58 @@
-﻿<Window x:Class="KeyboardSplitter.MainWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="MainWindow"
-        Width="600" Height="440" MinWidth="600" MinHeight="440"
-        Loaded="Window_Loaded" Closing="Window_Closing" Closed="Window_Closed"
-        WindowStartupLocation="CenterScreen"
-        ResizeMode="CanResizeWithGrip">
-    <Grid Name="mainGrid">
+﻿<UI:CustomWindow x:Class="KeyboardSplitter.MainWindow"
+                 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                 xmlns:Converters="clr-namespace:KeyboardSplitter.Converters"
+                 xmlns:Controls="clr-namespace:KeyboardSplitter.Controls"
+                 xmlns:Splitter="clr-namespace:KeyboardSplitter"
+                 xmlns:UI="clr-namespace:KeyboardSplitter.UI"
+                 Title="djlastnight's Keyboard Splitter"
+                 Width="610"
+                 Height="515"
+                 MinWidth="610"
+                 MinHeight="515"
+                 Loaded="Window_Loaded"
+                 Closing="Window_Closing"
+                 Closed="Window_Closed"
+                 DataContext="{Binding RelativeSource={RelativeSource Self}}">
+    <Window.Resources>
+        <Converters:BoolToReversedBoolConverter x:Key="boolConverter" />
+        <Converters:BooleanToVisibilityConverter x:Key="boolToVisibilityConverter" />
+        <Style TargetType="TextBlock" x:Key="HelperTextBlockStyle">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Foreground" Value="Orange" />
+            <Setter Property="FontSize" Value="20" />
+            <Setter Property="TextAlignment" Value="Center" />
+        </Style>
+    </Window.Resources>
+    <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="20"/>
-            <RowDefinition Height="40"/>
+            <RowDefinition Height="20" />
+            <RowDefinition Height="40" />
             <RowDefinition/>
-            <RowDefinition Height="30" Name="lastGridRow"/>
+            <RowDefinition>
+                <RowDefinition.Style>
+                    <Style TargetType="RowDefinition">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsInputMonitorExpanded}" Value="False">
+                                <Setter Property="Height" Value="30" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding IsInputMonitorExpanded}" Value="True">
+                                <Setter Property="Height" Value="100" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </RowDefinition.Style>
+            </RowDefinition>
         </Grid.RowDefinitions>
         <Menu Height="19" Grid.Row="0">
             <MenuItem Header="File">
                 <MenuItem Header="Exit" Click="FileExit_Click"/>
             </MenuItem>
             <MenuItem Header="Tools">
-                <MenuItem Header="Test Virtual Controllers" Click="ControllerTest_Click"/>
+                <MenuItem Header="Test Xinput Controllers" Click="ControllerTest_Click"/>
                 <MenuItem Header="Open Windows' Gamepads" Click="OpenGamepadProperties_Click"/>
+                <MenuItem Header="Controller subtypes" Click="OnControllerSubtypesClicked" />
+                <MenuItem Header="Options" Click="OptionsClicked" />
             </MenuItem>
             <MenuItem Header="Drivers">
                 <MenuItem Header="Get Xbox 360 Accessories Driver" Click="OpenXboxSite"/>
@@ -31,8 +65,11 @@
                 <MenuItem Header="How it works" Click="HowItWorks_Click"/>
             </MenuItem>
         </Menu>
-        <Border Grid.Row="1" VerticalAlignment="Top"
-                BorderBrush="Black" BorderThickness="0.5" CornerRadius="0,0,10,10">
+        <Border Grid.Row="1"
+                VerticalAlignment="Top"
+                BorderBrush="Black"
+                BorderThickness="0.5"
+                CornerRadius="0,0,10,10">
             <Grid>
                 <Grid.Background>
                     <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
@@ -40,35 +77,184 @@
                         <GradientStop Color="White" Offset="1" />
                     </LinearGradientBrush>
                 </Grid.Background>
-                <Label Content="Slots count:" Height="28" HorizontalAlignment="Left" Margin="0,10,0,0" VerticalAlignment="Top"
-                       ToolTip="Determines the virtual xbox 360 gamepads count"/>
-                <ComboBox Height="23" HorizontalAlignment="Left" Margin="70,12,0,0" Name="deviceCountBox" VerticalAlignment="Top"
-                          Width="35" SelectionChanged="DeviceCountBox_SelectionChanged"/>
-                <CheckBox Content="Block choosen keyboards" Height="16" HorizontalAlignment="Left" Margin="111,15,0,0"
-                          Name="blockKeyboardCheckbox" VerticalAlignment="Top" IsChecked="True"
-                          ToolTip="Determines whether Windows OS will receive the assigned keyboards input"/>
-                <Button Name="startButton" Content="Start" Width="75" Height="23" HorizontalAlignment="Left" VerticalAlignment="Top"
-                        Margin="389,12,0,0" Click="StartButton_Click" ToolTip="Starts the emulation process" />
-                <Button Name="stopButton" Content="Stop" Width="75" Height="23" HorizontalAlignment="Left" VerticalAlignment="Top"
-                        Margin="470,12,0,0" IsEnabled="False" Click="StopButton_Click" ToolTip="Stops the emulation process"/>
+                <Label Content="Slots count:"
+                       Height="28"
+                       HorizontalAlignment="Left"
+                       VerticalAlignment="Top"
+                       Margin="0,10,0,0" />
+                <ComboBox IsEnabled="{Binding Splitter.EmulationManager.IsEmulationStarted, Converter={StaticResource boolConverter}}"
+                          ItemsSource="{Binding SlotsCountItemsSource}"
+                          SelectedItem="{Binding SlotsCount}"
+                          Width="35" 
+                          Height="23"
+                          HorizontalAlignment="Left"
+                          VerticalAlignment="Top"
+                          ToolTip="Determines the Virtual Xbox 360 gamepads count"
+                          Margin="70,12,0,0"
+                          SelectionChanged="OnSlotsCountChanged">
+                </ComboBox>
+                <CheckBox IsChecked="{Binding Splitter.ShouldBlockKeyboards}"
+                          Content="Block keyboards"
+                          Height="16"
+                          HorizontalAlignment="Left"
+                          VerticalAlignment="Top"
+                          Margin="111,15,0,0">
+                    <CheckBox.ToolTip>
+                        <TextBlock>
+                            Determines whether Windows OS will receive the assigned keyboards input.
+                            <LineBreak />
+                            Hit Left Control key 5 times in a row to toggle this checkbox even in fullscreen mode.
+                            <LineBreak />
+                            You will hear a different sound for activating/deactivating this function.
+                        </TextBlock>
+                    </CheckBox.ToolTip>
+                </CheckBox>   
+                <CheckBox IsChecked="{Binding Splitter.ShouldBlockMice}"
+                          Content="Block mice"
+                          Height="16"
+                          HorizontalAlignment="Left"
+                          VerticalAlignment="Top"
+                          Margin="230,15,0,0">
+                    <CheckBox.ToolTip>
+                        <TextBlock>
+                            Determines whether Windows OS will receive the assigned mice input.
+                            <LineBreak />
+                            Hit Right Control key 5 times in a row to toggle this checkbox even in fullscreen mode.
+                            <LineBreak />
+                            You will hear a different sound for activating/deactivating this function.
+                        </TextBlock>
+                    </CheckBox.ToolTip>
+                </CheckBox>
+                <Button IsEnabled="{Binding Splitter.EmulationManager.IsEmulationStarted, Converter={StaticResource boolConverter}}"
+                        Command="{Binding StartEmulationCommand}"
+                        Content="Start"
+                        Width="75"
+                        Height="23"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Top"
+                        Margin="389,12,0,0">
+                    <Button.ToolTip>
+                        <TextBlock>
+                            Starts the emulation process, which includes plugging in
+                            <LineBreak />
+                            the virtual xbox 360 controller(s) into the system and feeds it/them, 
+                            <LineBreak />
+                            using the assigned input devices in a way determined by the current preset.
+                        </TextBlock>
+                    </Button.ToolTip>
+                </Button>
+                <Button IsEnabled="{Binding Splitter.EmulationManager.IsEmulationStarted}"
+                        Command="{Binding StopEmulationCommand}"
+                        Content="Stop"
+                        Width="75"
+                        Height="23"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Top"
+                        Margin="470,12,0,0">
+                    <Button.ToolTip>
+                        <TextBlock>
+                            Stops the emulation process, which includes unplugging the virtual
+                            <LineBreak />
+                            xbox 360 controller(s) and removing the input interception filter.
+                            <LineBreak />
+                            Hit Ctrl+Alt+Delete to activate this button even in fullscreen mode.
+                        </TextBlock>
+                    </Button.ToolTip>
+                </Button>
             </Grid>
         </Border>
-        <ScrollViewer Grid.Row="2" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" >
-            <WrapPanel Name="wrapPanel"/>
+        <ScrollViewer Grid.Row="2"
+                      HorizontalScrollBarVisibility="Auto"
+                      VerticalScrollBarVisibility="Disabled" >
+            <Grid>
+                <Grid.Resources>
+                    <Splitter:GlobalSettings x:Key="settings" />
+                </Grid.Resources>
+                <ItemsControl ItemsSource="{Binding Splitter.EmulationManager.Slots}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
+                <Grid Background="#CC808080"
+                      Name="helperGrid"
+                      Opacity="0"
+                      IsHitTestVisible="False"
+                      Visibility="{Binding Source={StaticResource settings}, Path=Instance.DisplayEmulationInformation, Converter={StaticResource boolToVisibilityConverter}}">
+                    <StackPanel Orientation="Vertical"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Center"
+                                Margin="0,25,0,0">
+                        <TextBlock Style="{StaticResource HelperTextBlockStyle}">
+                            Emulation process is currently running.
+                        </TextBlock>
+                        <TextBlock Style="{StaticResource HelperTextBlockStyle}"
+                                   Text="{Binding EmulationInformation}" />
+                        <TextBlock Style="{StaticResource HelperTextBlockStyle}" />
+
+                        <TextBlock Style="{StaticResource HelperTextBlockStyle}">
+                            You may now start your game or an application,
+                        </TextBlock>
+                        <TextBlock Style="{StaticResource HelperTextBlockStyle}">
+                            which works with Xbox 360 Controllers.
+                        </TextBlock>
+                        <TextBlock Style="{StaticResource HelperTextBlockStyle}" />
+                        <TextBlock Style="{StaticResource HelperTextBlockStyle}">
+                            Global Keyboard HotKeys:
+                        </TextBlock>
+                        <TextBlock Style="{StaticResource HelperTextBlockStyle}">
+                            Block/unblock keyboards - LeftControl 5 times in a row.
+                        </TextBlock>
+                        <TextBlock Style="{StaticResource HelperTextBlockStyle}">
+                            Block/unblock mice - RightControl 5 times in a row.
+                        </TextBlock>
+                        <TextBlock Style="{StaticResource HelperTextBlockStyle}">
+                            Stop Emulation - Ctrl+Alt+Delete
+                        </TextBlock>
+                    </StackPanel>
+                    <Button Content="x"
+                            Padding="0,-2,0,0"
+                            Width="20"
+                            Height="20"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Top"
+                            Margin="2"
+                            Foreground="Orange"
+                            Background="#CC808080"
+                            BorderBrush="Black"
+                            BorderThickness="2"
+                            Click="OnHelperGridCloseButtonClicked"
+                            ToolTip="Hide emulation information">
+                    </Button>
+                </Grid>
+            </Grid>
         </ScrollViewer>
-        <Border Grid.Row="3" Margin="5,0,5,5" CornerRadius="12,0,0,12" BorderBrush="Black" BorderThickness="0.1">
-            <Expander Name="expander" Header="Keyboards Input Monitor" IsExpanded="False" Padding="0,0,0,1"
-                      ExpandDirection="Up" Expanded="Expander_Expanded" Collapsed="Expander_Collapsed">
-                <TextBox Name="inputMonitor" IsReadOnly="True" VerticalScrollBarVisibility="Visible"
-                         FontWeight="Bold" Padding="5,5,5,5">
-                    <TextBox.Background>
+        <Border Grid.Row="3"
+                Margin="5,0,5,5"
+                CornerRadius="12,0,0,12"
+                BorderBrush="Black"
+                BorderThickness="0.1">
+            <Expander Header="Input Device Monitor"
+                      IsExpanded="{Binding IsInputMonitorExpanded}"
+                      Padding="0,0,0,1"
+                      ExpandDirection="Up"
+                      Expanded="Expander_Expanded"
+                      Collapsed="Expander_Collapsed"
+                      ToolTip="{Binding InputMonitorTooltip}">
+                <Controls:ScrollingTextBox Text="{Binding Splitter.InputManager.InputMonitorHistory}"
+                                           IsReadOnly="True"
+                                           VerticalScrollBarVisibility="Visible"
+                                           FontWeight="Bold"
+                                           Padding="5">
+                    <Controls:ScrollingTextBox.Background>
                         <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                             <GradientStop Color="#00FEF772" Offset="0" />
                             <GradientStop Color="White" Offset="1" />
                         </LinearGradientBrush>
-                    </TextBox.Background>
-                </TextBox>
+                    </Controls:ScrollingTextBox.Background>
+                </Controls:ScrollingTextBox>
             </Expander>
         </Border>
     </Grid>
-</Window>
+</UI:CustomWindow>

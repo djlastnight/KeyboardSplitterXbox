@@ -2,86 +2,240 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.IO;
+    using System.Linq;
+    using System.Text;
     using System.Xml.Serialization;
-    using Interceptor;
-    using XboxInterfaceWrap;
+    using SplitterCore;
+    using SplitterCore.Input;
+    using SplitterCore.Preset;
+    using VirtualXbox.Enums;
 
     [Serializable]
     [XmlType("preset")]
-    public class Preset
+    public class Preset : IPreset
     {
-        public static readonly Preset Empty = CreateEmptyPreset();
-
         public static readonly Preset Default = CreateDefaultPreset();
 
         public static readonly List<Preset> ImuttablePresets =
-            new List<Preset>() { Empty, Default };
+            new List<Preset>() { Default };
 
         public Preset()
         {
-            this.Buttons = new List<PresetButton>();
-            this.Triggers = new List<PresetTrigger>();
-            this.Axes = new List<PresetAxis>();
-            this.Povs = new List<PresetDpad>();
-            this.CustomFunctions = new List<PresetCustom>();
+            this.Buttons = new ObservableCollection<PresetButton>();
+            this.Triggers = new ObservableCollection<PresetTrigger>();
+            this.Axes = new ObservableCollection<PresetAxis>();
+            this.Dpads = new ObservableCollection<PresetDpad>();
+            this.CustomFunctions = new ObservableCollection<PresetCustom>();
         }
 
-        [XmlAttribute("Name")]
+        [XmlAttribute("name")]
         public string Name { get; set; }
 
         [XmlElement("button")]
-        public List<PresetButton> Buttons { get; set; }
+        public ObservableCollection<PresetButton> Buttons { get; set; }
 
         [XmlElement("trigger")]
-        public List<PresetTrigger> Triggers { get; set; }
+        public ObservableCollection<PresetTrigger> Triggers { get; set; }
 
         [XmlElement("axis")]
-        public List<PresetAxis> Axes { get; set; }
+        public ObservableCollection<PresetAxis> Axes { get; set; }
 
         [XmlElement("dpad")]
-        public List<PresetDpad> Povs { get; set; }
+        public ObservableCollection<PresetDpad> Dpads { get; set; }
 
         [XmlElement("custom")]
-        public List<PresetCustom> CustomFunctions { get; set; }
-
-        public void Reset()
-        {
-            string noneKey = InterceptionKeys.None.ToString();
-
-            this.Buttons = new List<PresetButton>();
-            foreach (XboxButton button in Enum.GetValues(typeof(XboxButton)))
-            {
-                this.Buttons.Add(new PresetButton(button, noneKey));
-            }
-
-            this.Triggers = new List<PresetTrigger>();
-            foreach (XboxTrigger trigger in Enum.GetValues(typeof(XboxTrigger)))
-            {
-                this.Triggers.Add(new PresetTrigger(trigger, noneKey));
-            }
-
-            this.Axes = new List<PresetAxis>();
-            foreach (XboxAxis axis in Enum.GetValues(typeof(XboxAxis)))
-            {
-                this.Axes.Add(new PresetAxis(axis, XboxAxisPosition.Min, noneKey));
-                this.Axes.Add(new PresetAxis(axis, XboxAxisPosition.Max, noneKey));
-            }
-
-            this.Povs = new List<PresetDpad>();
-            foreach (XboxDpadDirection direction in Enum.GetValues(typeof(XboxDpadDirection)))
-            {
-                if (direction != XboxDpadDirection.None)
-                {
-                    this.Povs.Add(new PresetDpad(direction, noneKey));
-                }
-            }
-
-            this.CustomFunctions = new List<PresetCustom>();
-        }
+        public ObservableCollection<PresetCustom> CustomFunctions { get; set; }
 
         public override string ToString()
         {
             return this.Name;
+        }
+
+        public IPreset FilterByKey(InputKey key)
+        {
+            var preset = new Preset()
+            {
+                Name = this.Name,
+                Buttons = new ObservableCollection<PresetButton>(this.Buttons.Where(x => x.Key == key)),
+                Triggers = new ObservableCollection<PresetTrigger>(this.Triggers.Where(x => x.Key == key)),
+                Axes = new ObservableCollection<PresetAxis>(this.Axes.Where(x => x.Key == key)),
+                Dpads = new ObservableCollection<PresetDpad>(this.Dpads.Where(x => x.Key == key)),
+                CustomFunctions = new ObservableCollection<PresetCustom>(this.CustomFunctions.Where(x => x.Key == key))
+            };
+
+            return preset;
+        }
+
+        public List<InputKey> GetKeys(PresetButton presetButton)
+        {
+            var keys = new List<InputKey>();
+            keys.AddRange(this.Buttons.Where(x => x == presetButton).Select(x => x.Key));
+
+            // Adding buttons from custom functions
+            foreach (var customFunction in this.CustomFunctions)
+            {
+                XboxCustomFunction xboxCustomfunction = (XboxCustomFunction)customFunction.Function;
+                if (Helpers.CustomFunctionHelper.GetFunctionType(xboxCustomfunction) == FunctionType.Button)
+                {
+                    uint customXboxButton = (uint)Helpers.CustomFunctionHelper.GetXboxButton(xboxCustomfunction);
+                    if (customXboxButton == presetButton.Button)
+                    {
+                        keys.Add(customFunction.Key);
+                    }
+                }
+            }
+
+            return keys;
+        }
+
+        public List<InputKey> GetKeys(PresetTrigger presetTrigger)
+        {
+            var keys = new List<InputKey>();
+            keys.AddRange(this.Triggers.Where(x => x == presetTrigger).Select(x => x.Key));
+
+            // Adding triggers from custom functions
+            foreach (var customFunction in this.CustomFunctions)
+            {
+                XboxCustomFunction xboxCustomfunction = (XboxCustomFunction)customFunction.Function;
+                if (Helpers.CustomFunctionHelper.GetFunctionType(xboxCustomfunction) == FunctionType.Trigger)
+                {
+                    uint customXboxTrigger = (uint)Helpers.CustomFunctionHelper.GetXboxTrigger(xboxCustomfunction);
+                    if (customXboxTrigger == presetTrigger.Trigger)
+                    {
+                        keys.Add(customFunction.Key);
+                    }
+                }
+            }
+
+            return keys;
+        }
+
+        public List<InputKey> GetKeys(PresetAxis axis)
+        {
+            var keys = new List<InputKey>();
+            keys.AddRange(this.Axes.Where(x => x.Axis == axis.Axis && x.Value == axis.Value).Select(x => x.Key));
+
+            // Adding dpads from custom functions
+            foreach (var customFunction in this.CustomFunctions)
+            {
+                XboxCustomFunction xboxCustomfunction = (XboxCustomFunction)customFunction.Function;
+                if (Helpers.CustomFunctionHelper.GetFunctionType(xboxCustomfunction) == FunctionType.Axis)
+                {
+                    XboxAxisPosition pos;
+                    uint customXboxAxis = (uint)Helpers.CustomFunctionHelper.GetXboxAxis(xboxCustomfunction, out pos);
+                    if (customXboxAxis == axis.Axis && (short)pos == axis.Value)
+                    {
+                        keys.Add(customFunction.Key);
+                    }
+                }
+            }
+
+            return keys;
+        }
+
+        public List<InputKey> GetKeys(PresetDpad dpad)
+        {
+            var keys = new List<InputKey>();
+            keys.AddRange(this.Dpads.Where(x => x.Direction == dpad.Direction).Select(x => x.Key));
+
+            // Adding dpads from custom functions
+            foreach (var customFunction in this.CustomFunctions)
+            {
+                XboxCustomFunction xboxCustomfunction = (XboxCustomFunction)customFunction.Function;
+                if (Helpers.CustomFunctionHelper.GetFunctionType(xboxCustomfunction) == FunctionType.Dpad)
+                {
+                    int customXboxDpad = (int)Helpers.CustomFunctionHelper.GetDpadDirection(xboxCustomfunction);
+                    if (customXboxDpad == dpad.Direction)
+                    {
+                        keys.Add(customFunction.Key);
+                    }
+                }
+            }
+
+            return keys;
+        }
+
+        public List<InputKey> GetKeys(PresetCustom presetCustom)
+        {
+            var keys = new List<InputKey>();
+            keys.AddRange(this.CustomFunctions.Where(x => x.Function == presetCustom.Function).Select(x => x.Key));
+
+            foreach (var customFunction in this.CustomFunctions)
+            {
+                if (customFunction.Function != presetCustom.Function)
+                {
+                    continue;
+                }
+
+                var xboxCustomFunction = (XboxCustomFunction)presetCustom.Function;
+                var functionType = Helpers.CustomFunctionHelper.GetFunctionType(xboxCustomFunction);
+                switch (functionType)
+                {
+                    case FunctionType.Button:
+                        foreach (var presetButton in this.Buttons)
+                        {
+                            var xboxButton = Helpers.CustomFunctionHelper.GetXboxButton(xboxCustomFunction);
+                            if (xboxButton == (XboxButton)presetButton.Button)
+                            {
+                                keys.Add(presetButton.Key);
+                            }
+                        }
+
+                        break;
+                    case FunctionType.Axis:
+                        foreach (var presetAxis in this.Axes)
+                        {
+                            XboxAxisPosition pos;
+                            var xboxAxis = Helpers.CustomFunctionHelper.GetXboxAxis(xboxCustomFunction, out pos);
+                            if (xboxAxis == (XboxAxis)presetAxis.Axis && pos == (XboxAxisPosition)presetAxis.Value)
+                            {
+                                keys.Add(presetAxis.Key);
+                            }
+                        }
+
+                        break;
+                    case FunctionType.Dpad:
+                        foreach (var presetDpad in this.Dpads)
+                        {
+                            var direction = Helpers.CustomFunctionHelper.GetDpadDirection(xboxCustomFunction);
+                            if (direction == (XboxDpadDirection)presetDpad.Direction)
+                            {
+                                keys.Add(presetDpad.Key);
+                            }
+                        }
+
+                        break;
+                    case FunctionType.Trigger:
+                        foreach (var presetTrigger in this.Triggers)
+                        {
+                            var xboxTrigger = Helpers.CustomFunctionHelper.GetXboxTrigger(xboxCustomFunction);
+                            if (xboxTrigger == (XboxTrigger)presetTrigger.Trigger)
+                            {
+                                keys.Add(presetTrigger.Key);
+                            }
+                        }
+
+                        break;
+                    default:
+                        throw new NotImplementedException(
+                            "Not implemented Function Type: " + functionType);
+                }
+            }
+
+            return keys;
+        }
+
+        public string Serialize()
+        {
+            var sb = new StringBuilder();
+            using (var writer = new StringWriter(sb))
+            {
+                var serializer = new XmlSerializer(this.GetType());
+                serializer.Serialize(writer, this);
+                return sb.ToString();
+            }
         }
 
         private static Preset CreateEmptyPreset()
@@ -97,36 +251,43 @@
         {
             Preset preset = new Preset();
             preset.Name = "default";
+            preset.Buttons.Add(new PresetButton((uint)XboxButton.Start, InputKey.Escape));
+            preset.Buttons.Add(new PresetButton((uint)XboxButton.Back, InputKey.Backspace));
 
-            preset.Buttons.Add(new PresetButton(XboxButton.Guide, InterceptionKeys.LeftWindows.ToString()));
-            preset.Buttons.Add(new PresetButton(XboxButton.A, InterceptionKeys.S.ToString()));
-            preset.Buttons.Add(new PresetButton(XboxButton.B, InterceptionKeys.D.ToString()));
-            preset.Buttons.Add(new PresetButton(XboxButton.X, InterceptionKeys.A.ToString()));
-            preset.Buttons.Add(new PresetButton(XboxButton.Y, InterceptionKeys.W.ToString()));
-            preset.Buttons.Add(new PresetButton(XboxButton.LeftBumper, InterceptionKeys.Z.ToString()));
-            preset.Buttons.Add(new PresetButton(XboxButton.RightBumper, InterceptionKeys.C.ToString()));
-            preset.Buttons.Add(new PresetButton(XboxButton.Back, InterceptionKeys.Backspace.ToString()));
-            preset.Buttons.Add(new PresetButton(XboxButton.Start, InterceptionKeys.Escape.ToString()));
-            preset.Buttons.Add(new PresetButton(XboxButton.LeftThumb, InterceptionKeys.LeftShift.ToString()));
-            preset.Buttons.Add(new PresetButton(XboxButton.RightThumb, InterceptionKeys.RightShift.ToString()));
+            preset.Buttons.Add(new PresetButton((uint)XboxButton.LeftThumb, InputKey.LeftShift));
+            preset.Buttons.Add(new PresetButton((uint)XboxButton.RightThumb, InputKey.RightShift));
 
-            preset.Triggers.Add(new PresetTrigger(XboxTrigger.LeftTrigger, InterceptionKeys.Q.ToString()));
-            preset.Triggers.Add(new PresetTrigger(XboxTrigger.RightTrigger, InterceptionKeys.E.ToString()));
+            preset.Buttons.Add(new PresetButton((uint)XboxButton.LeftBumper, InputKey.Z));
+            preset.Buttons.Add(new PresetButton((uint)XboxButton.RightBumper, InputKey.C));
 
-            preset.Axes.Add(new PresetAxis(XboxAxis.X, XboxAxisPosition.Min, InterceptionKeys.Left.ToString()));
-            preset.Axes.Add(new PresetAxis(XboxAxis.X, XboxAxisPosition.Max, InterceptionKeys.Right.ToString()));
-            preset.Axes.Add(new PresetAxis(XboxAxis.Y, XboxAxisPosition.Max, InterceptionKeys.Up.ToString()));
-            preset.Axes.Add(new PresetAxis(XboxAxis.Y, XboxAxisPosition.Min, InterceptionKeys.Down.ToString()));
+            preset.Buttons.Add(new PresetButton((uint)XboxButton.Guide, InputKey.LeftWindows));
 
-            preset.Axes.Add(new PresetAxis(XboxAxis.Rx, XboxAxisPosition.Min, InterceptionKeys.Numpad4.ToString()));
-            preset.Axes.Add(new PresetAxis(XboxAxis.Rx, XboxAxisPosition.Max, InterceptionKeys.Numpad6.ToString()));
-            preset.Axes.Add(new PresetAxis(XboxAxis.Ry, XboxAxisPosition.Min, InterceptionKeys.Numpad2.ToString()));
-            preset.Axes.Add(new PresetAxis(XboxAxis.Ry, XboxAxisPosition.Max, InterceptionKeys.Numpad8.ToString()));
+            preset.Buttons.Add(new PresetButton((uint)XboxButton.A, InputKey.S));
+            preset.Buttons.Add(new PresetButton((uint)XboxButton.B, InputKey.D));
+            preset.Buttons.Add(new PresetButton((uint)XboxButton.X, InputKey.A));
+            preset.Buttons.Add(new PresetButton((uint)XboxButton.Y, InputKey.W));
 
-            preset.Povs.Add(new PresetDpad(XboxDpadDirection.Up, InterceptionKeys.I.ToString()));
-            preset.Povs.Add(new PresetDpad(XboxDpadDirection.Down, InterceptionKeys.K.ToString()));
-            preset.Povs.Add(new PresetDpad(XboxDpadDirection.Left, InterceptionKeys.J.ToString()));
-            preset.Povs.Add(new PresetDpad(XboxDpadDirection.Right, InterceptionKeys.L.ToString()));
+            preset.Triggers.Add(new PresetTrigger((uint)XboxTrigger.Left, InputKey.Q));
+            preset.Triggers.Add(new PresetTrigger((uint)XboxTrigger.Right, InputKey.E));
+
+            preset.Axes.Add(new PresetAxis((uint)XboxAxis.X, (short)XboxAxisPosition.Min, InputKey.Left));
+            preset.Axes.Add(new PresetAxis((uint)XboxAxis.X, (short)XboxAxisPosition.Max, InputKey.Right));
+
+            preset.Axes.Add(new PresetAxis((uint)XboxAxis.Y, (short)XboxAxisPosition.Min, InputKey.Down));
+            preset.Axes.Add(new PresetAxis((uint)XboxAxis.Y, (short)XboxAxisPosition.Max, InputKey.Up));
+
+            preset.Axes.Add(new PresetAxis((uint)XboxAxis.Rx, (short)XboxAxisPosition.Min, InputKey.Numpad4));
+            preset.Axes.Add(new PresetAxis((uint)XboxAxis.Rx, (short)XboxAxisPosition.Max, InputKey.Numpad6));
+
+            preset.Axes.Add(new PresetAxis((uint)XboxAxis.Ry, (short)XboxAxisPosition.Min, InputKey.Numpad2));
+            preset.Axes.Add(new PresetAxis((uint)XboxAxis.Ry, (short)XboxAxisPosition.Max, InputKey.Numpad8));
+
+            preset.Dpads.Add(new PresetDpad((int)XboxDpadDirection.Up, InputKey.I));
+            preset.Dpads.Add(new PresetDpad((int)XboxDpadDirection.Down, InputKey.K));
+            preset.Dpads.Add(new PresetDpad((int)XboxDpadDirection.Left, InputKey.J));
+            preset.Dpads.Add(new PresetDpad((int)XboxDpadDirection.Right, InputKey.L));
+
+            preset.CustomFunctions.Add(new PresetCustom((uint)XboxButton.A, InputKey.Enter));
 
             return preset;
         }

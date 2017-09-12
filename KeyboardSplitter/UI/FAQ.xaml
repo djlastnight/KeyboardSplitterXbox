@@ -1,9 +1,0 @@
-﻿<Window x:Class="KeyboardSplitter.UI.FAQ"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="FAQ" Height="600" Width="800">
-    <ScrollViewer>
-        <TextBox Name="textBox" TextWrapping="Wrap" IsReadOnly="True" FontSize="16">
-        </TextBox>
-    </ScrollViewer>
-</Window>

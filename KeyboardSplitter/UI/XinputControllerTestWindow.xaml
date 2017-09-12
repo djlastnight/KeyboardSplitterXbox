@@ -1,0 +1,37 @@
+﻿<ui:CustomWindow x:Class="KeyboardSplitter.UI.XinputControllerTestWindow"
+                 x:Name="window"
+                 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                 xmlns:ui="clr-namespace:KeyboardSplitter.UI"
+                 MinWidth="280" MinHeight="300" 
+                 Width="280" Height="300"
+                 WindowStartupLocation="CenterOwner"
+                 Title="Xinput Controller Tester"
+                 SizeChanged="Window_SizeChanged"
+                 Icon="/KeyboardSplitter;component/Resources/icon.ico"
+                 ResizeMode="CanResizeWithGrip">
+    <Grid>
+        <StackPanel>
+            <Border BorderBrush="Black"
+                    BorderThickness="0.5"
+                    CornerRadius="0,0,10,10"
+                    HorizontalAlignment="Stretch"
+                    Background="LightGray">
+                <StackPanel Orientation="Horizontal"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center">
+                    <CheckBox Name="checkbox" Content="Enable auto scan"
+                      HorizontalAlignment="Center" IsChecked="True" VerticalAlignment="Center"/>
+                    <Button Content="Manual scan"
+                    Width="100"
+                    Height="20"
+                    VerticalAlignment="Center"
+                    Margin="5"
+                    Click="Button_Click"
+                    Name="button" />
+                </StackPanel>
+            </Border>
+            <WrapPanel Name="panel" HorizontalAlignment="Center" VerticalAlignment="Center" />
+        </StackPanel>
+    </Grid>
+</ui:CustomWindow>

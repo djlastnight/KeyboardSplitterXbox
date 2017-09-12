@@ -6,16 +6,11 @@
     [TestClass]
     public class TestMainWindow
     {
-        [TestInitialize]
-        public void Init()
-        {
-            KeyboardSplitter.App.Initialize();
-        }
 
         [TestMethod]
         public void TestMainWindowConstructor()
         {
-            if (!DriversManager.AreBuiltInDriversInstalled())
+            if (!DriversManager.AreBuiltInDriversInstalled)
             {
                 return;
             }

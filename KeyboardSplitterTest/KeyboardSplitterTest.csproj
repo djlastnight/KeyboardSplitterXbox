@@ -25,6 +25,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -82,9 +83,9 @@
       <Project>{fd02ac73-7f6d-48fc-851f-55d1499d0161}</Project>
       <Name>KeyboardSplitter</Name>
     </ProjectReference>
-    <ProjectReference Include="..\XboxInterfaceWrap\XboxInterfaceWrap.csproj">
+    <ProjectReference Include="..\XboxInterfaceWrap\VirtualXbox.csproj">
       <Project>{c25d1435-780b-41ba-9097-1b4a296f0603}</Project>
-      <Name>XboxInterfaceWrap</Name>
+      <Name>VirtualXbox</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

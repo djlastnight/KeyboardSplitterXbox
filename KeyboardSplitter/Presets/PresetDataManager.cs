@@ -3,36 +3,107 @@
     using System;
     using System.Collections.ObjectModel;
     using System.Collections.Specialized;
+    using System.IO;
     using System.Linq;
+    using System.Windows;
 
     public static class PresetDataManager
     {
-        private const string PresetsFilename = "presets.xml";
+        private const string PresetsFilename = "splitter_presets.xml";
+
+        private const string PresetsBackupFilename = "splitter_presets_backup.xml";
 
         private static PresetData data;
 
         static PresetDataManager()
         {
-            data = new PresetData();
-
-            try
-            {
-                data = PresetData.Deserialize(PresetsFilename);
-            }
-            catch (Exception)
-            {
-            }
-
-            data.Presets.CollectionChanged += new NotifyCollectionChangedEventHandler(Presets_CollectionChanged);
+            PresetDataManager.data = PresetDataManager.ReadPresetDataFromFile();
         }
 
-        public static event NotifyCollectionChangedEventHandler PresetsChanged;
-
-        public static ObservableCollection<Preset> Presets
+        public static ObservableCollection<Preset> CurrentPresets
         {
             get
             {
-                return data.Presets;
+                return PresetDataManager.data.Presets;
+            }
+        }
+
+        public static PresetData ReadPresetDataFromFile()
+        {
+            var data = new PresetData();
+
+            if (!File.Exists(PresetDataManager.PresetsFilename))
+            {
+                return data;
+            }
+
+            try
+            {
+                data = PresetData.Deserialize(PresetDataManager.PresetsFilename);
+            }
+            catch (Exception e)
+            {
+                var message = string.Format(
+                    "Reading presets file [{0}] failed: {1}",
+                    PresetDataManager.PresetsFilename,
+                    e.ToString());
+
+                LogWriter.Write(message);
+
+                bool isBackupCreated = false;
+
+                // Creating a presets backup file
+                if (File.Exists(PresetDataManager.PresetsFilename) && !File.Exists(PresetDataManager.PresetsBackupFilename))
+                {
+                    try
+                    {
+                        File.Copy(PresetDataManager.PresetsFilename, PresetDataManager.PresetsBackupFilename);
+                        isBackupCreated = true;
+                    }
+                    catch (Exception ex)
+                    {
+                        LogWriter.Write("Presets file backup failed: " + ex.Message);
+                    }
+
+                    LogWriter.Write("Backup of presets file succesfully created at " + PresetDataManager.PresetsBackupFilename);
+                }
+
+                string alertMessage = "Presets file parse failed. Please refer to " + LogWriter.GetLogFileName + " for more details.";
+                if (isBackupCreated)
+                {
+                    alertMessage += Environment.NewLine + "Backup created at " + PresetDataManager.PresetsBackupFilename;
+                }
+
+                var splitter = Helpers.SplitterHelper.TryFindSplitter();
+                if (splitter != null && splitter.EmulationManager != null && splitter.EmulationManager.Slots != null)
+                {
+                    foreach (var slot in splitter.EmulationManager.Slots)
+                    {
+                        slot.InvalidateReason = SplitterCore.Emulation.SlotInvalidationReason.Presets_Parse_Failed;
+                    }
+                }
+
+                MessageBox.Show(alertMessage, ApplicationInfo.AppName, MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+
+            return data;
+        }
+
+        public static void WritePresetDataToFile()
+        {
+            PresetDataManager.data.Serialize(PresetsFilename);
+        }
+
+        public static void AddNewPreset(Preset preset)
+        {
+            PresetDataManager.data.Presets.Add(preset);
+        }
+
+        public static void DeletePreset(Preset preset)
+        {
+            if (PresetDataManager.data.Presets.Contains(preset))
+            {
+                PresetDataManager.data.Presets.Remove(preset);
             }
         }
 
@@ -46,16 +117,38 @@
             return false;
         }
 
-        public static void ExportToFile()
+        public static bool IsPresetChanged(Preset preset)
         {
-            data.Serialize(PresetsFilename);
-        }
-
-        private static void Presets_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            if (PresetDataManager.PresetsChanged != null)
+            if (preset == null)
             {
-                PresetDataManager.PresetsChanged(sender, e);
+                throw new ArgumentNullException("preset");
+            }
+
+            if (IsProtectedPreset(preset.Name))
+            {
+                return false;
+            }
+
+            var fileData = PresetDataManager.ReadPresetDataFromFile();
+            var currentData = PresetDataManager.data;
+
+            if (!currentData.Presets.Contains(preset))
+            {
+                throw new InvalidOperationException(
+                    "The following preset does not exsists in the current preset data: " + preset);
+            }
+
+            var original = fileData.Presets.FirstOrDefault(x => x.Name == preset.Name);
+            if (original == null)
+            {
+                // We found a new preset
+                return true;
+            }
+            else
+            {
+                var origialSerialized = original.Serialize();
+                var presetSerialized = preset.Serialize();
+                return origialSerialized != presetSerialized;
             }
         }
     }

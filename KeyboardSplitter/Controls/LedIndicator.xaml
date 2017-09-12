@@ -1,0 +1,30 @@
+﻿<UserControl x:Class="KeyboardSplitter.Controls.LedIndicator"
+             x:Name="uc"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:converter="clr-namespace:KeyboardSplitter.Converters"
+             mc:Ignorable="d" 
+             d:DesignHeight="10" d:DesignWidth="200">
+    <UserControl.Resources>
+        <converter:LedNumberToBrushConverter x:Key="ledConverter" />
+        <Style TargetType="Ellipse" x:Key="EllipseStyle">
+            <Setter Property="Width" Value="10" />
+            <Setter Property="Height" Value="10" />
+            <Setter Property="Margin" Value="2" />
+        </Style>
+    </UserControl.Resources>
+    <StackPanel Orientation="Horizontal"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Top">
+        <Ellipse Fill="{Binding ElementName=uc, Path=LedNumber, Mode=OneWay, Converter={StaticResource ledConverter}, ConverterParameter=1}"
+                 Style="{StaticResource EllipseStyle}" />
+        <Ellipse Fill="{Binding ElementName=uc, Path=LedNumber, Mode=OneWay, Converter={StaticResource ledConverter}, ConverterParameter=2}"
+                 Style="{StaticResource EllipseStyle}" />
+        <Ellipse Fill="{Binding ElementName=uc, Path=LedNumber, Mode=OneWay, Converter={StaticResource ledConverter}, ConverterParameter=3}"
+                 Style="{StaticResource EllipseStyle}" />
+        <Ellipse Fill="{Binding ElementName=uc, Path=LedNumber, Mode=OneWay, Converter={StaticResource ledConverter}, ConverterParameter=4}"
+                 Style="{StaticResource EllipseStyle}" />
+    </StackPanel>
+</UserControl>

@@ -1,0 +1,16 @@
+﻿<UI:CustomWindow x:Class="KeyboardSplitter.UI.HelpDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:UI="clr-namespace:KeyboardSplitter.UI"
+        Title="User interface help" Height="520" Width="640" MinWidth="480" MinHeight="320">
+    <ScrollViewer Name="scrollViewer">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition></RowDefinition>
+                <RowDefinition></RowDefinition>
+            </Grid.RowDefinitions>
+            <Image Source="/KeyboardSplitter;component/Resources/splitter_UI_help.png" Grid.Row="0"/>
+            <TextBox Grid.Row="1" Name="contentsTextBox" TextWrapping="Wrap" IsReadOnly="True" FontSize="16"/>
+        </Grid>
+    </ScrollViewer>
+</UI:CustomWindow>

@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using System.IO;
     using System.Linq;
     using System.Reflection;
     using System.Text;
@@ -19,6 +20,14 @@
             FileVersionInfo info = FileVersionInfo.GetVersionInfo(assembly.Location);
             string version = info.FileVersion;
             AppNameVersion = AppName + " v" + version;
+        }
+
+        public static string AppTempDirectory
+        {
+            get
+            {
+                return Path.Combine(Path.GetTempPath(), ApplicationInfo.AppNameVersion);
+            }
         }
     }
 }

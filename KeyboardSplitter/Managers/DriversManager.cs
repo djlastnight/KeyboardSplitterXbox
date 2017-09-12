@@ -4,105 +4,59 @@
     using System.IO;
     using System.Windows;
     using Interceptor;
-    using XboxInterfaceWrap;
+    using Interceptor.Enums;
+    using VirtualXbox;
 
     public static class DriversManager
     {
-        public static bool AreBuiltInDriversInstalled()
+        public static bool IsInterceptionInstalled
         {
-            bool interceptionOK = InterceptionDriver.GetDriverState() == DriverState.Installed;
-            bool xboxBusOK = XboxBus.IsInstalled();
-
-            return interceptionOK && xboxBusOK;
+            get
+            {
+                return InterceptionDriver.DriverState == InterceptionDriverState.Installed;
+            }
         }
 
-        public static bool IsXboxAccessoriesInstalled()
+        public static bool IsVirtualXboxBusInstallled
         {
-            var version = Environment.OSVersion.Version;
-            bool isWin7 = version.Major == 6 && version.Minor == 1;
-            bool isVista = version.Major == 6 && version.Minor == 0;
-            bool isXp = version.Major == 5 && version.Minor == 1;
-
-            if (isWin7 || isVista || isXp)
+            get
             {
-                string rootDriveLetter = Path.GetPathRoot(
-                    Environment.GetFolderPath(Environment.SpecialFolder.Windows));
-
-                string xboxAccessoriesStatFile = Path.Combine(
-                    rootDriveLetter, "Program Files", "Microsoft Xbox 360 Accessories", "XBoxStat.exe");
-
-                return File.Exists(xboxAccessoriesStatFile);
+                return VirtualXboxBus.IsInstalled;
             }
+        }
 
-            // windows 8 and above has this driver built-in
-            return true;
+        public static bool AreBuiltInDriversInstalled
+        {
+            get
+            {
+                return IsInterceptionInstalled && IsVirtualXboxBusInstallled;
+            }
         }
 
         public static void InstallBuiltInDrivers()
         {
-            bool interceptionOK = InterceptionDriver.GetDriverState() == DriverState.Installed;
-            bool xboxBusOK = XboxBus.IsInstalled();
-
-            if (!interceptionOK || !xboxBusOK)
+            if (!IsInterceptionInstalled)
             {
-                ProcessBuiltInInstallation(interceptionOK, xboxBusOK);
-            }
-        }
-
-        public static void UninstallBuiltInDrivers()
-        {
-            LogWriter.Write("Uninstalling Built-in drivers");
-            try
-            {
-                const string KEYBOARD_DRIVER_FILENAME = "keyboard_driver.exe";
-                string fullPath = Path.Combine(Path.GetTempPath(), ApplicationInfo.AppNameVersion, KEYBOARD_DRIVER_FILENAME);
-                InterceptionDriver.Uninstall(fullPath);
-                int exitCode;
-                string msg = XboxBus.Uninstall(out exitCode);
-                LogWriter.Write(msg);
-                System.Windows.MessageBox.Show(msg);
-            }
-            catch (Exception ex)
-            {
-                LogWriter.Write("Uninstalling Built-in drivers FAILED: " + ex);
-
-                System.Windows.MessageBox.Show(
-                    "Uninstall failed: " + ex.Message, "Process failed", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-
-            LogWriter.Write("Uninstall completed, closing the application");
-            Environment.Exit(0);
-        }
-
-        private static void ProcessBuiltInInstallation(bool interceptionOK, bool xboxBusOK)
-        {
-            if (!interceptionOK)
-            {
-                const string KeyboardDriverFileName = "keyboard_driver.exe";
-                string fullPath = Path.Combine(
-                    Path.GetTempPath(),
-                    ApplicationInfo.AppNameVersion,
-                    KeyboardDriverFileName);
-
                 LogWriter.Write("Installing interception driver");
-                InterceptionDriver.Install(fullPath);
+                var path = KeyboardSplitter.Helpers.ResourceExtractor.ExtractResourceToDirectory("KeyboardSplitter.Lib.keyboard_driver.exe");
+                InterceptionDriver.Install(path);
             }
 
-            if (!xboxBusOK)
+            if (!IsVirtualXboxBusInstallled)
             {
-                LogWriter.Write("Installing xbox bus driver");
-                XboxBus.Install();
+                LogWriter.Write("Installing virtual xbox bus (SCP) driver");
+                VirtualXboxBus.Install();
             }
 
             LogWriter.Write("Built-in drivers installation finished");
 
-            var driverState = InterceptionDriver.GetDriverState();
+            var driverState = InterceptionDriver.DriverState;
             switch (driverState)
             {
-                case DriverState.Installed:
+                case InterceptionDriverState.Installed:
                     {
                         System.Windows.MessageBox.Show(
-                            "Installation finished, please restart the application.",
+                            "Installation finished, please start the application again.",
                             ApplicationInfo.AppNameVersion,
                             MessageBoxButton.OK,
                             MessageBoxImage.Information);
@@ -112,7 +66,7 @@
                     }
 
                     break;
-                case DriverState.NotInstalled:
+                case InterceptionDriverState.NotInstalled:
                     {
                         System.Windows.MessageBox.Show(
                             "Built-In Drivers Installation failed!",
@@ -124,7 +78,7 @@
                     }
 
                     break;
-                case DriverState.RebootRequired:
+                case InterceptionDriverState.RebootRequired:
                     {
                         var result = System.Windows.MessageBox.Show(
                             "Built-in drivers installation finished.\r\n" +
@@ -136,7 +90,18 @@
 
                         if (result == MessageBoxResult.Yes)
                         {
-                            System.Diagnostics.Process.Start("shutdown.exe", "-r -t 0");
+                            try
+                            {
+                                System.Diagnostics.Process.Start("shutdown.exe", "-r -t 0");
+                            }
+                            catch (Exception)
+                            {
+                                System.Windows.MessageBox.Show(
+                                    "Reboot command failed! Please reboot manually!",
+                                    ApplicationInfo.AppNameVersion,
+                                    MessageBoxButton.OK,
+                                    MessageBoxImage.Hand);
+                            }
                         }
 
                         Environment.Exit(0);
@@ -146,6 +111,29 @@
                 default:
                     throw new NotImplementedException(
                         "Not implemented driver state: " + driverState);
+            }
+        }
+
+        public static void UninstallBuiltInDrivers()
+        {
+            LogWriter.Write("Uninstalling Built-in drivers");
+            try
+            {
+                var path = Helpers.ResourceExtractor.ExtractResourceToDirectory("KeyboardSplitter.Lib.keyboard_driver.exe");
+                InterceptionDriver.Uninstall(path);
+                int exitCode;
+                string msg = VirtualXboxBus.Uninstall(out exitCode);
+                LogWriter.Write(msg);
+                LogWriter.Write("Uninstall completed");
+                System.Windows.MessageBox.Show("Drivers uninstalled. Application will now close.");
+                Environment.Exit(0);
+            }
+            catch (Exception ex)
+            {
+                LogWriter.Write("Uninstalling Built-in drivers FAILED: " + ex);
+
+                System.Windows.MessageBox.Show(
+                    "Uninstall failed: " + ex.Message, "Process failed", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
     }

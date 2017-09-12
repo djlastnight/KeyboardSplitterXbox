@@ -4,370 +4,194 @@
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Diagnostics;
-    using System.IO;
     using System.Linq;
-    using System.Management;
-    using System.Media;
-    using System.Text;
+    using System.Threading;
     using System.Windows;
     using System.Windows.Controls;
+    using System.Windows.Input;
     using System.Windows.Interop;
+    using System.Windows.Media.Animation;
     using System.Windows.Threading;
-    using Interceptor;
-    using KeyboardSplitter.Controls;
-    using KeyboardSplitter.Enums;
+    using KeyboardSplitter.Commands;
     using KeyboardSplitter.Exceptions;
     using KeyboardSplitter.Managers;
+    using KeyboardSplitter.Models;
     using KeyboardSplitter.Presets;
-    using KeyboardSplitter.Resources;
     using KeyboardSplitter.UI;
-    using XboxInterfaceWrap;
+    using SplitterCore;
+    using SplitterCore.Preset;
 
-    public partial class MainWindow : Window, IDisposable
+    public partial class MainWindow : CustomWindow, IDisposable
     {
-        private const uint DefaultSlotsCount = 2;
+        public static readonly DependencyProperty SplitterProperty =
+            DependencyProperty.Register(
+            "Splitter",
+            typeof(ISplitter),
+            typeof(MainWindow),
+            new PropertyMetadata(null));
+
+        public static readonly DependencyProperty SlotsCountProperty =
+            DependencyProperty.Register(
+            "SlotsCount",
+            typeof(int),
+            typeof(MainWindow),
+            new PropertyMetadata(0));
+
+        public static readonly DependencyProperty SlotsCountItemsSourceProperty =
+            DependencyProperty.Register(
+            "SlotsCountItemsSource",
+            typeof(IEnumerable<int>),
+            typeof(MainWindow),
+            new PropertyMetadata(new List<int> { 1, 2, 3, 4 }));
+
+        public static readonly DependencyProperty IsInputMonitorExpandedProperty =
+            DependencyProperty.Register(
+            "IsInputMonitorExpanded",
+            typeof(bool),
+            typeof(MainWindow),
+            new PropertyMetadata(false));
+
+        public static readonly DependencyProperty InputMonitorTooltipProperty =
+            DependencyProperty.Register(
+            "InputMonitorTooltip",
+            typeof(string),
+            typeof(MainWindow),
+            new PropertyMetadata(string.Empty));
+
+        public static readonly DependencyProperty EmulationInformationProperty =
+            DependencyProperty.Register(
+            "EmulationInformation",
+            typeof(string),
+            typeof(MainWindow),
+            new PropertyMetadata(string.Empty));
+
+        private bool disposed;
 
         private DispatcherTimer autoCollapseTimer;
 
         private TimeSpan autoCollapseSpan = TimeSpan.FromSeconds(60);
 
-        private List<InterceptionKeyboard> initialKeyboards;
+        private ICommand startEmulationCommand;
 
-        private string emergencyKey = InterceptionKeys.LeftControl.ToString();
+        private ICommand stopEmulationCommand;
 
-        private int emergencyHitDownCount;
-
-        private int emergencyHitUpCount;
-
-        private ManagementEventWatcher usbWatcher;
+        private bool isControllersTestActive;
 
         public MainWindow()
         {
             this.InitializeComponent();
-            this.CheckForObsoleteOS();
-            this.CheckDrivers();
             this.Title = ApplicationInfo.AppNameVersion;
             this.autoCollapseTimer = new DispatcherTimer();
             this.autoCollapseTimer.Interval = this.autoCollapseSpan;
             this.autoCollapseTimer.Tick += new EventHandler(this.AutoCollapseTimer_Tick);
-            KeyboardManager.KeyPressed += this.KeyboardManager_KeyPressed;
+        }
+
+        public ISplitter Splitter
+        {
+            get { return (ISplitter)this.GetValue(SplitterProperty); }
+            set { this.SetValue(SplitterProperty, value); }
+        }
+
+        public int SlotsCount
+        {
+            get { return (int)this.GetValue(SlotsCountProperty); }
+            set { this.SetValue(SlotsCountProperty, value); }
+        }
+
+        public IEnumerable<int> SlotsCountItemsSource
+        {
+            get { return (IEnumerable<int>)this.GetValue(SlotsCountItemsSourceProperty); }
+            set { this.SetValue(SlotsCountItemsSourceProperty, value); }
+        }
+
+        public bool IsInputMonitorExpanded
+        {
+            get { return (bool)this.GetValue(IsInputMonitorExpandedProperty); }
+            set { this.SetValue(IsInputMonitorExpandedProperty, value); }
+        }
+
+        public string InputMonitorTooltip
+        {
+            get { return (string)this.GetValue(InputMonitorTooltipProperty); }
+            set { this.SetValue(InputMonitorTooltipProperty, value); }
+        }
+
+        public string EmulationInformation
+        {
+            get { return (string)this.GetValue(EmulationInformationProperty); }
+            set { this.SetValue(EmulationInformationProperty, value); }
+        }
+
+        public ICommand StartEmulationCommand
+        {
+            get
+            {
+                if (this.startEmulationCommand == null)
+                {
+                    this.startEmulationCommand = new RelayCommand(this.OnStartEmulationRequested);
+                }
+
+                return this.startEmulationCommand;
+            }
+        }
+
+        public ICommand StopEmulationCommand
+        {
+            get
+            {
+                if (this.stopEmulationCommand == null)
+                {
+                    this.stopEmulationCommand = new RelayCommand(this.OnStopEmulationRequested);
+                }
+
+                return this.stopEmulationCommand;
+            }
         }
 
         public void Dispose()
         {
-            this.StopUsbWatcher();
-            EmulationManager.Destroy();
-            PresetDataManager.ExportToFile();
-        }
-
-        private void CheckForObsoleteOS()
-        {
-            var version = Environment.OSVersion.Version;
-            if (version.Major < 5)
-            {
-                LogWriter.Write("Obsolete OS detected: " + Environment.OSVersion.VersionString);
-                System.Windows.MessageBox.Show(
-                    "Your operating system is not supported!",
-                    ApplicationInfo.AppNameVersion,
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Error);
-
-                Environment.Exit(0);
-            }
-        }
-
-        private void CheckDrivers()
-        {
-            if (!DriversManager.AreBuiltInDriversInstalled())
-            {
-                LogWriter.Write("Built-in drivers are not installed, asking user to install them");
-                var result = System.Windows.MessageBox.Show(
-                    "It seems that the required built-in drivers are not installed.\r\n" +
-                    "Do you want to install them (may require reboot)?\r\n\r\n" +
-                    "Selecting \"No\" will quit the application.",
-                    "Drivers required",
-                    MessageBoxButton.YesNo,
-                    MessageBoxImage.Question);
-
-                if (result == MessageBoxResult.Yes)
-                {
-                    DriversManager.InstallBuiltInDrivers();
-                }
-                else
-                {
-                    LogWriter.Write(
-                        "User has choosen to NOT install the built-in drivers. Exitting");
-
-                    Environment.Exit(0);
-                }
-            }
-        }
-
-        private void Stop()
-        {
-            EmulationManager.Stop();
-
-            this.stopButton.IsEnabled = false;
-            this.startButton.IsEnabled = true;
-            this.deviceCountBox.IsEnabled = true;
-            this.emergencyHitDownCount = 0;
-        }
-
-        private void Reset()
-        {
-            this.emergencyHitDownCount = 0;
-            this.wrapPanel.Children.Clear();
-            this.initialKeyboards = KeyboardManager.GetKeyboards();
-
-            uint slotsCount = Convert.ToUInt32(this.deviceCountBox.SelectedItem);
-            EmulationManager.Create(slotsCount, this.initialKeyboards.Select(x => x.StrongName).ToArray());
-
-            foreach (JoyControl joyControl in EmulationManager.JoyControls)
-            {
-                this.wrapPanel.Children.Add(joyControl);
-            }
-
-            // autosizing
-            int screenWidth = System.Windows.Forms.Screen.FromHandle(new WindowInteropHelper(this).Handle).Bounds.Width;
-            if (screenWidth >= 1280 && this.WindowState != WindowState.Maximized)
-            {
-                this.SizeToContent = SizeToContent.Width;
-            }
-        }
-
-        private void AddInputToMonitor(KeyPressedEventArgs e)
-        {
-            if (!this.expander.IsExpanded)
+            if (this.disposed)
             {
                 return;
             }
 
-            if (this.inputMonitor.Text.Length > 10000)
-            {
-                this.inputMonitor.Clear();
-            }
-
-            this.inputMonitor.AppendText(
-                string.Format(
-                "'{0}' on {1} ({2}) [{3}]{4}",
-                e.CorrectedKey,
-                e.Keyboard.StrongName,
-                e.State,
-                Convert.ToInt32(e.Key),
-                Environment.NewLine));
-
-            this.inputMonitor.ScrollToEnd();
+            this.Dispose(true);
+            GC.SuppressFinalize(this);
+            this.disposed = true;
         }
 
-        private UnsavedPresetsData GetUnsavedPresetsData()
+        protected virtual void Dispose(bool disposing)
         {
-            // collects data about all unsaved presets
-            var output = new UnsavedPresetsData();
-
-            if (this.wrapPanel.Children.Count == 0)
+            if (disposing)
             {
-                return output;
-            }
-
-            var notSavedControls = EmulationManager.JoyControls.Where(x => x.CanSavePreset);
-
-            if (notSavedControls.Count() == 0)
-            {
-                return output;
-            }
-
-            var sb = new StringBuilder();
-
-            List<Preset> distintPresets = new List<Preset>();
-            foreach (var notSavedControl in notSavedControls)
-            {
-                if (!distintPresets.Contains(notSavedControl.CurrentPreset))
+                Thread.Sleep(100);
+                this.Splitter.Destroy();
+                try
                 {
-                    sb.AppendLine(
-                        string.Format("- {0} [vXbox Device #{1}]", notSavedControl.PresetBoxText, notSavedControl.UserIndex));
-
-                    output.NotSavedControls.Add(notSavedControl);
-                    distintPresets.Add(notSavedControl.CurrentPreset);
+                    PresetDataManager.WritePresetDataToFile();
                 }
-                else
+                catch (Exception e)
                 {
-                    output.IgnoredControls.Add(notSavedControl);
+                    LogWriter.Write("Preset save failed! Exception details: " + Environment.NewLine + e);
                 }
+
+                LogWriter.Write("Main window disposed");
             }
-
-            if (output.IgnoredControls.Count > 0)
-            {
-                sb.AppendLine(Environment.NewLine);
-                sb.AppendLine("The following 'cloned' presets will be ignored to avoid ambiguity:");
-
-                foreach (var ignoredControl in output.IgnoredControls)
-                {
-                    sb.AppendLine(
-                        string.Format(
-                        "- {0} [vXbox Device #{1}]",
-                        ignoredControl.PresetBoxText,
-                        ignoredControl.UserIndex));
-                }
-            }
-
-            output.Message = sb.ToString();
-
-            return output;
         }
 
-        private void CheckForEmergencyHit(KeyPressedEventArgs e)
+        private void OnStartEmulationRequested(object parameter)
         {
-            if (this.startButton.IsEnabled)
+            if (this.Splitter == null)
             {
                 return;
             }
 
-            if (e.CorrectedKey == this.emergencyKey)
-            {
-                if (e.State == KeyState.Down || e.State == KeyState.E0)
-                {
-                    this.emergencyHitDownCount++;
-                }
-                else if (e.State == KeyState.Up || e.State == (KeyState.Up | KeyState.E0))
-                {
-                    this.emergencyHitUpCount++;
-                }
-            }
-            else
-            {
-                this.emergencyHitDownCount = 0;
-                this.emergencyHitUpCount = 0;
-                return;
-            }
-
-            if (this.emergencyHitDownCount >= 5 && this.emergencyHitUpCount >= 5)
-            {
-                if (this.blockKeyboardCheckbox.IsChecked == true)
-                {
-                    using (var player = new SoundPlayer(Sounds.Disconnected))
-                    {
-                        player.Play();
-                    }
-
-                    this.blockKeyboardCheckbox.IsChecked = false;
-
-                    LogWriter.Write("Emergency activated: Block choosen keyboards unchecked");
-                }
-                else
-                {
-                    using (var player = new SoundPlayer(Sounds.Connected))
-                    {
-                        player.Play();
-                    }
-
-                    this.blockKeyboardCheckbox.IsChecked = true;
-
-                    LogWriter.Write("Emergency activated: Block choosen keyboards checked");
-                }
-
-                this.emergencyHitDownCount = 0;
-                this.emergencyHitUpCount = 0;
-            }
-        }
-
-        private void StartUsbWatcher()
-        {
-            string queryString = "SELECT * FROM __InstanceOperationEvent WITHIN 1 WHERE TargetInstance ISA 'Win32_PnPEntity'";
-
-            this.usbWatcher = new ManagementEventWatcher(queryString);
-            this.usbWatcher.EventArrived += new EventArrivedEventHandler(this.OnUsbPlugUnplug);
-            this.usbWatcher.Start();
-        }
-
-        private void StopUsbWatcher()
-        {
-            if (this.usbWatcher != null)
-            {
-                this.usbWatcher.EventArrived -= this.OnUsbPlugUnplug;
-                this.usbWatcher.Stop();
-                this.usbWatcher.Dispose();
-                this.usbWatcher = null;
-            }
-        }
-
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-            this.StartUsbWatcher();
-            LogWriter.Write("Main window loaded");
-            this.deviceCountBox.ItemsSource = new int[] { 1, 2, 3, 4 };
-            this.deviceCountBox.SelectedIndex = 1;
-            this.expander.ToolTip = "Click to expand/collapse the keyboards input monitor.\r\n" +
-                "It will autocollapse after " + this.autoCollapseSpan.TotalSeconds + " seconds to save CPU time.";
-        }
-
-        private void Window_Closing(object sender, CancelEventArgs e)
-        {
-            // checking for unsaved presets
-            var unsavedPresets = this.GetUnsavedPresetsData();
-
-            if (unsavedPresets.NotSavedControls.Count > 0)
-            {
-                var result = System.Windows.MessageBox.Show(
-                    "Do you want to save the following unsaved presets, before you quit?\r\n" + unsavedPresets.Message,
-                    "You are about to quit " + ApplicationInfo.AppNameVersion,
-                    MessageBoxButton.YesNoCancel,
-                    MessageBoxImage.Question);
-
-                if (result == MessageBoxResult.Yes)
-                {
-                    // save the presets
-                    unsavedPresets.SaveNotSavedPresets();
-                }
-
-                e.Cancel = result == MessageBoxResult.Cancel;
-            }
-        }
-
-        private void Window_Closed(object sender, EventArgs e)
-        {
-            this.Dispose();
-            LogWriter.Write("Application terminated by user");
-        }
-
-        private void KeyboardManager_KeyPressed(object sender, KeyPressedEventArgs e)
-        {
-            this.Dispatcher.Invoke((Action)delegate
-            {
-                this.CheckForEmergencyHit(e);
-
-                this.AddInputToMonitor(e);
-
-                if (!this.IsEnabled || this.startButton.IsEnabled)
-                {
-                    return;
-                }
-
-                bool blockChoosenKeyboards = this.blockKeyboardCheckbox.IsChecked == true;
-                EmulationManager.ProcessKeyPress(e, blockChoosenKeyboards);
-            });
-        }
-
-        private void StartButton_Click(object sender, RoutedEventArgs e)
-        {
-            uint slotsCount = Convert.ToUInt32(this.deviceCountBox.SelectedItem);
             try
             {
-                EmulationManager.Start();
-
-                this.inputMonitor.Clear();
-                this.startButton.IsEnabled = false;
-                this.stopButton.IsEnabled = true;
-                this.deviceCountBox.IsEnabled = false;
-
-                AutoHideTooltip ahtt = new AutoHideTooltip(
-                    "Emulation successfully started. You may now start your game.\r\n" +
-                    "To block/unblock the assigned keyboards, press LeftControl 5 times.",
-                    this.startButton.PointToScreen(new Point(this.startButton.Width, 0)));
-
-                ahtt.Owner = this;
-                ahtt.Show();
+                this.Splitter.EmulationManager.Start();
+                this.Splitter.InputManager.ClearInputMonitorHistory();
             }
-            catch (EmulationManagerException ex)
+            catch (KeyboardSplitterExceptionBase ex)
             {
                 System.Windows.MessageBox.Show(
                     ex.Message,
@@ -377,52 +201,189 @@
             }
         }
 
-        private void StopButton_Click(object sender, RoutedEventArgs e)
+        private void OnStopEmulationRequested(object parameter)
         {
-            this.Stop();
+            if (this.Splitter != null)
+            {
+                this.Splitter.EmulationManager.Stop();
+            }
         }
 
-        private void DeviceCountBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        private void FadeInEmulationInformation()
         {
-            LogWriter.Write("Slots count changed to " + Convert.ToInt32(this.deviceCountBox.SelectedItem));
+            this.helperGrid.Opacity = 0;
+            this.helperGrid.BeginAnimation(Grid.OpacityProperty, new DoubleAnimation(1, new Duration(TimeSpan.FromSeconds(1))));
+            this.helperGrid.IsHitTestVisible = true;
+        }
+
+        private void FadeOutEmulationInformation()
+        {
+            this.helperGrid.Opacity = 1;
+            this.helperGrid.BeginAnimation(Grid.OpacityProperty, new DoubleAnimation(0, new Duration(TimeSpan.FromSeconds(1))));
+            this.helperGrid.IsHitTestVisible = false;
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            GlobalSettings.TryApplySettings();
+            LogWriter.Write("Main window loaded");
+            this.InputMonitorTooltip = "Click to expand/collapse the input device monitor.\r\n" +
+                "It will autocollapse after " + this.autoCollapseSpan.TotalSeconds + " seconds to save CPU time.";
+
+            XinputWrapper.XinputController.StartPolling();
+
+            var inputDevices = KeyboardSplitter.Managers.InputManager.ConnectedInputDevices;
+            if (inputDevices.Count == 0)
+            {
+                // We have some error or nothing is attached to the system.
+                LogWriter.Write("No input devices were detected! Terminating application.");
+                MessageBox.Show(
+                    "No input devices were detected!\r\nApplication will now close!",
+                    ApplicationInfo.AppName,
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+
+                Environment.Exit(0);
+            }
+
+            if (!GlobalSettings.Instance.SuggestInputDevicesForNewSlots)
+            {
+                this.SlotsCount = 1;
+            }
+            else
+            {
+                var keyboardsCount = inputDevices.Where(x => x.IsKeyboard).Count();
+                var miceCount = inputDevices.Count - keyboardsCount;
+
+                this.SlotsCount = Math.Min(Math.Max(keyboardsCount, miceCount), 4);
+            }
+        }
+
+        private void Window_Closing(object sender, CancelEventArgs e)
+        {
+            LogWriter.Write("Application is about to close. Checking for unsaved presets...");
 
             // checking for unsaved presets
-            var unsavedPresets = this.GetUnsavedPresetsData();
+            var unsavedPresets = new List<IPreset>();
+            foreach (var preset in PresetDataManager.CurrentPresets)
+            {
+                if (PresetDataManager.IsPresetChanged(preset))
+                {
+                    unsavedPresets.Add(preset);
+                }
+            }
 
-            if (unsavedPresets.NotSavedControls.Count > 0)
+            string message = string.Empty;
+            foreach (var preset in unsavedPresets)
+            {
+                message += string.Format("Preset '{0}'{1}", preset.Name, Environment.NewLine);
+            }
+
+            if (message.Length > 0)
             {
                 var result = System.Windows.MessageBox.Show(
-                    "Do you want to save the following unsaved presets,\r\nbefore you change the slots count?\r\n" + unsavedPresets.Message,
-                    "Presets save",
-                    MessageBoxButton.YesNo,
+                    "Do you want to save the following unsaved presets, before you quit?\r\n\r\n" + message,
+                    "You are about to quit " + ApplicationInfo.AppNameVersion,
+                    MessageBoxButton.YesNoCancel,
                     MessageBoxImage.Question);
 
                 if (result == MessageBoxResult.Yes)
                 {
                     // save the presets
-                    unsavedPresets.SaveNotSavedPresets();
+                    PresetDataManager.WritePresetDataToFile();
+                }
+
+                e.Cancel = result == MessageBoxResult.Cancel;
+            }
+        }
+
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            this.Dispose();
+            XinputWrapper.XinputController.StopPolling();
+            GlobalSettings.TrySaveToFile();
+        }
+
+        private void OnSlotsCountChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            if (!this.IsActive || (sender as System.Windows.Controls.ComboBox).SelectedIndex == -1)
+            {
+                return;
+            }
+
+            // Creating new splitter
+            if (this.Splitter == null)
+            {
+                this.Splitter = new Splitter(this.SlotsCount);
+                this.Splitter.EmulationManager.EmulationStarted += this.EmulationManager_EmulationStarted;
+                this.Splitter.EmulationManager.EmulationStopped += this.EmulationManager_EmulationStopped;
+            }
+            else
+            {
+                this.Splitter.EmulationManager.ChangeSlotsCountBy(this.SlotsCount - this.Splitter.EmulationManager.Slots.Count);
+            }
+
+            if (this.SizeToContent != System.Windows.SizeToContent.Width)
+            {
+                // Autosizing the main window
+                int screenWidth = System.Windows.Forms.Screen.FromHandle(new WindowInteropHelper(this).Handle).Bounds.Width;
+                if (screenWidth >= 1280 && this.WindowState != WindowState.Maximized)
+                {
+                    this.SizeToContent = SizeToContent.Width;
                 }
             }
 
-            this.Reset();
+            // Preparing the emulation information
+            if (this.SlotsCount == 1)
+            {
+                this.EmulationInformation = "There is 1 Virtual Xbox 360 Controller mounted into the system.";
+                this.EmulationInformation += Environment.NewLine + "To feed it, use the assigned keyboard/mouse.";
+            }
+            else
+            {
+                this.EmulationInformation = string.Format(
+                    "There are {0} Virtual Xbox 360 Controllers mounted into the system.",
+                    this.SlotsCount);
+                this.EmulationInformation += Environment.NewLine + "To feed them, use the assigned keyboards/mice.";
+            }
+        }
+
+        private void EmulationManager_EmulationStarted(object sender, EventArgs e)
+        {
+            if (this.Splitter.EmulationManager.Slots.Any(x => x.Keyboard == SplitterCore.Input.Keyboard.None && x.Mouse == SplitterCore.Input.Mouse.None))
+            {
+                // We have mouse click feeder active
+                return;
+            }
+
+            this.FadeInEmulationInformation();
+        }
+
+        private void EmulationManager_EmulationStopped(object sender, EventArgs e)
+        {
+            if (this.Splitter.EmulationManager.Slots.Any(x => x.Keyboard == SplitterCore.Input.Keyboard.None && x.Mouse == SplitterCore.Input.Mouse.None))
+            {
+                // We have mouse click feeder active
+                return;
+            }
+
+            this.FadeOutEmulationInformation();
         }
 
         private void AutoCollapseTimer_Tick(object sender, EventArgs e)
         {
-            this.expander.IsExpanded = false;
+            this.IsInputMonitorExpanded = false;
         }
 
         private void Expander_Expanded(object sender, RoutedEventArgs e)
         {
-            this.lastGridRow.Height = new GridLength(100);
             this.autoCollapseTimer.Start();
         }
 
         private void Expander_Collapsed(object sender, RoutedEventArgs e)
         {
             this.autoCollapseTimer.Stop();
-            this.lastGridRow.Height = new GridLength(30);
-            this.inputMonitor.Clear();
+            this.Splitter.InputManager.ClearInputMonitorHistory();
         }
 
         private void FileExit_Click(object sender, RoutedEventArgs e)
@@ -438,15 +399,26 @@
             }
             catch (Exception ex)
             {
-                System.Windows.MessageBox.Show("Can not open gamepad properties: " + ex.Message);
+                System.Windows.MessageBox.Show("Can not open gamepad properties: " + Environment.NewLine + ex.Message);
             }
         }
 
         private void OpenXboxSite(object sender, RoutedEventArgs e)
         {
+            if (XboxGamepad.AreXboxAccessoriesInstalled)
+            {
+                MessageBox.Show(
+                    "Xbox accessories is already installed on your computer!",
+                    ApplicationInfo.AppName,
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Information);
+
+                return;
+            }
+
             try
             {
-                Process.Start("https://www.microsoft.com/accessories/en-us/products/gaming/xbox-360-controller-for-windows/52a-00004#techspecs-connect");
+                Process.Start("https://www.microsoft.com/accessories/en-gb/d/xbox-360-controller-for-windows");
             }
             catch (Exception)
             {
@@ -455,7 +427,7 @@
 
         private void HelpAbout_Click(object sender, RoutedEventArgs e)
         {
-            AboutDialog dialog = new AboutDialog("About " + ApplicationInfo.AppNameVersion);
+            AboutWindow dialog = new AboutWindow("About " + ApplicationInfo.AppNameVersion);
             dialog.ShowDialog();
         }
 
@@ -475,99 +447,60 @@
 
         private void ControllerTest_Click(object sender, RoutedEventArgs e)
         {
-            if (this.startButton.IsEnabled)
+            if (this.isControllersTestActive)
             {
                 System.Windows.MessageBox.Show(
-                    "You can not test controllers, while the emulation is stopped!",
-                    ApplicationInfo.AppNameVersion,
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Hand);
-
-                return;
-            }
-
-            Window testWindow = new Window();
-            WrapPanel panel = new WrapPanel();
-            foreach (var joyControl in EmulationManager.JoyControls)
-            {
-                if (VirtualXboxController.Exists(joyControl.UserIndex) &&
-                    VirtualXboxController.IsOwned(joyControl.UserIndex))
-                {
-                    panel.Children.Add(new XboxTester(joyControl));
-                }
-            }
-
-            if (panel.Children.Count == 0)
-            {
-                System.Windows.MessageBox.Show(
-                    "There are no virtual controllers currently plugged-in!",
-                    ApplicationInfo.AppNameVersion,
+                    "Xinput controller test window is already open!",
+                    ApplicationInfo.AppName,
                     MessageBoxButton.OK,
                     MessageBoxImage.Error);
-
                 return;
             }
 
-            testWindow.WindowStyle = WindowStyle.ToolWindow;
-            testWindow.ResizeMode = ResizeMode.NoResize;
-            testWindow.Owner = this;
-            testWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-            testWindow.Title = "Virtual Xbox Controllers Test";
-            testWindow.Content = panel;
-            testWindow.SizeToContent = SizeToContent.WidthAndHeight;
-            testWindow.ShowDialog();
+            XinputControllerTestWindow window = new XinputControllerTestWindow(this);
+            window.Closed += (oo, ss) =>
+            {
+                this.isControllersTestActive = false;
+            };
+
+            this.isControllersTestActive = true;
+            window.Show();
         }
 
         private void HelpContents_Click(object sender, RoutedEventArgs e)
         {
-            UI_Help howToUse = new UI_Help();
+            HelpDialog howToUse = new HelpDialog();
             howToUse.ShowDialog();
         }
 
         private void HowItWorks_Click(object sender, RoutedEventArgs e)
         {
-            HowItWorks how = new HowItWorks();
+            HowItWorksWindow how = new HowItWorksWindow();
             how.ShowDialog();
         }
 
         private void FAQ_Click(object sender, RoutedEventArgs e)
         {
-            FAQ fac = new FAQ();
+            FaqWindow fac = new FaqWindow();
             fac.ShowDialog();
         }
 
-        private void OnUsbPlugUnplug(object sender, EventArrivedEventArgs e)
+        private void OptionsClicked(object sender, RoutedEventArgs e)
         {
-            Dispatcher.Invoke((Action)delegate
-            {
-                var newKeyboards = KeyboardManager.GetKeyboards();
-                switch (e.NewEvent.ClassPath.ClassName)
-                {
-                    case "__InstanceDeletionEvent":
-                        {
-                            foreach (var joyControl in EmulationManager.JoyControls)
-                            {
-                                if (joyControl.CurrentKeyboard == null)
-                                {
-                                    continue;
-                                }
+            var settings = new SettingsWindow();
+            settings.Owner = this;
+            settings.ShowDialog();
+        }
 
-                                var joyKeyboard = this.initialKeyboards.Find(x => x.StrongName == joyControl.CurrentKeyboard);
-                                if (newKeyboards.FirstOrDefault(x => x.IsTheSameAs(joyKeyboard)) == null)
-                                {
-                                    // joycontrol's keyboard was unplugged
-                                    joyControl.Invalidate(SlotInvalidationReason.Keyboard_Unplugged);
-                                }
-                            }
-                        }
+        private void OnHelperGridCloseButtonClicked(object sender, RoutedEventArgs e)
+        {
+            this.FadeOutEmulationInformation();
+        }
 
-                        break;
-                    case "__InstanceCreationEvent":
-                        break;
-                    default:
-                        break;
-                }
-            });
+        private void OnControllerSubtypesClicked(object sender, RoutedEventArgs e)
+        {
+            var wind = new XinputSubTypesWindow();
+            wind.ShowDialog();
         }
     }
 }

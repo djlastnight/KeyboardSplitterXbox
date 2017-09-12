@@ -1,0 +1,71 @@
+﻿<ui:CustomWindow x:Class="KeyboardSplitter.UI.XinputSubTypesWindow"
+                 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                 xmlns:ui="clr-namespace:KeyboardSplitter.UI"
+                 xmlns:System="clr-namespace:System;assembly=mscorlib"
+                 xmlns:enums="clr-namespace:XinputWrapper.Enums;assembly=XinputWrapper"
+                 IsToolWindow="True"
+                 Title="Set custom controller subtypes"
+                 Height="370"
+                 Width="470">
+    <Grid>
+        <StackPanel>
+            <TextBlock Text="To change controller subtype, you have to patch the desired game or application." Margin="5,5,0,0" />
+            <TextBlock Text="Note that the patch creates/overwrites the following files:" Margin="5,5,0,0" />
+            <TextBlock Text="- XINPUT9_1_0.DLL" Margin="5,5,0,0" />
+            <TextBlock Text="- xinput1_3.dll" Margin="5,5,0,0" />
+            <TextBlock Text="- xinput1_4.dll" Margin="5,5,0,0"/>
+            <TextBlock Text="- xinput.ini" Margin="5,5,0,0"/>
+            <TextBlock Text="To remove the patch - simply delete this files." Margin="5,5,0,5" />
+            <StackPanel Orientation="Vertical">
+                <GroupBox Header="Choose game or application to patch"
+                  Margin="5">
+                    <Grid>
+                        <TextBlock Name="fileName" />
+                        <Button Content="Browse" Width="80" Height="23" HorizontalAlignment="Right" VerticalAlignment="Top"
+                            Click="BrowseClicked"/>
+                    </Grid>
+                </GroupBox>
+                <GroupBox Header="Change controller sub type"
+                  Margin="5"
+                      Name="subTypeGroupBox"
+                      IsEnabled="False">
+                    <Grid>
+                        <TextBlock Text="Controller #1" Margin="0,0,0,0" Height="20" VerticalAlignment="Top" Width="75" HorizontalAlignment="Left"/>
+                        <TextBlock Text="Controller #2" Margin="112,0,0,0" Height="20" VerticalAlignment="Top" Width="75" HorizontalAlignment="Left"/>
+                        <TextBlock Text="Controller #3" Margin="225,0,0,0" Height="20" VerticalAlignment="Top" Width="75" HorizontalAlignment="Left"/>
+                        <TextBlock Text="Controller #4" Margin="337,0,0,0" Height="20" VerticalAlignment="Top" Width="75" HorizontalAlignment="Left"/>
+                        <StackPanel Orientation="Horizontal"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Top"
+                    Margin="0,20,0,0">
+                            <StackPanel.Resources>
+                                <ObjectDataProvider x:Key="dataFromEnum" MethodName="GetValues"
+                            ObjectType="{x:Type System:Enum}">
+                                    <ObjectDataProvider.MethodParameters>
+                                        <x:Type TypeName="enums:ControllerSubtype"/>
+                                    </ObjectDataProvider.MethodParameters>
+                                </ObjectDataProvider>
+                                <Style TargetType="ComboBox" x:Key="comboboxStyle">
+                                    <Setter Property="Width" Value="105" />
+                                    <Setter Property="Height" Value="23" />
+                                    <Setter Property="Margin" Value="2" />
+                                    <Setter Property="ItemsSource" Value="{Binding Source={StaticResource dataFromEnum}}" />
+                                </Style>
+                            </StackPanel.Resources>
+                            <ComboBox Style="{StaticResource comboboxStyle}" Name="id1" />
+                            <ComboBox Style="{StaticResource comboboxStyle}" Name="id2"/>
+                            <ComboBox Style="{StaticResource comboboxStyle}" Name="id3"/>
+                            <ComboBox Style="{StaticResource comboboxStyle}" Name="id4"/>
+                        </StackPanel>
+                    </Grid>
+                </GroupBox>
+            </StackPanel>
+
+        </StackPanel>
+        <Grid>
+            <Button Name="patchButton" Content="Patch" Width="70" Height="23" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,100,20" IsEnabled="False" Click="PathButtonClicked" />
+            <Button Content="Cancel" Width="70" Height="23" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,20,20" IsCancel="True" />
+        </Grid>
+    </Grid>
+</ui:CustomWindow>

@@ -1,10 +1,15 @@
 ﻿namespace KeyboardSplitter
 {
     using System;
+    using System.IO;
     using System.Reflection;
     using System.Threading;
     using System.Windows;
     using KeyboardSplitter.AssemblyLoaders;
+    using KeyboardSplitter.Helpers;
+    using KeyboardSplitter.Managers;
+    using KeyboardSplitter.Models;
+    using KeyboardSplitter.Presets;
 
     /// <summary>
     /// The main application's App class.
@@ -12,26 +17,48 @@
     /// </summary>
     public partial class App : Application, IDisposable
     {
-        private static bool loaded;
+        private static bool assembliesLoaded;
 
         private Mutex mutex;
 
-        /// <summary>
-        /// Start the logging and loads all the needed dlls.
-        /// Calling this method more than once has no effect.
-        /// </summary>
-        public static void Initialize()
+        static App()
         {
-            StartLogging();
+            App.StartLogging();
+            App.CheckForObsoleteOS();
+            App.LoadAssemblies();
+        }
 
-            LoadAssemblies();
+        public static bool HasWriteAccessToFolder(string folderPath)
+        {
+            try
+            {
+                // Attempt to get a list of security permissions from the folder. 
+                // This will raise an exception if the path is read only or do not have access to view the permissions. 
+                Directory.GetAccessControl(folderPath);
+                return true;
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return false;
+            }
         }
 
         public void Dispose()
         {
-            if (this.mutex != null)
+            this.Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
             {
-                this.mutex.ReleaseMutex();
+                if (this.mutex != null)
+                {
+                    this.mutex.ReleaseMutex();
+                    this.mutex.Dispose();
+                    this.mutex = null;
+                }
             }
         }
 
@@ -40,83 +67,185 @@
             if (!LogWriter.IsInitialized)
             {
                 LogWriter.Init();
-                LogWriter.Write("Application started from " +
-                    System.Windows.Forms.Application.ExecutablePath);
+                var starupPath = System.Windows.Forms.Application.ExecutablePath;
+                LogWriter.Write("Application started from " + starupPath);
+                LogWriter.Write("User has write permissions: " + HasWriteAccessToFolder(starupPath));
+                LogWriter.Write("Application version: " + ApplicationInfo.AppNameVersion);
+                LogWriter.Write("OS version: " + Helpers.OSHelper.GetWindowsFullVersion());
+#if DEBUG
+                LogWriter.Write("Debug mode enabled");
+#endif
+            }
+        }
 
-                LogWriter.Write("OS version: " + Environment.OSVersion.VersionString);
+        private static void CheckForObsoleteOS()
+        {
+            var version = Environment.OSVersion.Version;
+            if (version.Major < 5)
+            {
+                LogWriter.Write("Obsolete OS detected: " + Environment.OSVersion.VersionString);
+                System.Windows.MessageBox.Show(
+                    "Your operating system is not supported!",
+                    ApplicationInfo.AppNameVersion,
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+
+                Environment.Exit(0);
             }
         }
 
         private static void LoadAssemblies()
         {
-            if (!loaded)
+            if (!App.assembliesLoaded)
             {
-                UnmanagedAssemblyLoader.Load(
-                    Assembly.GetExecutingAssembly(),
-                    "KeyboardSplitter.Lib.interception.dll",
-                    "interception.dll",
-                    ApplicationInfo.AppNameVersion,
-                    true);
+                // Setting the native dll search path
+                LogWriter.Write("Setting environment");
+                Environment.SetEnvironmentVariable(
+                    "PATH",
+                    ApplicationInfo.AppTempDirectory,
+                    EnvironmentVariableTarget.Process);
 
-                UnmanagedAssemblyLoader.Load(
-                    Assembly.GetExecutingAssembly(),
-                    "KeyboardSplitter.Lib.keyboard_driver.exe",
-                    "keyboard_driver.exe",
-                    ApplicationInfo.AppNameVersion,
-                    true);
-
-                UnmanagedAssemblyLoader.Load(
-                    Assembly.GetExecutingAssembly(),
-                    "KeyboardSplitter.Lib.XboxInterfaceNative.dll",
-                    "XboxInterfaceNative.dll",
-                    ApplicationInfo.AppNameVersion,
-                    true);
+                // Extracting the native assemblies
+                ResourceExtractor.ExtractResourceToDirectory("KeyboardSplitter.Lib.interception.dll", ApplicationInfo.AppTempDirectory);
+                ResourceExtractor.ExtractResourceToDirectory("KeyboardSplitter.Lib.VirtualXboxNative.dll", ApplicationInfo.AppTempDirectory);
 
                 ManagedAssemblyLoader.Load(
                     "KeyboardSplitter.Lib.Interceptor.dll",
                     "Interceptor.dll");
 
                 ManagedAssemblyLoader.Load(
-                    "KeyboardSplitter.Lib.XboxInterfaceWrap.dll",
-                    "XboxInterfaceWrap.dll");
+                    "KeyboardSplitter.Lib.SplitterCore.dll",
+                    "SplitterCore.dll");
 
-                loaded = true;
+                ManagedAssemblyLoader.Load(
+                    "KeyboardSplitter.Lib.VirtualXbox.dll",
+                    "VirtualXbox.dll");
+
+                ManagedAssemblyLoader.Load(
+                    "KeyboardSplitter.Lib.XinputWrapper.dll",
+                    "XinputWrapper.dll");
+
+                LogWriter.Write("Assemblies successfully loaded");
+                App.assembliesLoaded = true;
             }
+        }
+
+        private static void CheckDrivers()
+        {
+            if (!DriversManager.AreBuiltInDriversInstalled)
+            {
+                LogWriter.Write("Built-in drivers are not installed, asking user to install them");
+                var result = System.Windows.MessageBox.Show(
+                    "It seems that the required built-in drivers are not installed.\r\n" +
+                    "Do you want to install them (may require reboot)?\r\n\r\n" +
+                    "Selecting \"No\" will quit the application.",
+                    ApplicationInfo.AppName + " | Drivers required",
+                    MessageBoxButton.YesNo,
+                    MessageBoxImage.Question);
+
+                if (result == MessageBoxResult.Yes)
+                {
+                    DriversManager.InstallBuiltInDrivers();
+                }
+                else
+                {
+                    LogWriter.Write(
+                        "User has choosen to NOT install the built-in drivers. Exitting");
+
+                    Environment.Exit(0);
+                }
+            }
+        }
+
+        private static void ReportDriversState()
+        {
+            LogWriter.Write(string.Format(
+                "Interception driver state: {0}",
+                DriversManager.IsInterceptionInstalled ? "installed" : "not installed"));
+
+            LogWriter.Write(string.Format(
+                "ScpVBus driver state: {0}",
+                DriversManager.IsVirtualXboxBusInstallled ? "installed" : "not installed"));
+
+            LogWriter.Write(string.Format(
+                "Xbox accessories driver state: {0}",
+                XboxGamepad.AreXboxAccessoriesInstalled ? "installed" : "not installed"));
         }
 
         private void Application_Startup(object sender, StartupEventArgs e)
         {
-            // creating mutex, which will ensure single app instance
-            this.mutex = new Mutex(false, "KB_XBOX_SPLITTER_SINGLE_INSTANCE_MUTEX");
-
-            if (!this.mutex.WaitOne(0, false))
+            bool allowMultiInstance = false;
+            foreach (var arg in e.Args)
             {
-                this.mutex.Close();
-                this.mutex = null;
-                string name = ApplicationInfo.AppName;
+                if (arg.ToLower() == "allow-multi-instance")
+                {
+                    LogWriter.Write("Allow multi instance parameter passed");
+                    allowMultiInstance = true;
+                }
+            }
 
-                System.Windows.MessageBox.Show(
-                    name + " is already running!",
-                    name,
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Error);
+            if (!allowMultiInstance)
+            {
+                // creating mutex, which will ensure single app instance
+                this.mutex = new Mutex(false, "KB_XBOX_SPLITTER_SINGLE_INSTANCE_MUTEX");
 
-                Environment.Exit(0);
+                if (!this.mutex.WaitOne(0, false))
+                {
+                    this.mutex.Close();
+                    this.mutex = null;
+                    string name = ApplicationInfo.AppName;
+
+                    System.Windows.MessageBox.Show(
+                        name + " is already running!",
+                        name,
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Error);
+
+                    Environment.Exit(0);
+                }
             }
 
             AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(this.CurrentDomain_AssemblyResolve);
 
-            Initialize();
+            App.ReportDriversState();
+            App.CheckDrivers();
+        }
+
+        private void Application_SessionEnding(object sender, SessionEndingCancelEventArgs e)
+        {
+            LogWriter.Write(string.Format(
+                "Due to pending Windows {0}, application will try to save the current settings and presets",
+                e.ReasonSessionEnding.ToString()));
+
+            GlobalSettings.TrySaveToFile();
+
+            try
+            {
+                PresetDataManager.WritePresetDataToFile();
+                LogWriter.Write("Presets successfully saved");
+            }
+            catch (Exception ex)
+            {
+                LogWriter.Write("Presets saving failed:");
+                LogWriter.Write(ex.ToString());
+            }
+
+            var splitter = Helpers.SplitterHelper.TryFindSplitter();
+            if (splitter != null)
+            {
+                splitter.Destroy();
+            }
+        }
+
+        private void Application_Exit(object sender, ExitEventArgs e)
+        {
+            LogWriter.Write("Application exited with code: " + e.ApplicationExitCode);
+            this.Dispose();
         }
 
         private Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
         {
             return ManagedAssemblyLoader.Get(args.Name);
-        }
-
-        private void Application_Exit(object sender, ExitEventArgs e)
-        {
-            this.Dispose();
         }
 
         private void Application_DispatcherUnhandledException(
@@ -127,8 +256,28 @@
                 LogWriter.Init();
             }
 
+            var splitter = Helpers.SplitterHelper.TryFindSplitter();
+            if (splitter != null)
+            {
+                splitter.Destroy();
+            }
+
             LogWriter.Write("::: UNHANDLED EXCEPTION DETAILS :::");
             LogWriter.Write(e.Exception.ToString());
+
+            string message = string.Format(
+                "Unexpected app crash occured.{0}Please refer to {1} for more details.{0}{0}{2} will now close.",
+                Environment.NewLine,
+                LogWriter.GetLogFileName,
+                ApplicationInfo.AppName);
+
+            MessageBox.Show(
+                message,
+                ApplicationInfo.AppNameVersion,
+                MessageBoxButton.OK,
+                MessageBoxImage.Error);
+
+            Environment.Exit(0);
         }
     }
 }

@@ -14,7 +14,6 @@
         public PresetData()
         {
             this.Presets = new ObservableCollection<Preset>();
-            this.Presets.Add(Preset.Empty);
             this.Presets.Add(Preset.Default);
         }
 
@@ -37,22 +36,14 @@
             }
         }
 
-        public bool Serialize(string xmlFileLocation)
+        public void Serialize(string xmlFileLocation)
         {
             this.RemoveImuttablePresets();
 
-            try
+            using (var writer = new StreamWriter(path: xmlFileLocation, append: false, encoding: Encoding.Unicode))
             {
-                using (var writer = new StreamWriter(path: xmlFileLocation, append: false, encoding: Encoding.Unicode))
-                {
-                    var serializer = new XmlSerializer(this.GetType());
-                    serializer.Serialize(writer, this);
-                    return true;
-                }
-            }
-            catch (Exception)
-            {
-                return false;
+                var serializer = new XmlSerializer(this.GetType());
+                serializer.Serialize(writer, this);
             }
         }
 

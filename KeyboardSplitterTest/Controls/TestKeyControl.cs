@@ -6,7 +6,7 @@
 ////    using KeyboardSplitter.Enums;
 ////    using KeyboardSplitter.Helpers;
 ////    using Microsoft.VisualStudio.TestTools.UnitTesting;
-////    using XboxInterfaceWrap;
+////    using XboxAPI;
 
 ////    [TestClass]
 ////    public class TestKeyControl

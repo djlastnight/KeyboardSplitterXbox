@@ -1,8 +1,9 @@
-﻿namespace XboxInterfaceWrap
+﻿namespace VirtualXbox
 {
     using System;
     using System.Collections.Generic;
     using System.Reflection;
+    using VirtualXbox.Enums;
 
     public static class VirtualXboxController
     {
@@ -21,28 +22,15 @@
 
         public static bool Exists(uint userIndex)
         {
-            return NativeMethods.ControllerExistsExt(userIndex);
+            return NativeMethods.ControllerExists(userIndex);
         }
 
         public static bool IsOwned(uint userIndex)
         {
-            return NativeMethods.IsControllerOwnedExt(userIndex);
+            return NativeMethods.IsControllerOwned(userIndex);
         }
 
-        public static int GetEmptyBusSlotsCount()
-        {
-            int count;
-            if (NativeMethods.GetEmptyBusSlotsCount(out count))
-            {
-                return count;
-            }
-            else
-            {
-                return -1;
-            }
-        }
-
-        public static byte GetLedNumber(uint userIndex)
+        public static int GetLedNumber(uint userIndex)
         {
             byte ledNumber;
             if (NativeMethods.GetLedNumber(userIndex, out ledNumber))
@@ -50,157 +38,150 @@
                 return ledNumber;
             }
 
-            return 0;
-        }
-
-        public static void ResetStates(uint userIndex)
-        {
-            if (userIndex >= 1 && userIndex <= 4)
-            {
-                states[userIndex - 1].Reset();
-            }
+            return -1;
         }
 
         public static bool PlugIn(uint userIndex)
         {
-            VirtualXboxController.ResetStates(userIndex);
+            if (NativeMethods.PlugIn(userIndex))
+            {
+                VirtualXboxController.ResetStates(userIndex);
+                return true;
+            }
 
-            return NativeMethods.PlugInExt(userIndex);
+            return false;
         }
 
         public static bool UnPlug(uint userIndex, bool force = false)
         {
-            VirtualXboxController.ResetStates(userIndex);
+            if (NativeMethods.Unplug(userIndex, force))
+            {
+                VirtualXboxController.ResetStates(userIndex);
+                return true;
+            }
 
-            if (force)
-            {
-                return NativeMethods.UnPlugForceExt(userIndex);
-            }
-            else
-            {
-                return NativeMethods.UnPlugExt(userIndex);
-            }
+            return false;
         }
 
         public static bool SetAxis(uint userIndex, XboxAxis axis, short value)
         {
+            if (!VirtualXboxController.IsOwned(userIndex))
+            {
+                return false;
+            }
+
+            if (!NativeMethods.SetAxis(userIndex, (uint)axis, value))
+            {
+                return false;
+            }
+
             switch (axis)
             {
                 case XboxAxis.X:
-                    {
-                        states[(int)userIndex - 1].AxisXValue = value;
-                        return NativeMethods.SetAxisX(userIndex, value);
-                    }
-
+                    states[(int)userIndex - 1].AxisXValue = value;
+                    break;
                 case XboxAxis.Y:
-                    {
-                        states[(int)userIndex - 1].AxisYValue = value;
-                        return NativeMethods.SetAxisY(userIndex, value);
-                    }
-
+                    states[(int)userIndex - 1].AxisYValue = value;
+                    break;
                 case XboxAxis.Rx:
-                    {
-                        states[(int)userIndex - 1].AxisRxValue = value;
-                        return NativeMethods.SetAxisRx(userIndex, value);
-                    }
+                    states[(int)userIndex - 1].AxisRxValue = value;
+                    break;
 
                 case XboxAxis.Ry:
-                    {
-                        states[(int)userIndex - 1].AxisRyValue = value;
-                        return NativeMethods.SetAxisRy(userIndex, value);
-                    }
+                    states[(int)userIndex - 1].AxisRyValue = value;
+                    break;
 
                 default:
                     throw new NotImplementedException(
                         "Not implemented xbox axis: " + axis);
             }
+
+            return true;
+        }
+
+        public static bool SetAxis(uint userIndex, XboxAxis axis, XboxAxisPosition position)
+        {
+            if (!VirtualXboxController.IsOwned(userIndex))
+            {
+                return false;
+            }
+
+            return VirtualXboxController.SetAxis(userIndex, axis, (short)position);
         }
 
         public static bool SetButton(uint userIndex, XboxButton button, bool value)
         {
-            var buttonStates = states[(int)userIndex - 1].ButtonsDown;
-            if (value == true)
+            if (!VirtualXboxController.IsOwned(userIndex))
             {
-                if (!buttonStates.Contains(button))
-                {
-                    buttonStates.Add(button);
-                }
+                return false;
             }
-            else
+
+            bool isButtonSet = NativeMethods.SetButton(userIndex, (uint)button, value);
+
+            if (isButtonSet)
             {
-                if (buttonStates.Contains(button))
+                var buttonStates = states[(int)userIndex - 1].ButtonsDown;
+                if (value == true)
                 {
-                    buttonStates.Remove(button);
+                    if (!buttonStates.Contains(button))
+                    {
+                        buttonStates.Add(button);
+                    }
+                }
+                else
+                {
+                    if (buttonStates.Contains(button))
+                    {
+                        buttonStates.Remove(button);
+                    }
                 }
             }
 
-            switch (button)
-            {
-                case XboxButton.Guide:
-                    return NativeMethods.SetBtnGuide(userIndex, value);
-                case XboxButton.A:
-                    return NativeMethods.SetBtnA(userIndex, value);
-                case XboxButton.B:
-                    return NativeMethods.SetBtnB(userIndex, value);
-                case XboxButton.X:
-                    return NativeMethods.SetBtnX(userIndex, value);
-                case XboxButton.Y:
-                    return NativeMethods.SetBtnY(userIndex, value);
-                case XboxButton.Start:
-                    return NativeMethods.SetBtnStart(userIndex, value);
-                case XboxButton.Back:
-                    return NativeMethods.SetBtnBack(userIndex, value);
-                case XboxButton.LeftThumb:
-                    return NativeMethods.SetBtnLT(userIndex, value);
-                case XboxButton.RightThumb:
-                    return NativeMethods.SetBtnRT(userIndex, value);
-                case XboxButton.LeftBumper:
-                    return NativeMethods.SetBtnLB(userIndex, value);
-                case XboxButton.RightBumper:
-                    return NativeMethods.SetBtnRB(userIndex, value);
-                default:
-                    throw new NotImplementedException(
-                        "Not implemented Xbox button: " + button);
-            }
+            return isButtonSet;
         }
 
         public static bool SetTrigger(uint userIndex, XboxTrigger trigger, byte value)
         {
+            if (!VirtualXboxController.IsOwned(userIndex))
+            {
+                return false;
+            }
+
+            if (!NativeMethods.SetTrigger(userIndex, (uint)trigger, value))
+            {
+                return false;
+            }
+
             switch (trigger)
             {
-                case XboxTrigger.LeftTrigger:
-                    {
-                        if (NativeMethods.SetTriggerL(userIndex, value))
-                        {
-                            states[(int)userIndex - 1].LeftTriggerValue = value;
-                            return true;
-                        }
-
-                        return false;
-                    }
-
-                case XboxTrigger.RightTrigger:
-                    {
-                        if (NativeMethods.SetTriggerR(userIndex, value))
-                        {
-                            states[(int)userIndex - 1].RightTriggerValue = value;
-                            return true;
-                        }
-
-                        return false;
-                    }
-
+                case XboxTrigger.Left:
+                    states[(int)userIndex - 1].LeftTriggerValue = value;
+                    break;
+                case XboxTrigger.Right:
+                    states[(int)userIndex - 1].RightTriggerValue = value;
+                    break;
                 default:
                     throw new NotImplementedException(
                         "Not implemented Xbox trigger: " + trigger);
             }
+
+            return true;
         }
 
-        public static bool SetDPad(uint userIndex, XboxDpadDirection direction)
+        public static bool SetDPad(uint userIndex, XboxDpadDirection directions)
         {
-            states[(int)userIndex - 1].DpadDirections = direction;
+            if (!VirtualXboxController.IsOwned(userIndex))
+            {
+                return false;
+            }
 
-            return NativeMethods.SetDpadExt(userIndex, (int)direction);
+            if (NativeMethods.SetDpad(userIndex, (int)directions))
+            {
+                states[(int)userIndex - 1].DpadDirections = directions;
+                return true;
+            }
+
+            return false;
         }
 
         public static bool GetButtonValue(uint userIndex, XboxButton button)
@@ -212,9 +193,9 @@
         {
             switch (trigger)
             {
-                case XboxTrigger.LeftTrigger:
+                case XboxTrigger.Left:
                     return states[(int)userIndex - 1].LeftTriggerValue;
-                case XboxTrigger.RightTrigger:
+                case XboxTrigger.Right:
                     return states[(int)userIndex - 1].RightTriggerValue;
                 default:
                     throw new NotImplementedException(
@@ -247,6 +228,14 @@
                 default:
                     throw new NotImplementedException(
                         "Not implemented xbox axis: " + axis);
+            }
+        }
+
+        private static void ResetStates(uint userIndex)
+        {
+            if (userIndex >= 1 && userIndex <= 4)
+            {
+                states[userIndex - 1].Reset();
             }
         }
     }

@@ -1,0 +1,250 @@
+﻿<UserControl x:Class="KeyboardSplitter.Controls.PresetControl"
+             x:Name="presetControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:System="clr-namespace:System;assembly=mscorlib"
+             xmlns:CoreInput="clr-namespace:SplitterCore.Input;assembly=SplitterCore"
+             xmlns:CorePresets="clr-namespace:SplitterCore.Preset;assembly=SplitterCore"
+             xmlns:Converters="clr-namespace:KeyboardSplitter.Converters"
+             xmlns:Presets="clr-namespace:KeyboardSplitter.Presets"
+             xmlns:Controls="clr-namespace:KeyboardSplitter.Controls"
+             xmlns:Xbox="clr-namespace:VirtualXbox;assembly=VirtualXbox"
+             xmlns:XboxEnums="clr-namespace:VirtualXbox.Enums;assembly=VirtualXbox"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300"
+             Loaded="OnLoaded">
+    <Grid>
+        <Grid.Resources>
+            <Converters:BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+        </Grid.Resources>
+        <!-- Preset control -->
+        <Grid Background="#1F6CF8A4"
+              Height="32"
+              VerticalAlignment="Top">
+            <TextBlock
+                IsHitTestVisible="False"
+                Text="Preset:"
+                Height="23"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                Margin="2,8,0,0"
+                Width="50" />
+            <ComboBox Height="23"
+                      HorizontalAlignment="Left"
+                      Margin="47,5,0,0"
+                      VerticalAlignment="Top"
+                      Width="140"
+                      ToolTip="Select existing preset. To create new preset: type new name here and hit the save button."
+                      ItemsSource="{Binding ElementName=presetControl, Path=CurrentPresets}"
+                      SelectedItem="{Binding ElementName=presetControl, Path=Preset, Mode=TwoWay}"
+                      IsEditable="True"
+                      StaysOpenOnEdit="True"
+                      IsTextSearchEnabled="False"
+                      Text="{Binding ElementName=presetControl, Path=PresetBoxText}"
+                      TextBoxBase.TextChanged="OnPresetTextboxTextChanged"
+                      SelectionChanged="OnPresetSelectionChanged" />
+            <Button Height="23"
+                    HorizontalAlignment="Left"
+                    Margin="193,5,0,0"
+                    VerticalAlignment="Top"
+                    Width="23"
+                    ToolTip="Save preset"
+                    BorderThickness="1"
+                    BorderBrush="Blue"
+                    Visibility="{Binding ElementName=presetControl, Path=IsSaveAllowed, Converter={StaticResource BoolToVisibilityConverter}}"
+                    Command="{Binding ElementName=presetControl, Path=SavePresetCommand}">
+                <StackPanel>
+                    <Image Source="/KeyboardSplitter;component/Resources/save.png"/>
+                </StackPanel>
+            </Button>
+            <Button Height="23"
+                    HorizontalAlignment="Left"
+                    Margin="221,5,0,0"
+                    VerticalAlignment="Top"
+                    Width="23"
+                    ToolTip="Delete preset"
+                    BorderBrush="Blue"
+                    BorderThickness="1"
+                    Visibility="{Binding ElementName=presetControl, Path=IsDeleteAllowed, Converter={StaticResource BoolToVisibilityConverter}}"
+                    Command="{Binding ElementName=presetControl, Path=DeletePresetCommand}">
+                <StackPanel>
+                    <Image Source="/KeyboardSplitter;component/Resources/delete.png"/>
+                </StackPanel>
+            </Button>
+        </Grid>
+        <StackPanel Orientation="Horizontal"
+                    Margin="0,30,0,0">
+            <TextBlock Text="Xbox Function"
+                       Width="110"
+                       Margin="5"/>
+            <TextBlock Text="Keyboard/Mouse key:"
+                       Margin="5"/>
+        </StackPanel>
+
+        <!-- List of preset controls depending on selected preset -->
+        <StackPanel Margin="0,55,0,0" VerticalAlignment="Top" IsEnabled="{Binding ElementName=presetControl, Path=IsDeleteAllowed}">
+            <StackPanel.Resources>
+                <ObjectDataProvider x:Key="InputKeys" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
+                    <ObjectDataProvider.MethodParameters>
+                        <x:Type TypeName="CoreInput:InputKey" />
+                    </ObjectDataProvider.MethodParameters>
+                </ObjectDataProvider>
+                <Style x:Key="InputKeySelectorStyle" TargetType="ComboBox">
+                    <Setter Property="ItemsSource" Value="{Binding Source={StaticResource InputKeys}}" />
+                    <Setter Property="SelectedItem" Value="{Binding Key}" />
+                    <Setter Property="Width" Value="112" />
+                    <Setter Property="Height" Value="20" />
+                    <Setter Property="VerticalAlignment" Value="Center" />
+                </Style>
+                <Style x:Key="KeyDetectorStyle" TargetType="Button">
+                    <Setter Property="Content" Value=".." />
+                    <Setter Property="ToolTip" Value="Detect input key" />
+                    <Setter Property="Width" Value="20" />
+                    <Setter Property="Height" Value="20" />
+                    <Setter Property="Margin" Value="2,0,0,0" />
+                    <Setter Property="VerticalAlignment" Value="Center" />
+                    <Setter Property="Command" Value="{Binding ElementName=presetControl, Path=DetectKeyCommand}" />
+                    <Setter Property="CommandParameter" Value="{Binding}" />
+                </Style>
+                <Style x:Key="KeyNameStyle" TargetType="TextBlock">
+                    <Setter Property="Width" Value="110" />
+                    <Setter Property="VerticalAlignment" Value="Center" />
+                    <Setter Property="ToolTip" Value="{Binding RelativeSource={RelativeSource Self}, Path=Text}" />
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Key}" Value="LeftControl">
+                            <Setter Property="Foreground" Value="Red" />
+                            <Setter Property="FontStyle" Value="Italic" />
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding Key}" Value="RightControl">
+                            <Setter Property="Foreground" Value="Red" />
+                            <Setter Property="FontStyle" Value="Italic" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </StackPanel.Resources>
+            <ItemsControl ItemsSource="{Binding Preset.Buttons}">
+                <ItemsControl.Resources>
+                    <Converters:XboxButtonConverter x:Key="ButtonConverter" />
+                </ItemsControl.Resources>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate DataType="CorePresets:PresetButton">
+                        <StackPanel Orientation="Horizontal" Margin="2">
+                            <TextBlock Text="{Binding Button, Converter={StaticResource ButtonConverter}}"
+                                       Style="{StaticResource KeyNameStyle}" />
+                            <ComboBox Style="{StaticResource InputKeySelectorStyle}" />
+                            <Button Style="{StaticResource KeyDetectorStyle}" />
+                        </StackPanel>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+            
+            <ItemsControl ItemsSource="{Binding Preset.Triggers}">
+                <ItemsControl.Resources>
+                    <Converters:XboxTriggerConverter x:Key="TriggerConverter" />
+                </ItemsControl.Resources>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate DataType="CorePresets:PresetTrigger">
+                        <StackPanel Orientation="Horizontal" Margin="2">
+                            <TextBlock Text="{Binding Trigger, Converter={StaticResource TriggerConverter}}"
+                                       Style="{StaticResource KeyNameStyle}"/>
+                            <ComboBox Style="{StaticResource InputKeySelectorStyle}" />
+                            <Button Style="{StaticResource KeyDetectorStyle}" />
+                        </StackPanel>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+            
+            <ItemsControl ItemsSource="{Binding Preset.Axes}">
+                <ItemsControl.Resources>
+                    <Converters:XboxAxisConverter x:Key="AxisConverter" />
+                </ItemsControl.Resources>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate DataType="CorePresets:PresetAxis">
+                        <StackPanel Orientation="Horizontal" Margin="2">
+                            <StackPanel Orientation="Horizontal"
+                                        Width="110"
+                                        VerticalAlignment="Center">
+                                <TextBlock Style="{StaticResource KeyNameStyle}">
+                                    <TextBlock.Text>
+                                        <MultiBinding StringFormat="{}{0} {1}">
+                                            <Binding Path="Axis" Converter="{StaticResource AxisConverter}" />
+                                            <Binding Path="Value" Converter="{StaticResource AxisConverter}" ConverterParameter="value" />
+                                        </MultiBinding>
+                                    </TextBlock.Text>
+                                    <TextBlock.ToolTip>
+                                        <TextBlock>
+                                            <TextBlock.Text>
+                                                <MultiBinding StringFormat="{}{0} {1}">
+                                                    <Binding Path="Axis" Converter="{StaticResource AxisConverter}" ConverterParameter="full" />
+                                                    <Binding Path="Value" Converter="{StaticResource AxisConverter}" ConverterParameter="value" />
+                                                </MultiBinding>
+                                            </TextBlock.Text>
+                                        </TextBlock>
+                                    </TextBlock.ToolTip>
+                                </TextBlock>
+                            </StackPanel>
+                            <ComboBox Style="{StaticResource InputKeySelectorStyle}" />
+                            <Button Style="{StaticResource KeyDetectorStyle}" />
+                        </StackPanel>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+            <ItemsControl ItemsSource="{Binding Preset.Dpads}">
+                <ItemsControl.Resources>
+                    <Converters:XboxDpadConverter x:Key="DpadConverter" />
+                </ItemsControl.Resources>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate DataType="CorePresets:PresetDpad">
+                        <StackPanel Orientation="Horizontal" Margin="2">
+                            <TextBlock Text="{Binding Direction, Converter={StaticResource DpadConverter}}"
+                                       Style="{StaticResource KeyNameStyle}" />
+                            <ComboBox Style="{StaticResource InputKeySelectorStyle}" />
+                            <Button Style="{StaticResource KeyDetectorStyle}" />
+                        </StackPanel>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+            <ItemsControl ItemsSource="{Binding Preset.CustomFunctions}">
+                <ItemsControl.Resources>
+                    <Converters:XboxCustomFunctionConverter x:Key="CustomFunctionConverter" />
+                    <ObjectDataProvider x:Key="CustomFunctions" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
+                        <ObjectDataProvider.MethodParameters>
+                            <x:Type TypeName="XboxEnums:XboxCustomFunction" />
+                        </ObjectDataProvider.MethodParameters>
+                    </ObjectDataProvider>
+                </ItemsControl.Resources>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate DataType="CorePresets:PresetCustom">
+                        <StackPanel Orientation="Horizontal">
+                            <Button Width="20"
+                                    Height="20"
+                                    Margin="2"
+                                    ToolTip="Remove custom function"
+                                    Command="{Binding ElementName=presetControl, Path=RemoveCustomFunctionCommand}"
+                                    CommandParameter="{Binding}">
+                                <StackPanel>
+                                    <Image Source="/KeyboardSplitter;component/Resources/delete.png"/>
+                                </StackPanel>
+                            </Button>
+                            <ComboBox ItemsSource="{Binding Source={StaticResource CustomFunctions}}"
+                                      SelectedItem="{Binding Function, Converter={StaticResource CustomFunctionConverter}}"
+                                      ToolTip="{Binding Function, Converter={StaticResource CustomFunctionConverter}}"
+                                      Width="84"
+                                      Height="20"
+                                      Margin="2" />
+                            <ComboBox Style="{StaticResource InputKeySelectorStyle}" />
+                            <Button Style="{StaticResource KeyDetectorStyle}" />
+                        </StackPanel>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+            <Button Content="Add custom function"
+                    Visibility="{Binding ElementName=presetControl, Path=IsDeleteAllowed, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=collapsed}"
+                    Command="{Binding ElementName=presetControl, Path=AddCustomFunctionCommand}" />
+        </StackPanel>
+    </Grid>
+</UserControl>

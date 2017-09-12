@@ -1,0 +1,73 @@
+﻿<UI:CustomWindow x:Class="KeyboardSplitter.UI.SettingsWindow"
+                 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                 xmlns:splitter="clr-namespace:KeyboardSplitter"
+                 xmlns:UI="clr-namespace:KeyboardSplitter.UI"
+                 Title="Settings"
+                 Height="300"
+                 Width="310"
+                 Loaded="Window_Loaded"
+                 WindowStartupLocation="CenterOwner"
+                 IsToolWindow="True">
+    <Window.Resources>
+        <splitter:GlobalSettings x:Key="settings" />
+    </Window.Resources>
+    <StackPanel>
+        <GroupBox Header="Mouse Move Dead Zone"
+                  Margin="5">
+            <GroupBox.ToolTip>
+                <TextBlock>
+                    Determines how much acceleration will be needed 
+                    <LineBreak />
+                    to trigger the mapped virtual controller function.
+                </TextBlock>
+            </GroupBox.ToolTip>
+            <StackPanel>
+                <TextBlock Text="{Binding ElementName=slider, Path=Value}"
+                           HorizontalAlignment="Center"/>
+                <Slider Minimum="0"
+                        Maximum="12"
+                        IsSnapToTickEnabled="True"
+                        SmallChange="1"
+                        LargeChange="1"
+                        TickPlacement="BottomRight"
+                        Width="200"
+                        Height="30"
+                        Name="slider"
+                        ValueChanged="OnSliderValueChanged"/>
+            </StackPanel>
+        </GroupBox>
+        <GroupBox Header="Emulation"
+                  Margin="5">
+            <StackPanel>
+                <CheckBox Content="Suggest input devices for new slots"
+                          IsChecked="{Binding Source={StaticResource settings}, Path=Instance.SuggestInputDevicesForNewSlots}"
+                          Margin="5"
+                          ToolTip="If unchecked all new slots will have Keyboard none and Mouse none selected by default."/>
+                <Button Content="Force unplug all virtual controllers"
+                    Width="220"
+                    Click="UnplugAllClicked"
+                    Margin="5"
+                        ToolTip="Unplugs virtual controllers #1, #2, #3 and #4 even if they are mounted from another application."/>
+                <StackPanel Orientation="Horizontal"
+                            HorizontalAlignment="Center"
+                            ToolTip="Determines which virtual controller # will be the first to mount.">
+                    <TextBlock Text="Starting virtual controller user index"
+                               Margin="5"/>
+                    <ComboBox Loaded="ComboBox_Loaded" SelectionChanged="ComboBox_SelectionChanged">
+                        <ComboBox.ItemsSource>
+                            <Int32Collection>1,2,3,4</Int32Collection>
+                        </ComboBox.ItemsSource>
+                    </ComboBox>
+                </StackPanel>
+            </StackPanel>
+
+        </GroupBox>
+        <GroupBox Header="User Interface"
+                  Margin="5">
+            <CheckBox Content="Display helper information on emulation start" 
+                      Margin="5"
+                      IsChecked="{Binding Source={StaticResource settings}, Path=Instance.DisplayEmulationInformation}" />
+        </GroupBox>
+    </StackPanel>
+</UI:CustomWindow>

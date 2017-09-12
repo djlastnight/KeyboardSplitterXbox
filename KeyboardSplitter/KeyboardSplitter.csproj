@@ -15,6 +15,7 @@
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -27,7 +28,6 @@
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>0</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
@@ -84,77 +84,142 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="ApplicationInfo.cs" />
+    <Compile Include="Commands\RelayCommand.cs" />
+    <Compile Include="Controls\EmulationSlot.xaml.cs">
+      <DependentUpon>EmulationSlot.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\LedIndicator.xaml.cs">
+      <DependentUpon>LedIndicator.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\PresetControl.xaml.cs">
+      <DependentUpon>PresetControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ScrollingTextBox.cs" />
+    <Compile Include="Converters\BooleanToVisibilityConverter.cs" />
+    <Compile Include="Converters\BoolToReversedBoolConverter.cs" />
+    <Compile Include="Converters\LedNumberToBrushConverter.cs" />
+    <Compile Include="Converters\XboxAxisConverter.cs" />
+    <Compile Include="Converters\XboxButtonConverter.cs" />
+    <Compile Include="Converters\XboxCustomFunctionConverter.cs" />
+    <Compile Include="Converters\XboxDpadConverter.cs" />
+    <Compile Include="Converters\XboxTriggerConverter.cs" />
+    <Compile Include="Exceptions\Emulation\EmulationSlotTypeException.cs" />
+    <Compile Include="Exceptions\Gamepad\GamepadExceptionBase.cs" />
+    <Compile Include="Exceptions\Gamepad\GamepadIsInUseException.cs" />
+    <Compile Include="Exceptions\Gamepad\GamepadOwnedException.cs" />
+    <Compile Include="Exceptions\Gamepad\VirtualBusFullException.cs" />
+    <Compile Include="Exceptions\Gamepad\VirtualBusNotInstalledException.cs" />
+    <Compile Include="Exceptions\KeyboardSplitterExceptionBase.cs" />
+    <Compile Include="GlobalSettings.cs" />
+    <Compile Include="Helpers\NativeMethods.cs" />
+    <Compile Include="Helpers\OSHelper.cs" />
+    <Compile Include="Helpers\ParentFinder.cs" />
+    <Compile Include="Helpers\SplitterHelper.cs" />
+    <Compile Include="UI\InputDetectorWindow.xaml.cs">
+      <DependentUpon>InputDetectorWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Enums\InputDetectorDeviceFilter.cs" />
+    <Compile Include="Enums\InputDetectorTarget.cs" />
     <Compile Include="Managers\DriversManager.cs" />
     <Compile Include="Managers\EmulationManager.cs" />
-    <Compile Include="Enums\SlotInvalidationReason.cs" />
-    <Compile Include="Enums\XboxCustomFunction.cs" />
-    <Compile Include="Exceptions\EmulationManagerException.cs" />
-    <Compile Include="Exceptions\KeyboardNotSetException.cs" />
-    <Compile Include="Exceptions\SlotInvalidatedException.cs" />
-    <Compile Include="Exceptions\SlotsCountMismatchException.cs" />
-    <Compile Include="Exceptions\XboxAccessoriesNotInstalledException.cs" />
+    <Compile Include="Exceptions\Emulation\EmulationExceptionBase.cs" />
+    <Compile Include="Exceptions\Emulation\SlotInvalidatedException.cs" />
+    <Compile Include="Exceptions\Gamepad\XinputSlotsFullException.cs" />
+    <Compile Include="Exceptions\Gamepad\XboxAccessoriesNotInstalledException.cs" />
     <Compile Include="Helpers\CustomFunctionHelper.cs" />
-    <Compile Include="Managers\KeyboardManager.cs" />
+    <Compile Include="Managers\InputManager.cs" />
     <Compile Include="LogWriter.cs" />
-    <Compile Include="NativeMethods.cs" />
+    <Compile Include="Helpers\InputHelper.cs" />
+    <Compile Include="Presets\Extensions.cs" />
+    <Compile Include="Presets\Mapping.cs" />
     <Compile Include="Presets\Preset.cs" />
-    <Compile Include="Presets\PresetAxis.cs" />
-    <Compile Include="Presets\PresetButton.cs" />
-    <Compile Include="Presets\PresetCustom.cs" />
-    <Compile Include="Presets\PresetDpad.cs" />
-    <Compile Include="Presets\PresetTrigger.cs" />
+    <Compile Include="Helpers\RegistryMonitor.cs" />
     <Compile Include="Resources\Sounds.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Sounds.resx</DependentUpon>
     </Compile>
-    <Compile Include="UI\FAQ.xaml.cs">
-      <DependentUpon>FAQ.xaml</DependentUpon>
+    <Compile Include="Models\Splitter.cs" />
+    <Compile Include="Controls\CustomTitlebar.xaml.cs">
+      <DependentUpon>CustomTitlebar.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Presets\UnsavedPresetsData.cs" />
-    <Compile Include="UI\HowItWorks.xaml.cs">
-      <DependentUpon>HowItWorks.xaml</DependentUpon>
+    <Compile Include="UI\CustomWindow.cs" />
+    <Compile Include="Helpers\AeroHelper.cs" />
+    <Compile Include="UI\XinputSubTypesWindow.xaml.cs">
+      <DependentUpon>XinputSubTypesWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\ScrollviewerBehavior.cs" />
-    <Compile Include="UI\UI_Help.xaml.cs">
-      <DependentUpon>UI_Help.xaml</DependentUpon>
+    <Compile Include="UI\SettingsWindow.xaml.cs">
+      <DependentUpon>SettingsWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\XboxTester.xaml.cs">
-      <DependentUpon>XboxTester.xaml</DependentUpon>
+    <Compile Include="UI\XinputControllerTestWindow.xaml.cs">
+      <DependentUpon>XinputControllerTestWindow.xaml</DependentUpon>
     </Compile>
-    <Page Include="UI\FAQ.xaml">
+    <Compile Include="UI\FaqWindow.xaml.cs">
+      <DependentUpon>FaqWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\HowItWorksWindow.xaml.cs">
+      <DependentUpon>HowItWorksWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\OnScreenController.xaml.cs">
+      <DependentUpon>OnScreenController.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Behaviors\ScrollviewerBehavior.cs" />
+    <Compile Include="UI\HelpDialog.xaml.cs">
+      <DependentUpon>HelpDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\XboxTestSlot.xaml.cs">
+      <DependentUpon>XboxTestSlot.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Models\XboxGamepad.cs" />
+    <Page Include="Controls\EmulationSlot.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UI\AboutDialog.xaml">
+    <Page Include="Controls\LedIndicator.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UI\AutoHideToolTip.xaml">
+    <Page Include="Controls\PresetControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Detectors\KeyboardDetector.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Controls\JoyControl.xaml">
+    <Page Include="UI\InputDetectorWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\KeyControl.xaml">
+    <Page Include="Controls\CustomTitlebar.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Detectors\KeyDetector.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="UI\HowItWorks.xaml">
+    <Page Include="UI\XinputSubTypesWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UI\UI_Help.xaml">
+    <Page Include="UI\SettingsWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\XinputControllerTestWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\FaqWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\AboutWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\HowItWorksWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\OnScreenController.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\HelpDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -162,43 +227,27 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="UI\AboutDialog.xaml.cs">
-      <DependentUpon>AboutDialog.xaml</DependentUpon>
+    <Compile Include="UI\AboutWindow.xaml.cs">
+      <DependentUpon>AboutWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="AssemblyLoaders\ManagedAssemblyLoader.cs" />
-    <Compile Include="AssemblyLoaders\UnmanagedAssemblyLoader.cs" />
-    <Compile Include="UI\AutoHideToolTip.xaml.cs">
-      <DependentUpon>AutoHideToolTip.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Helpers\AxisHelper.cs" />
-    <Compile Include="Detectors\KeyboardDetector.xaml.cs">
-      <DependentUpon>KeyboardDetector.xaml</DependentUpon>
-    </Compile>
+    <Compile Include="Helpers\ResourceExtractor.cs" />
     <Compile Include="KeyboardInfo.cs" />
-    <Compile Include="Controls\JoyControl.xaml.cs">
-      <DependentUpon>JoyControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\KeyControl.xaml.cs">
-      <DependentUpon>KeyControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Enums\KeyControlType.cs" />
-    <Compile Include="Detectors\KeyDetector.xaml.cs" />
     <Compile Include="KeyGestureChangedHandler.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="UI\XboxTester.xaml">
+    <Page Include="Controls\XboxTestSlot.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Helpers\PovHelper.cs" />
     <Compile Include="Presets\PresetData.cs" />
     <Compile Include="Presets\PresetDataManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -264,9 +313,6 @@
       <ProductName>Windows Installer 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="AssemblyLoaders\Notes.txt" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\RightThumb.png" />
@@ -353,23 +399,43 @@
     <Resource Include="Resources\splitter_UI_help.png" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Resources\mouse.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Lib\SplitterCore.dll" />
+  </ItemGroup>
+  <ItemGroup>
     <EmbeddedResource Include="Lib\Interceptor.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Lib\VirtualXbox.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Lib\VirtualXboxNative.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Lib\xinput.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Lib\XinputWrapper.dll" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Interceptor\Interceptor.csproj">
       <Project>{c451a00e-77f1-4f3f-b7ee-27dc712ea316}</Project>
       <Name>Interceptor</Name>
     </ProjectReference>
-    <ProjectReference Include="..\XboxInterfaceWrap\XboxInterfaceWrap.csproj">
-      <Project>{c25d1435-780b-41ba-9097-1b4a296f0603}</Project>
-      <Name>XboxInterfaceWrap</Name>
+    <ProjectReference Include="..\SplitterCore\SplitterCore.csproj">
+      <Project>{2dd765bb-cf6f-464c-8a24-e871c6145a4c}</Project>
+      <Name>SplitterCore</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Lib\XboxInterfaceWrap.dll" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Lib\XboxInterfaceNative.dll" />
+    <ProjectReference Include="..\XboxInterfaceWrap\VirtualXbox.csproj">
+      <Project>{c25d1435-780b-41ba-9097-1b4a296f0603}</Project>
+      <Name>VirtualXbox</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\XInputWrapper\XinputWrapper.csproj">
+      <Project>{146bcdf6-0354-4401-bbdd-57a52d2598a6}</Project>
+      <Name>XinputWrapper</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
