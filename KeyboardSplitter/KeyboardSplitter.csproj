@@ -428,7 +428,7 @@
       <Project>{2dd765bb-cf6f-464c-8a24-e871c6145a4c}</Project>
       <Name>SplitterCore</Name>
     </ProjectReference>
-    <ProjectReference Include="..\XboxInterfaceWrap\VirtualXbox.csproj">
+    <ProjectReference Include="..\VirtualXbox\VirtualXbox.csproj">
       <Project>{c25d1435-780b-41ba-9097-1b4a296f0603}</Project>
       <Name>VirtualXbox</Name>
     </ProjectReference>

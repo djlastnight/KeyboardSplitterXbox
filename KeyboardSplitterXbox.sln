@@ -1,4 +1,4 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.21005.1
@@ -11,12 +11,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KeyboardSplitter", "Keyboar
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Interceptor", "Interceptor\Interceptor.csproj", "{C451A00E-77F1-4F3F-B7EE-27DC712EA316}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtualXbox", "XboxInterfaceWrap\VirtualXbox.csproj", "{C25D1435-780B-41BA-9097-1B4A296F0603}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtualXbox", "VirtualXbox\VirtualXbox.csproj", "{C25D1435-780B-41BA-9097-1B4A296F0603}"
 	ProjectSection(ProjectDependencies) = postProject
 		{ADBCFC5D-A992-4442-B04A-59ADE8EEFFB4} = {ADBCFC5D-A992-4442-B04A-59ADE8EEFFB4}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VirtualXboxNative", "XboxInterfaceNative\vXboxInterface.vcxproj", "{ADBCFC5D-A992-4442-B04A-59ADE8EEFFB4}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VirtualXboxNative", "VirtualXboxNative\VirtualXboxNative.vcxproj", "{ADBCFC5D-A992-4442-B04A-59ADE8EEFFB4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SplitterCore", "SplitterCore\SplitterCore.csproj", "{2DD765BB-CF6F-464C-8A24-E871C6145A4C}"
 EndProject
