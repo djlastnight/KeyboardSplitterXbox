@@ -20,6 +20,9 @@ extern "C" {
 
 #include <stdio.h>
 
+	// Don't warn about old school strcpy
+#pragma warning( disable : 4996 )
+
 	/* Typedef for prototype of handler function. */
 	typedef int(*ini_handler)(void* user, const char* section,
 		const char* name, const char* value);

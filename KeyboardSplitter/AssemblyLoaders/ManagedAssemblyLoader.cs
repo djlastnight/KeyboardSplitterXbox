@@ -96,7 +96,9 @@
 
             if (loadedAssemblies.ContainsKey(assemblyFullName))
             {
-                return loadedAssemblies[assemblyFullName];
+                var assembly = loadedAssemblies[assemblyFullName];
+                LogWriter.Write("Loading " + assembly.GetName().Name + " " + assembly.GetName().Version.ToString());
+                return assembly;
             }
 
             return null;

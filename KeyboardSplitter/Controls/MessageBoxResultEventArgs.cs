@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Windows;
-
-namespace KeyboardSplitter.Controls
+﻿namespace KeyboardSplitter.Controls
 {
+    using System;
+    using System.Windows;
+
     public class MessageBoxResultEventArgs : EventArgs
     {
         public MessageBoxResultEventArgs(MessageBoxResult result)

@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
+    using System.Reflection;
     using System.Windows;
     using System.Windows.Documents;
     using System.Windows.Forms;
@@ -224,7 +225,7 @@
 
         private void CopyXinputDlls(string dir)
         {
-            var resourceFile = ResourceExtractor.ExtractResourceToDirectory("KeyboardSplitter.Lib.xinput.dll", dir);
+            var resourceFile = ResourceExtractor.ExtractResource(Assembly.GetExecutingAssembly(), "KeyboardSplitter.Lib.xinput.dll", dir);
 
             var xinput13 = System.IO.Path.Combine(dir, "xinput1_3.dll");
             var xinput14 = System.IO.Path.Combine(dir, "xinput1_4.dll");

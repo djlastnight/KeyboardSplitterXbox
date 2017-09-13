@@ -1,7 +1,6 @@
 ﻿namespace VirtualXbox
 {
     using System;
-    using System.Diagnostics;
     using System.IO;
     using System.Reflection;
     using System.Security.Cryptography;
@@ -13,8 +12,13 @@
         /// </summary>
         /// <param name="manifestResourceLocation"></param>
         /// <returns>The full path to the extracted resource file</returns>
-        public static string ExtractResourceToDirectory(string manifestResourceLocation, string targetDirectory = null)
+        public static string ExtractResource(Assembly assembly, string manifestResourceLocation, string targetDirectory = null)
         {
+            if (assembly == null)
+            {
+                throw new ArgumentNullException("assembly");
+            }
+
             if (manifestResourceLocation == null)
             {
                 throw new ArgumentNullException("manifestResourceLocation");
@@ -29,10 +33,8 @@
 
             if (targetDirectory == null)
             {
-                var assembly = typeof(VirtualXbox.ResourceExtractor).Assembly;
                 string assemblyName = assembly.GetName().Name;
-                FileVersionInfo info = FileVersionInfo.GetVersionInfo(assembly.Location);
-                string assemblyVersion = info.FileVersion;
+                string assemblyVersion = assembly.GetName().Version.ToString();
 
                 targetDirectory = Path.Combine(Path.GetTempPath(), assemblyName + " " + assemblyVersion + " resources");
             }
@@ -45,11 +47,11 @@
             string resourceName = tokens[tokens.Length - 2] + "." + tokens[tokens.Length - 1];
             string fileFullPath = Path.Combine(targetDirectory, resourceName);
 
-            using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(manifestResourceLocation))
+            using (var stream = assembly.GetManifestResourceStream(manifestResourceLocation))
             {
                 if (stream == null)
                 {
-                    throw new Exception(resourceName + " is not found in Embedded Resources.");
+                    throw new Exception(resourceName + " is not marked as embedded resource [assembly name: " + assembly.GetName().Name + "]!");
                 }
 
                 byte[] data = new BinaryReader(stream).ReadBytes((int)stream.Length);

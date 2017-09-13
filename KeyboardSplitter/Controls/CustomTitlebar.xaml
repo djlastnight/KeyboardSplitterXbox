@@ -94,6 +94,7 @@
 
             <Button Style="{StaticResource WindowButtonStyle}"
                     Content="r"
+                    IsEnabled="{Binding EnableCloseButton}"
                     Click="OnCloseButtonClicked"
                     IsCancel="True"
                     ToolTip="Close">

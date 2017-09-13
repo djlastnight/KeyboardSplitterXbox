@@ -113,10 +113,12 @@
     <Compile Include="Exceptions\Gamepad\VirtualBusNotInstalledException.cs" />
     <Compile Include="Exceptions\KeyboardSplitterExceptionBase.cs" />
     <Compile Include="GlobalSettings.cs" />
+    <Compile Include="Helpers\IconUtilities.cs" />
     <Compile Include="Helpers\NativeMethods.cs" />
     <Compile Include="Helpers\OSHelper.cs" />
     <Compile Include="Helpers\ParentFinder.cs" />
     <Compile Include="Helpers\SplitterHelper.cs" />
+    <Compile Include="Helpers\TextMeasureHelper.cs" />
     <Compile Include="UI\InputDetectorWindow.xaml.cs">
       <DependentUpon>InputDetectorWindow.xaml</DependentUpon>
     </Compile>
@@ -432,18 +434,22 @@
     <ProjectReference Include="..\Interceptor\Interceptor.csproj">
       <Project>{c451a00e-77f1-4f3f-b7ee-27dc712ea316}</Project>
       <Name>Interceptor</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\SplitterCore\SplitterCore.csproj">
       <Project>{2dd765bb-cf6f-464c-8a24-e871c6145a4c}</Project>
       <Name>SplitterCore</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\VirtualXbox\VirtualXbox.csproj">
       <Project>{c25d1435-780b-41ba-9097-1b4a296f0603}</Project>
       <Name>VirtualXbox</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\XInputWrapper\XinputWrapper.csproj">
       <Project>{146bcdf6-0354-4401-bbdd-57a52d2598a6}</Project>
       <Name>XinputWrapper</Name>
+      <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

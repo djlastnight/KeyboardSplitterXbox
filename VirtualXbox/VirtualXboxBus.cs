@@ -98,12 +98,13 @@
         {
             string arch = Environment.Is64BitOperatingSystem ? "x64" : "x86";
 
+            var assembly = typeof(VirtualXbox.VirtualXboxBus).Assembly;
             string manifestPath = "VirtualXbox.Driver." + arch + ".";
-            ResourceExtractor.ExtractResourceToDirectory(manifestPath + "scpvbus.cat");
-            ResourceExtractor.ExtractResourceToDirectory(manifestPath + "ScpVBus.inf");
-            ResourceExtractor.ExtractResourceToDirectory(manifestPath + "ScpVBus.sys");
-            ResourceExtractor.ExtractResourceToDirectory(manifestPath + "WdfCoinstaller01009.dll");
-            return ResourceExtractor.ExtractResourceToDirectory(manifestPath + "devcon.exe");
+            ResourceExtractor.ExtractResource(assembly, manifestPath + "scpvbus.cat");
+            ResourceExtractor.ExtractResource(assembly, manifestPath + "ScpVBus.inf");
+            ResourceExtractor.ExtractResource(assembly, manifestPath + "ScpVBus.sys");
+            ResourceExtractor.ExtractResource(assembly, manifestPath + "WdfCoinstaller01009.dll");
+            return ResourceExtractor.ExtractResource(assembly, manifestPath + "devcon.exe");
         }
     }
 }

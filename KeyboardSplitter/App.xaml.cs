@@ -105,9 +105,10 @@
                     ApplicationInfo.AppTempDirectory,
                     EnvironmentVariableTarget.Process);
 
-                // Extracting the native assemblies
-                ResourceExtractor.ExtractResourceToDirectory("KeyboardSplitter.Lib.interception.dll", ApplicationInfo.AppTempDirectory);
-                ResourceExtractor.ExtractResourceToDirectory("KeyboardSplitter.Lib.VirtualXboxNative.dll", ApplicationInfo.AppTempDirectory);
+                LogWriter.Write("Extracting native resources");
+                var assembly = Assembly.GetExecutingAssembly();
+                ResourceExtractor.ExtractResource(assembly, "KeyboardSplitter.Lib.interception.dll", ApplicationInfo.AppTempDirectory);
+                ResourceExtractor.ExtractResource(assembly, "KeyboardSplitter.Lib.VirtualXboxNative.dll", ApplicationInfo.AppTempDirectory);
 
                 ManagedAssemblyLoader.Load(
                     "KeyboardSplitter.Lib.Interceptor.dll",
@@ -125,7 +126,6 @@
                     "KeyboardSplitter.Lib.XinputWrapper.dll",
                     "XinputWrapper.dll");
 
-                LogWriter.Write("Assemblies successfully loaded");
                 App.assembliesLoaded = true;
             }
         }

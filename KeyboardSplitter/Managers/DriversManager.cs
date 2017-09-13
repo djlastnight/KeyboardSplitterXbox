@@ -1,10 +1,11 @@
 ﻿namespace KeyboardSplitter.Managers
 {
     using System;
-    using System.IO;
+    using System.Reflection;
     using System.Windows;
     using Interceptor;
     using Interceptor.Enums;
+    using KeyboardSplitter.Helpers;
     using VirtualXbox;
 
     public static class DriversManager
@@ -38,55 +39,69 @@
             if (!IsInterceptionInstalled)
             {
                 LogWriter.Write("Installing interception driver");
-                var path = KeyboardSplitter.Helpers.ResourceExtractor.ExtractResourceToDirectory("KeyboardSplitter.Lib.keyboard_driver.exe");
-                InterceptionDriver.Install(path);
+                var path = KeyboardSplitter.Helpers.ResourceExtractor.ExtractResource(
+                    Assembly.GetExecutingAssembly(),
+                    "KeyboardSplitter.Lib.keyboard_driver.exe");
+
+                LogWriter.Write(InterceptionDriver.Install(path));
+            }
+            else
+            {
+                LogWriter.Write("Skipping interception driver installation, because it is already installed");
             }
 
             if (!IsVirtualXboxBusInstallled)
             {
                 LogWriter.Write("Installing virtual xbox bus (SCP) driver");
-                VirtualXboxBus.Install();
+                LogWriter.Write(VirtualXboxBus.Install());
+            }
+            else
+            {
+                LogWriter.Write("Skipping virtual xbox bus (SCP) driver installation, because it is already installed");
             }
 
-            LogWriter.Write("Built-in drivers installation finished");
-
             var driverState = InterceptionDriver.DriverState;
+
+            // Original Messagebox is allowed here, because Interception is not loaded yet.
             switch (driverState)
             {
                 case InterceptionDriverState.Installed:
                     {
-                        Controls.MessageBox.Show(
+                        MessageBox.Show(
                             "Installation finished, please start the application again.",
                             ApplicationInfo.AppNameVersion,
                             MessageBoxButton.OK,
                             MessageBoxImage.Information);
 
-                        LogWriter.Write("Closing the application");
+                        LogWriter.Write("Installtion OK. Closing the application, because it needs to be restarted.");
                         Environment.Exit(0);
                     }
 
                     break;
                 case InterceptionDriverState.NotInstalled:
                     {
-                        Controls.MessageBox.Show(
+                        MessageBox.Show(
                             "Built-In Drivers Installation failed!",
                             ApplicationInfo.AppNameVersion,
                             MessageBoxButton.OK,
                             MessageBoxImage.Error);
 
+                        LogWriter.Write("Installation Error: Interception driver reports it is not installed");
                         Environment.Exit(0);
                     }
 
                     break;
                 case InterceptionDriverState.RebootRequired:
                     {
-                        var result = Controls.MessageBox.Show(
+                        var result = MessageBox.Show(
                             "Built-in drivers installation finished.\r\n" +
                             "In order to use them, you should reboot your PC.\r\n\r\n" +
                             "Do you want to reboot now?",
                             "Reboot required",
                             MessageBoxButton.YesNo,
                             MessageBoxImage.Question);
+
+                        LogWriter.Write("Installation finishes, but system reboot is required.");
 
                         if (result == MessageBoxResult.Yes)
                         {
@@ -119,14 +134,14 @@
             LogWriter.Write("Uninstalling Built-in drivers");
             try
             {
-                var path = Helpers.ResourceExtractor.ExtractResourceToDirectory("KeyboardSplitter.Lib.keyboard_driver.exe");
+                var path = ResourceExtractor.ExtractResource(Assembly.GetExecutingAssembly(), "KeyboardSplitter.Lib.keyboard_driver.exe");
                 string msg1 = InterceptionDriver.Uninstall(path);
                 string msg2 = VirtualXboxBus.Uninstall();
                 LogWriter.Write(msg1);
                 LogWriter.Write(msg2);
 
                 Controls.MessageBox.Show(
-                    "Uninstallation finished (see log for details). Application will now close.",
+                    "Uninstallation finished. You must reboot the system to completely remove the drivers.\r\n\r\n Application will now close.",
                     ApplicationInfo.AppName,
                     MessageBoxButton.OK,
                     MessageBoxImage.Information);
@@ -135,11 +150,11 @@
             }
             catch (Exception ex)
             {
-                LogWriter.Write("Uninstalling Built-in drivers FAILED: " + ex);
+                LogWriter.Write("Uninstalling Built-in drivers FAILED:\r\n" + ex.ToString());
 
                 Controls.MessageBox.Show(
                     "Uninstall failed: " + ex.Message,
-                    "Process failed",
+                    "Uninstall failed",
                     MessageBoxButton.OK,
                     MessageBoxImage.Error);
             }

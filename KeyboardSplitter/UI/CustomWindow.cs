@@ -41,38 +41,15 @@
             set { this.SetValue(IsToolWindowProperty, value); }
         }
 
-        protected override void OnActivated(System.EventArgs e)
+        internal CustomTitlebar CustomTitlebar
         {
-            GlobalSettings.IsMainWindowActivated = true;
-            base.OnActivated(e);
-            if (!AeroHelper.IsAeroEnabled && this.titleBar != null)
+            get
             {
-                this.titleBar.Background = System.Windows.SystemColors.ActiveCaptionBrush;
-                this.titleBar.Foreground = System.Windows.SystemColors.ActiveCaptionTextBrush;
+                return this.titleBar;
             }
         }
 
-        protected override void OnDeactivated(System.EventArgs e)
-        {
-            GlobalSettings.IsMainWindowActivated = false;
-            base.OnDeactivated(e);
-            if (!AeroHelper.IsAeroEnabled && this.titleBar != null)
-            {
-                this.titleBar.Background = System.Windows.SystemColors.InactiveCaptionBrush;
-                this.titleBar.Foreground = System.Windows.SystemColors.InactiveCaptionTextBrush;
-            }
-        }
-
-        protected override void OnSourceInitialized(EventArgs e)
-        {
-            base.OnSourceInitialized(e);
-            if (AeroHelper.IsAeroEnabled)
-            {
-                AeroHelper.ExtendGlassFrame(this, new Thickness(0, CustomTitlebar.TitlebarHeightInPixels + 4, 0, 0));
-            }
-        }
-
-        private void OnLoaded(object sender, RoutedEventArgs e)
+        protected virtual void OnLoaded(object sender, RoutedEventArgs e)
         {
             // Inserting a custom titlebar before the window's content
             var grid = new Grid();
@@ -119,6 +96,38 @@
                 this.MaxWidth = this.ActualWidth;
                 this.MinHeight = this.ActualHeight;
                 this.MaxHeight = this.ActualHeight;
+            }
+        }
+
+        protected override void OnActivated(System.EventArgs e)
+        {
+            GlobalSettings.IsMainWindowActivated = true;
+
+            base.OnActivated(e);
+            if (!AeroHelper.IsAeroEnabled && this.titleBar != null)
+            {
+                this.titleBar.Background = System.Windows.SystemColors.ActiveCaptionBrush;
+                this.titleBar.Foreground = System.Windows.SystemColors.ActiveCaptionTextBrush;
+            }
+        }
+
+        protected override void OnDeactivated(System.EventArgs e)
+        {
+            GlobalSettings.IsMainWindowActivated = false;
+            base.OnDeactivated(e);
+            if (!AeroHelper.IsAeroEnabled && this.titleBar != null)
+            {
+                this.titleBar.Background = System.Windows.SystemColors.InactiveCaptionBrush;
+                this.titleBar.Foreground = System.Windows.SystemColors.InactiveCaptionTextBrush;
+            }
+        }
+
+        protected override void OnSourceInitialized(EventArgs e)
+        {
+            base.OnSourceInitialized(e);
+            if (AeroHelper.IsAeroEnabled)
+            {
+                AeroHelper.ExtendGlassFrame(this, new Thickness(0, CustomTitlebar.TitlebarHeightInPixels + 4, 0, 0));
             }
         }
 

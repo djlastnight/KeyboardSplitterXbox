@@ -1,11 +1,11 @@
 ﻿namespace KeyboardSplitter.Controls
 {
     using System;
-    using System.Globalization;
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Input;
     using System.Windows.Media;
+    using KeyboardSplitter.Helpers;
     using KeyboardSplitter.UI;
 
     /// <summary>
@@ -50,6 +50,13 @@
             typeof(CustomTitlebar),
             new PropertyMetadata(true));
 
+        public static readonly DependencyProperty EnableCloseButtonProperty =
+            DependencyProperty.Register(
+            "EnableCloseButton",
+            typeof(bool),
+            typeof(CustomTitlebar),
+            new PropertyMetadata(true));
+
         private Window parent;
 
         public CustomTitlebar()
@@ -87,21 +94,10 @@
             set { this.SetValue(EnableRestoreButtonProperty, value); }
         }
 
-        private static Size MeasureText(TextBlock textBlock)
+        public bool EnableCloseButton
         {
-            var formattedText = new FormattedText(
-                textBlock.Text,
-                CultureInfo.CurrentUICulture,
-                FlowDirection.LeftToRight,
-                new Typeface(
-                    textBlock.FontFamily,
-                    textBlock.FontStyle,
-                    textBlock.FontWeight,
-                    textBlock.FontStretch),
-                textBlock.FontSize,
-                Brushes.Black);
-
-            return new Size(formattedText.Width, formattedText.Height);
+            get { return (bool)this.GetValue(EnableCloseButtonProperty); }
+            set { this.SetValue(EnableCloseButtonProperty, value); }
         }
 
         private void ToggleRestore()
@@ -129,7 +125,7 @@
 
             this.parent.StateChanged += this.OnParentWindowStateChanged;
             this.Title = this.parent.Title;
-            var textSize = MeasureText(this.titlebarTextblock);
+            var textSize = TextMeasureHelper.MeasureText(this.titlebarTextblock);
             this.titlebarTextBackground.Width = textSize.Width + 5;
             this.titlebarTextBackground.Height = textSize.Height;
             this.Icon = this.parent.Icon;
