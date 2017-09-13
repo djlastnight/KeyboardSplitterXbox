@@ -83,7 +83,11 @@
                     }
                 }
 
-                MessageBox.Show(alertMessage, ApplicationInfo.AppName, MessageBoxButton.OK, MessageBoxImage.Error);
+                Controls.MessageBox.Show(
+                    alertMessage,
+                    ApplicationInfo.AppName,
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
             }
 
             return data;

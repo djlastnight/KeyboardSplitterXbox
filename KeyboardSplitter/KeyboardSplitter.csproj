@@ -85,12 +85,14 @@
     </ApplicationDefinition>
     <Compile Include="ApplicationInfo.cs" />
     <Compile Include="Commands\RelayCommand.cs" />
+    <Compile Include="Controls\MessageBoxResultEventArgs.cs" />
     <Compile Include="Controls\EmulationSlot.xaml.cs">
       <DependentUpon>EmulationSlot.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\LedIndicator.xaml.cs">
       <DependentUpon>LedIndicator.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\MessageBox.cs" />
     <Compile Include="Controls\PresetControl.xaml.cs">
       <DependentUpon>PresetControl.xaml</DependentUpon>
     </Compile>
@@ -145,6 +147,9 @@
     </Compile>
     <Compile Include="UI\CustomWindow.cs" />
     <Compile Include="Helpers\AeroHelper.cs" />
+    <Compile Include="UI\MessageBoxWindow.xaml.cs">
+      <DependentUpon>MessageBoxWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UI\XinputSubTypesWindow.xaml.cs">
       <DependentUpon>XinputSubTypesWindow.xaml</DependentUpon>
     </Compile>
@@ -188,6 +193,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\CustomTitlebar.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\MessageBoxWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

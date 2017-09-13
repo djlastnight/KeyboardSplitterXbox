@@ -51,7 +51,7 @@
         {
             this.CheckKeysEnumerations();
             LogWriter.Write("Creating input manager");
-            this.interceptor = new Interception(KeyboardFilterMode.All, MouseFilterMode.None);
+            this.interceptor = new Interception(KeyboardFilterMode.All, MouseFilterMode.All);
             if (!this.interceptor.Load())
             {
                 LogWriter.Write("Interceptor.Load() failed!");

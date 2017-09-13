@@ -40,7 +40,12 @@
                 var ext = System.IO.Path.GetExtension(dialog.FileName);
                 if (ext.ToLower() != ".exe")
                 {
-                    System.Windows.MessageBox.Show("You must provide an exe file!");
+                    Controls.MessageBox.Show(
+                        "You must provide an exe file!",
+                        ApplicationInfo.AppName,
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Error);
+
                     return;
                 }
 
@@ -141,7 +146,7 @@
             }
             else
             {
-                System.Windows.MessageBox.Show(
+                Controls.MessageBox.Show(
                     "Patching failed, because " + this.fileName.Text + " is currently running!",
                     ApplicationInfo.AppNameVersion,
                     MessageBoxButton.OK,
@@ -154,7 +159,12 @@
             string exePath = this.fileName.ToolTip.ToString();
             if (!System.IO.File.Exists(exePath))
             {
-                System.Windows.MessageBox.Show(exePath + " does not exists!");
+                Controls.MessageBox.Show(
+                    exePath + " does not exists!",
+                    ApplicationInfo.AppName,
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+
                 return;
             }
 
@@ -181,7 +191,7 @@
                 // Check write access
                 if (!App.HasWriteAccessToFolder(dir))
                 {
-                    System.Windows.MessageBox.Show(
+                    Controls.MessageBox.Show(
                         "Patching failed, because you do not have a write permissions to exe's directory!",
                         ApplicationInfo.AppNameVersion,
                         MessageBoxButton.OK,
@@ -192,7 +202,7 @@
 
                 System.IO.File.WriteAllLines(iniPath, iniLines);
                 this.CopyXinputDlls(dir);
-                System.Windows.MessageBox.Show(
+                Controls.MessageBox.Show(
                     this.fileName.Text + " was succesfully patched. Now you can start it.",
                     ApplicationInfo.AppNameVersion,
                     MessageBoxButton.OK,
@@ -202,7 +212,7 @@
             }
             else
             {
-                System.Windows.MessageBox.Show(
+                Controls.MessageBox.Show(
                     this.fileName.Text + " not patched, because you have to change at least one controller subtype!",
                     ApplicationInfo.AppNameVersion,
                     MessageBoxButton.OK,

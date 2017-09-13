@@ -28,11 +28,11 @@
             }
         }
 
-        public static bool Install()
+        public static string Install()
         {
             if (VirtualXboxBus.IsInstalled)
             {
-                return true;
+                return "Error: ScpVBus is already installed!";
             }
 
             string output = null;
@@ -51,20 +51,19 @@
                     proc.WaitForExit();
                 }
 
-                return VirtualXboxBus.IsInstalled;
+                return "Output from ScpVBus installtion: " + output;
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return false;
+                return "ScpVBus installation failed!\r\n" + e.ToString();
             }
         }
 
-        public static string Uninstall(out int exitCode)
+        public static string Uninstall()
         {
             if (!VirtualXboxBus.IsInstalled)
             {
-                exitCode = 0;
-                return "Already uninstalled";
+                return "Error: ScpVBus is already uninstalled";
             }
 
             VirtualXboxController.UnPlug(1, true);
@@ -86,14 +85,12 @@
                 {
                     output = proc.StandardOutput.ReadToEnd();
                     proc.WaitForExit();
-                    exitCode = proc.ExitCode;
-                    return output;
+                    return "Output from ScpVBus uninstall: " + output;
                 }
             }
             catch (Exception ex)
             {
-                exitCode = -1;
-                return ex.ToString();
+                return "ScpVbus uninstall failed:\r\n" + ex.ToString();
             }
         }
 

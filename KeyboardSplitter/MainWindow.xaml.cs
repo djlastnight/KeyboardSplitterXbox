@@ -193,7 +193,7 @@
             }
             catch (KeyboardSplitterExceptionBase ex)
             {
-                System.Windows.MessageBox.Show(
+                Controls.MessageBox.Show(
                     ex.Message,
                     ApplicationInfo.AppNameVersion,
                     MessageBoxButton.OK,
@@ -237,7 +237,7 @@
             {
                 // We have some error or nothing is attached to the system.
                 LogWriter.Write("No input devices were detected! Terminating application.");
-                MessageBox.Show(
+                Controls.MessageBox.Show(
                     "No input devices were detected!\r\nApplication will now close!",
                     ApplicationInfo.AppName,
                     MessageBoxButton.OK,
@@ -281,7 +281,7 @@
 
             if (message.Length > 0)
             {
-                var result = System.Windows.MessageBox.Show(
+                var result = Controls.MessageBox.Show(
                     "Do you want to save the following unsaved presets, before you quit?\r\n\r\n" + message,
                     "You are about to quit " + ApplicationInfo.AppNameVersion,
                     MessageBoxButton.YesNoCancel,
@@ -399,7 +399,11 @@
             }
             catch (Exception ex)
             {
-                System.Windows.MessageBox.Show("Can not open gamepad properties: " + Environment.NewLine + ex.Message);
+                Controls.MessageBox.Show(
+                    "Can not open gamepad properties: " + Environment.NewLine + ex.Message,
+                    ApplicationInfo.AppName,
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
             }
         }
 
@@ -407,7 +411,7 @@
         {
             if (XboxGamepad.AreXboxAccessoriesInstalled)
             {
-                MessageBox.Show(
+                Controls.MessageBox.Show(
                     "Xbox accessories is already installed on your computer!",
                     ApplicationInfo.AppName,
                     MessageBoxButton.OK,
@@ -433,7 +437,7 @@
 
         private void UninstallBuiltInDrivers_Click(object sender, RoutedEventArgs e)
         {
-            var result = System.Windows.MessageBox.Show(
+            var result = Controls.MessageBox.Show(
                 "Are you sure that you want to remove the built-in drivers?",
                 "Confirm uninstall",
                 MessageBoxButton.YesNoCancel,
@@ -449,7 +453,7 @@
         {
             if (this.isControllersTestActive)
             {
-                System.Windows.MessageBox.Show(
+                Controls.MessageBox.Show(
                     "Xinput controller test window is already open!",
                     ApplicationInfo.AppName,
                     MessageBoxButton.OK,

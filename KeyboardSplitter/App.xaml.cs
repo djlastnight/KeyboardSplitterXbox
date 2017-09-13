@@ -84,7 +84,7 @@
             if (version.Major < 5)
             {
                 LogWriter.Write("Obsolete OS detected: " + Environment.OSVersion.VersionString);
-                System.Windows.MessageBox.Show(
+                Controls.MessageBox.Show(
                     "Your operating system is not supported!",
                     ApplicationInfo.AppNameVersion,
                     MessageBoxButton.OK,
@@ -135,7 +135,7 @@
             if (!DriversManager.AreBuiltInDriversInstalled)
             {
                 LogWriter.Write("Built-in drivers are not installed, asking user to install them");
-                var result = System.Windows.MessageBox.Show(
+                var result = Controls.MessageBox.Show(
                     "It seems that the required built-in drivers are not installed.\r\n" +
                     "Do you want to install them (may require reboot)?\r\n\r\n" +
                     "Selecting \"No\" will quit the application.",
@@ -195,7 +195,7 @@
                     this.mutex = null;
                     string name = ApplicationInfo.AppName;
 
-                    System.Windows.MessageBox.Show(
+                    Controls.MessageBox.Show(
                         name + " is already running!",
                         name,
                         MessageBoxButton.OK,
@@ -271,7 +271,7 @@
                 LogWriter.GetLogFileName,
                 ApplicationInfo.AppName);
 
-            MessageBox.Show(
+            Controls.MessageBox.Show(
                 message,
                 ApplicationInfo.AppNameVersion,
                 MessageBoxButton.OK,

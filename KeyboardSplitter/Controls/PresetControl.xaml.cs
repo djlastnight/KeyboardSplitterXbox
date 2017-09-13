@@ -190,7 +190,7 @@
                 return;
             }
 
-            var confirm = MessageBox.Show(
+            var confirm = Controls.MessageBox.Show(
                 string.Format("Are you sure that you want to delete '{0}' preset?", this.Preset.Name),
                 "Confirm preset delete",
                 MessageBoxButton.YesNo,
@@ -260,7 +260,7 @@
             bool isMouseSet = slot.Mouse != null && slot.Mouse != Mouse.None;
             if (!isKeyboardSet && !isMouseSet)
             {
-                System.Windows.MessageBox.Show(
+                Controls.MessageBox.Show(
                     "You can not detect an input key, because the slot is not assosiated with any valid input device!",
                     ApplicationInfo.AppNameVersion,
                     MessageBoxButton.OK,

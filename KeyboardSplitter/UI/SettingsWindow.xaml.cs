@@ -39,7 +39,7 @@
                 }
             }
 
-            MessageBox.Show(
+            Controls.MessageBox.Show(
                 unpluggedControllersCount + " virtual controllers were unplugged!",
                 ApplicationInfo.AppName,
                 MessageBoxButton.OK,
@@ -71,7 +71,7 @@
 
             var comboBox = sender as ComboBox;
 
-            var dialogResult = MessageBox.Show(
+            var dialogResult = Controls.MessageBox.Show(
                 string.Format(
                 "The requested operation requires slots reset.{0}Do you want to do that?",
                 Environment.NewLine),

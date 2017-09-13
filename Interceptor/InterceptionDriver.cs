@@ -60,7 +60,7 @@
             }
         }
 
-        public static void Install(string interceptionFullPath, bool showMessage = false)
+        public static string Install(string interceptionFullPath)
         {
             string output = null;
 
@@ -86,31 +86,27 @@
                 string message;
                 if (ex.Message == "The requested operation requires elevation")
                 {
-                    message = "You must run the application as administrator.";
+                    message = "Interception driver installation failed. You must run the application as administrator.";
                 }
                 else
                 {
                     message = ex.Message;
                 }
 
-                MessageBox.Show(
-                    "Interception driver installation failed!\r\n" + message,
-                    "Interception driver error",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Error);
-
-                return;
+                return "Interception driver installation failed!\r\n" + message;
             }
 
-            if (showMessage && !string.IsNullOrWhiteSpace(output))
+            if (!string.IsNullOrWhiteSpace(output))
             {
                 string[] lines = output.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
                 string lastLine = lines[lines.Length - 1];
-                MessageBox.Show(lastLine, "Driver information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return lastLine;
             }
+
+            return "Interception driver sucessfully installed.";
         }
 
-        public static void Uninstall(string interceptionFullPath, bool showMessage = false)
+        public static string Uninstall(string interceptionFullPath)
         {
             string output = null;
 
@@ -138,28 +134,24 @@
                 string message;
                 if (ex.Message == "The requested operation requires elevation")
                 {
-                    message = "You must run the application as administrator.";
+                    message = "Interception uninstall failed. You must run the application as administrator.";
                 }
                 else
                 {
                     message = ex.Message;
                 }
 
-                MessageBox.Show(
-                    "Interception driver uninstallation failed!\r\n" + message,
-                    "Interception driver error",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Error);
-
-                return;
+                return "Interception driver uninstall failed!\r\n" + message;
             }
 
-            if (showMessage && !string.IsNullOrWhiteSpace(output))
+            if (!string.IsNullOrWhiteSpace(output))
             {
                 string[] lines = output.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
                 string lastLine = lines[lines.Length - 1];
-                MessageBox.Show(lastLine, "Interception Driver information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return lastLine;
             }
+
+            return "Interception driver uninstalled";
         }
 
         private static string GetSystem32DirectoryPath()
