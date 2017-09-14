@@ -150,8 +150,8 @@
             }
             else
             {
-                var origialSerialized = original.Serialize();
-                var presetSerialized = preset.Serialize();
+                var origialSerialized = original.ToXml();
+                var presetSerialized = preset.ToXml();
                 return origialSerialized != presetSerialized;
             }
         }

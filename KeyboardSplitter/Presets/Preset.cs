@@ -227,15 +227,39 @@
             return keys;
         }
 
-        public string Serialize()
+        public void Reset()
         {
-            var sb = new StringBuilder();
-            using (var writer = new StringWriter(sb))
+            var noneKey = InputKey.None;
+
+            this.Buttons = new ObservableCollection<PresetButton>();
+            foreach (uint button in Enum.GetValues(typeof(XboxButton)))
             {
-                var serializer = new XmlSerializer(this.GetType());
-                serializer.Serialize(writer, this);
-                return sb.ToString();
+                this.Buttons.Add(new PresetButton(button, noneKey));
             }
+
+            this.Triggers = new ObservableCollection<PresetTrigger>();
+            foreach (uint trigger in Enum.GetValues(typeof(XboxTrigger)))
+            {
+                this.Triggers.Add(new PresetTrigger(trigger, noneKey));
+            }
+
+            this.Axes = new ObservableCollection<PresetAxis>();
+            foreach (uint axis in Enum.GetValues(typeof(XboxAxis)))
+            {
+                this.Axes.Add(new PresetAxis(axis, (short)XboxAxisPosition.Min, noneKey));
+                this.Axes.Add(new PresetAxis(axis, (short)XboxAxisPosition.Max, noneKey));
+            }
+
+            this.Dpads = new ObservableCollection<PresetDpad>();
+            foreach (int direction in Enum.GetValues(typeof(XboxDpadDirection)))
+            {
+                if (direction != (int)XboxDpadDirection.Off)
+                {
+                    this.Dpads.Add(new PresetDpad(direction, noneKey));
+                }
+            }
+
+            this.CustomFunctions = new ObservableCollection<PresetCustom>();
         }
 
         private static Preset CreateEmptyPreset()
