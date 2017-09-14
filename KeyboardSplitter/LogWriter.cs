@@ -12,7 +12,7 @@
 
         private static string logFilePath = System.Windows.Forms.Application.StartupPath + "/" + logFileName;
 
-        public static string GetLogFilePath
+        public static string LogFilePath
         {
             get
             {

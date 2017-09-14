@@ -67,15 +67,16 @@
             if (!LogWriter.IsInitialized)
             {
                 LogWriter.Init();
-                var starupPath = System.Windows.Forms.Application.ExecutablePath;
-                LogWriter.Write("Application started from " + starupPath);
-                LogWriter.Write("User has write permissions: " + HasWriteAccessToFolder(starupPath));
-                LogWriter.Write("Application version: " + ApplicationInfo.AppNameVersion);
-                LogWriter.Write("OS version: " + Helpers.OSHelper.GetWindowsFullVersion());
-#if DEBUG
-                LogWriter.Write("Debug mode enabled");
-#endif
             }
+
+            var starupPath = System.Windows.Forms.Application.ExecutablePath;
+            LogWriter.Write("Application started from " + starupPath);
+            LogWriter.Write("User has write permissions: " + HasWriteAccessToFolder(starupPath));
+            LogWriter.Write("Application version: " + ApplicationInfo.AppNameVersion);
+            LogWriter.Write("OS version: " + Helpers.OSHelper.GetWindowsFullVersion());
+#if DEBUG
+            LogWriter.Write("Debug mode enabled");
+#endif
         }
 
         private static void CheckForObsoleteOS()
@@ -256,7 +257,7 @@
                 LogWriter.Init();
             }
 
-            var splitter = Helpers.SplitterHelper.TryFindSplitter();
+            var splitter = SplitterHelper.TryFindSplitter();
             if (splitter != null)
             {
                 splitter.Destroy();
