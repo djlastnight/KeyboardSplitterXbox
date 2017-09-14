@@ -132,7 +132,7 @@
         /// </summary>
         public event ErrorEventHandler Error;
 
-                /// <summary>
+        /// <summary>
         /// Gets or sets the <see cref="RegChangeNotifyFilter">RegChangeNotifyFilter</see>.
         /// </summary>
         public RegChangeNotifyFilter RegChangeNotifyFilter
@@ -384,7 +384,10 @@
                 WaitHandle[] waitHandles = new WaitHandle[] { eventNotify, this.eventTerminate };
                 while (!this.eventTerminate.WaitOne(0, true))
                 {
-                    result = NativeMethods.RegNotifyChangeKeyValue(registryKey, true, this.regFilter, eventNotify.Handle, true);
+                    /// Removing the following line, because it uses deprecated property
+                    /// IntPtr handle = eventNotify.Handle;
+                    IntPtr handle = eventNotify.SafeWaitHandle.DangerousGetHandle();
+                    result = NativeMethods.RegNotifyChangeKeyValue(registryKey, true, this.regFilter, handle, true);
                     if (result != 0)
                     {
                         throw new Win32Exception(result);
