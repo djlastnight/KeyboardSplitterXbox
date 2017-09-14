@@ -172,8 +172,7 @@
                                             <Grid>
                                                 <Grid>
                                                     <Controls:PresetControl Preset="{Binding Preset, Mode=TwoWay}"
-                                                                            Visibility="{Binding IsOnScreenControllerActive, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=true}"
-                                                                            IsEnabled="{Binding IsLocked, Converter={StaticResource ReversedBoolConverter}}" />
+                                                                            Visibility="{Binding IsOnScreenControllerActive, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=true}" />
                                                 </Grid>
                                                 <Controls:OnScreenController Visibility="{Binding IsOnScreenControllerActive, Converter={StaticResource BoolToVisibilityConverter}}"
                                                                        VerticalAlignment="Top"
