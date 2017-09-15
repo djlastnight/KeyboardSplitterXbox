@@ -85,6 +85,9 @@
     </ApplicationDefinition>
     <Compile Include="ApplicationInfo.cs" />
     <Compile Include="Commands\RelayCommand.cs" />
+    <Compile Include="Controls\GameList.xaml.cs">
+      <DependentUpon>GameList.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\MessageBoxResultEventArgs.cs" />
     <Compile Include="Controls\EmulationSlot.xaml.cs">
       <DependentUpon>EmulationSlot.xaml</DependentUpon>
@@ -99,12 +102,14 @@
     <Compile Include="Controls\ScrollingTextBox.cs" />
     <Compile Include="Converters\BooleanToVisibilityConverter.cs" />
     <Compile Include="Converters\BoolToReversedBoolConverter.cs" />
+    <Compile Include="Converters\GameItemStatusToBrushConverter.cs" />
     <Compile Include="Converters\LedNumberToBrushConverter.cs" />
     <Compile Include="Converters\XboxAxisConverter.cs" />
     <Compile Include="Converters\XboxButtonConverter.cs" />
     <Compile Include="Converters\XboxCustomFunctionConverter.cs" />
     <Compile Include="Converters\XboxDpadConverter.cs" />
     <Compile Include="Converters\XboxTriggerConverter.cs" />
+    <Compile Include="Enums\GameItemStatus.cs" />
     <Compile Include="Exceptions\Emulation\EmulationSlotTypeException.cs" />
     <Compile Include="Exceptions\Gamepad\GamepadExceptionBase.cs" />
     <Compile Include="Exceptions\Gamepad\GamepadIsInUseException.cs" />
@@ -117,8 +122,17 @@
     <Compile Include="Helpers\NativeMethods.cs" />
     <Compile Include="Helpers\OSHelper.cs" />
     <Compile Include="Helpers\ParentFinder.cs" />
+    <Compile Include="ExtensionMethods.cs" />
     <Compile Include="Helpers\SplitterHelper.cs" />
     <Compile Include="Helpers\TextMeasureHelper.cs" />
+    <Compile Include="Models\GameData.cs" />
+    <Compile Include="Models\SlotData.cs" />
+    <Compile Include="UI\GameEditor.xaml.cs">
+      <DependentUpon>GameEditor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\GameItemEditor.xaml.cs">
+      <DependentUpon>GameItemEditor.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UI\InputDetectorWindow.xaml.cs">
       <DependentUpon>InputDetectorWindow.xaml</DependentUpon>
     </Compile>
@@ -134,7 +148,6 @@
     <Compile Include="Managers\InputManager.cs" />
     <Compile Include="LogWriter.cs" />
     <Compile Include="Helpers\InputHelper.cs" />
-    <Compile Include="Presets\Extensions.cs" />
     <Compile Include="Presets\Mapping.cs" />
     <Compile Include="Presets\Preset.cs" />
     <Compile Include="Helpers\RegistryMonitor.cs" />
@@ -182,11 +195,23 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\GameList.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\LedIndicator.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\PresetControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\GameEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\GameItemEditor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
