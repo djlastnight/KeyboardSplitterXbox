@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
+    using System.Linq;
 using System.Windows;
 using System.Windows.Media;
     using System.Xml.Serialization;
@@ -19,36 +20,31 @@ using System.Windows.Media;
 
         private string gameTitle;
 
-        private GameItemStatus status;
+        private GameDataStatus status;
 
-        private string executablePath;
+        private string gamePath;
 
-        private List<Keyboard> keyboards;
-
-        private List<Mouse> mice;
-
-        private List<Preset> presets;
+        private List<SlotData> slotsData;
 
         public GameData()
         {
-            this.status = GameItemStatus.OK;
         }
 
-        public GameData(ImageSource icon, string title)
+        public GameData(string title, string path)
             : this()
         {
-            if (icon == null)
-            {
-                throw new ArgumentNullException("icon");
-            }
-
             if (title == null)
             {
                 throw new ArgumentNullException("title");
             }
 
-            this.GameIcon = icon;
+            if (path == null)
+            {
+                throw new ArgumentNullException("path");
+            }
+
             this.GameTitle = title;
+            this.GamePath = path;
         }
 
         [XmlIgnore]
@@ -82,7 +78,7 @@ using System.Windows.Media;
         }
 
         [XmlIgnore]
-        public GameItemStatus Status
+        public GameDataStatus Status
         {
             get
             {
@@ -97,63 +93,33 @@ using System.Windows.Media;
         }
 
         [XmlAttribute("path")]
-        public string ExecutablePath
+        public string GamePath
         {
             get
             {
-                return this.executablePath;
+                return this.gamePath;
             }
 
             set
             {
-                this.executablePath = value;
-                this.OnPropertyChanged("ExecutablePath");
-                this.UpdateStatus();
+                this.gamePath = value;
+                this.OnPropertyChanged("GamePath");
+                this.Status = this.GetStatus();
             }
         }
 
-        [XmlElement("keyboards")]
-        public List<Keyboard> Keyboards
+        [XmlElement("slots")]
+        public List<SlotData> SlotsData
         {
             get
             {
-                return this.keyboards;
+                return this.slotsData;
             }
 
             set
             {
-                this.keyboards = value;
-                this.OnPropertyChanged("Keyboards");
-            }
-        }
-
-        [XmlElement("mice")]
-        public List<Mouse> Mice
-        {
-            get
-            {
-                return this.mice;
-            }
-
-            set
-            {
-                this.mice = value;
-                this.OnPropertyChanged("Mice");
-            }
-        }
-
-        [XmlElement("presets")]
-        public List<Preset> Presets
-        {
-            get
-            {
-                return this.presets;
-            }
-
-            set
-            {
-                this.presets = value;
-                this.OnPropertyChanged("Presets");
+                this.slotsData = value;
+                this.OnPropertyChanged("SlotsData");
             }
         }
 
@@ -167,18 +133,60 @@ using System.Windows.Media;
             }
         }
 
-        protected virtual void UpdateStatus()
+        protected virtual GameDataStatus GetStatus()
         {
-            if (this.executablePath == null || !File.Exists(this.executablePath))
+            if (this.gamePath == null || !File.Exists(this.gamePath) || Path.GetExtension(this.gamePath).ToLower() != ".exe")
             {
-                this.Status = GameItemStatus.Broken;
-                return;
+                return GameDataStatus.Broken;
             }
 
-            // TODO: check if selected input devices are currently availabe
-            // TODO: check if selected presets are currently availabe
+            if (this.slotsData.Count < 1 || this.slotsData.Count > 4)
+            {
+                return GameDataStatus.Warning;
+            }
 
-            this.Status = GameItemStatus.OK;
+            foreach (var slotData in this.slotsData)
+            {
+                if (slotData.SlotNumber < 1 || slotData.SlotNumber > 4)
+                {
+                    return GameDataStatus.Warning;
+                }
+
+                if (slotData.GamepadUserIndex < 1 || slotData.GamepadUserIndex > 4)
+                {
+                    return GameDataStatus.Warning;
+                }
+
+                var inputDevices = KeyboardSplitter.Managers.InputManager.ConnectedInputDevices;
+                if (slotData.KeyboardHardwareId != string.Empty)
+                {
+                    if (inputDevices.FirstOrDefault(x => x.IsKeyboard && x.HardwareID.ToLower() == slotData.KeyboardHardwareId.ToLower()) == null)
+                    {
+                        // Keyboard is not connected
+                        return GameDataStatus.Warning;
+                    }
+                }
+
+                if (slotData.MouseHardwareId != string.Empty)
+                {
+                    if (inputDevices.FirstOrDefault(x => !x.IsKeyboard && x.HardwareID.ToLower() == slotData.MouseHardwareId.ToLower()) == null)
+                    {
+                        // Mouse is not connected
+                        return GameDataStatus.Warning;
+                    }
+                }
+
+                if (!PresetDataManager.IsProtectedPreset(slotData.PresetName))
+                {
+                    if (PresetDataManager.CurrentPresets.FirstOrDefault(x => x.Name.ToLower() == slotData.PresetName) == null)
+                    {
+                        // Preset unavailable
+                        return GameDataStatus.Warning;
+                    }
+                }
+            }
+
+            return GameDataStatus.OK;
         }
     }
 }

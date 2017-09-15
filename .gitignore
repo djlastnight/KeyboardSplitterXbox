@@ -10,7 +10,6 @@
 
 [Dd]ebug/
 [Rr]elease/
-x64/
 build/
 [Bb]in/
 [Oo]bj/
@@ -154,6 +153,6 @@ $RECYCLE.BIN/
 
 # Mac desktop service store files
 .DS_Store
-/Interceptor
+
+#djlastnight
 *.exp
-/KeyboardSplitter/Lib/VirtualXboxNative.lib

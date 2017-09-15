@@ -11,18 +11,18 @@ namespace KeyboardSplitter.Converters
     {
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
-            if (targetType == typeof(Brush) && value.GetType() == typeof(Enums.GameItemStatus))
+            if (targetType == typeof(Brush) && value.GetType() == typeof(Enums.GameDataStatus))
             {
-                var status = (Enums.GameItemStatus)value;
+                var status = (Enums.GameDataStatus)value;
                 switch (status)
                 {
-                    case KeyboardSplitter.Enums.GameItemStatus.None:
+                    case KeyboardSplitter.Enums.GameDataStatus.None:
                         return Brushes.Transparent;
-                    case KeyboardSplitter.Enums.GameItemStatus.OK:
+                    case KeyboardSplitter.Enums.GameDataStatus.OK:
                         return Brushes.Lime;
-                    case KeyboardSplitter.Enums.GameItemStatus.Warning:
+                    case KeyboardSplitter.Enums.GameDataStatus.Warning:
                         return Brushes.Yellow;
-                    case KeyboardSplitter.Enums.GameItemStatus.Broken:
+                    case KeyboardSplitter.Enums.GameDataStatus.Broken:
                         return Brushes.Red;
                     default:
                         break;
