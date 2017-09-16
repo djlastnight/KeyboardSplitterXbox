@@ -37,6 +37,7 @@
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
+            <Setter Property="IsTabStop" Value="False" />
             <Setter Property="Background" Value="Transparent" />
             <Setter Property="FontFamily" Value="Webdings"/>
             <Setter Property="FontSize" Value="13.333" />

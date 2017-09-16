@@ -54,6 +54,10 @@
                 <MenuItem Header="Controller subtypes" Click="OnControllerSubtypesClicked" />
                 <MenuItem Header="Options" Click="OptionsClicked" />
             </MenuItem>
+            <MenuItem Header="Games" SubmenuOpened="GamesSubmenuOpened">
+                <MenuItem Header="Play" Name="playGameMenuItem" SubmenuOpened="GamesSubmenuOpened"/>
+                <MenuItem Header="Edit" Click="OnEditGamesListClicked"/>
+            </MenuItem>
             <MenuItem Header="Drivers">
                 <MenuItem Header="Get Xbox 360 Accessories Driver" Click="OpenXboxSite"/>
                 <MenuItem Header="Uninstall Built-in Drivers" Click="UninstallBuiltInDrivers_Click"/>
@@ -226,6 +230,15 @@
                             BorderThickness="2"
                             Click="OnHelperGridCloseButtonClicked"
                             ToolTip="Hide emulation information">
+                        <Button.Style>
+                            <Style TargetType="Button">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ElementName=helperGrid, Path=Opacity}" Value="0">
+                                        <Setter Property="IsTabStop" Value="False" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
                     </Button>
                 </Grid>
             </Grid>

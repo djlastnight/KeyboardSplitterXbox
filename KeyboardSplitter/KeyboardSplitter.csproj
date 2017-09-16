@@ -102,14 +102,16 @@
     <Compile Include="Controls\ScrollingTextBox.cs" />
     <Compile Include="Converters\BooleanToVisibilityConverter.cs" />
     <Compile Include="Converters\BoolToReversedBoolConverter.cs" />
-    <Compile Include="Converters\GameItemStatusToBrushConverter.cs" />
+    <Compile Include="Converters\GameStatusToBrushConverter.cs" />
+    <Compile Include="Converters\GameStatusToStringConverter.cs" />
     <Compile Include="Converters\LedNumberToBrushConverter.cs" />
+    <Compile Include="Converters\GameStatusToBoolConverter.cs" />
     <Compile Include="Converters\XboxAxisConverter.cs" />
     <Compile Include="Converters\XboxButtonConverter.cs" />
     <Compile Include="Converters\XboxCustomFunctionConverter.cs" />
     <Compile Include="Converters\XboxDpadConverter.cs" />
     <Compile Include="Converters\XboxTriggerConverter.cs" />
-    <Compile Include="Enums\GameItemStatus.cs" />
+    <Compile Include="Enums\GameStatus.cs" />
     <Compile Include="Exceptions\Emulation\EmulationSlotTypeException.cs" />
     <Compile Include="Exceptions\Gamepad\GamepadExceptionBase.cs" />
     <Compile Include="Exceptions\Gamepad\GamepadIsInUseException.cs" />
@@ -125,6 +127,8 @@
     <Compile Include="ExtensionMethods.cs" />
     <Compile Include="Helpers\SplitterHelper.cs" />
     <Compile Include="Helpers\TextMeasureHelper.cs" />
+    <Compile Include="Managers\GameDataManager.cs" />
+    <Compile Include="Models\Game.cs" />
     <Compile Include="Models\GameData.cs" />
     <Compile Include="Models\SlotData.cs" />
     <Compile Include="UI\GameEditor.xaml.cs">

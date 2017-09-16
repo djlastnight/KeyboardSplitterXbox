@@ -9,28 +9,44 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
-        <ListView SelectionMode="Single" Name="listView" Loaded="listView_Loaded">
+        <ListView SelectionMode="Single" Name="listView" Loaded="ListViewLoaded">
             <ListView.Resources>
-                <converters:GameItemStatusToBrushConverter x:Key="statusToBrushConverter" />
+                <converters:GameStatusToBrushConverter x:Key="statusToBrushConverter" />
+                <converters:GameStatusToStringConverter x:Key="statusToStringConverter" />
+                <converters:GameStatusToBoolConverter x:Key="statusToBoolConverter" />
             </ListView.Resources>
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Header="Status" Width="45">
+                    <GridViewColumn Header="Status" Width="40">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <Ellipse Width="20" Height="20" Fill="{Binding Status, Converter={StaticResource statusToBrushConverter}}" />
+                                <Ellipse Width="20"
+                                         Height="20"
+                                         Fill="{Binding Status, Converter={StaticResource statusToBrushConverter}}"
+                                         ToolTip="{Binding Status, Converter={StaticResource statusToStringConverter}}" />
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
-                    <GridViewColumn Header="Icon" Width="30" DisplayMemberBinding="{Binding GameIcon}" />
+                    <GridViewColumn Header="Icon" Width="30">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Image Source="{Binding GameIcon}" />
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
                     <GridViewColumn Header="Title" DisplayMemberBinding="{Binding GameTitle}" />
-                    <GridViewColumn Header="Path" DisplayMemberBinding="{Binding ExecutablePath}" />
-                    <GridViewColumn Header="Action" Width="130">
+                    <GridViewColumn Header="Notes" DisplayMemberBinding="{Binding GameNotes}" />
+                    <GridViewColumn Header="Path" DisplayMemberBinding="{Binding GamePath}" />
+                    <GridViewColumn Header="Action" Width="120">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
-                                    <Button Width="50" Height="23" Content="Edit" Margin="4" />
-                                    <Button Width="50" Height="23" Content="Run" Margin="4" />
+                                    <Button Width="50" Height="23" Content="Edit" Margin="1" IsEnabled="False" />
+                                    <Button Width="50"
+                                            Height="23"
+                                            Content="Play"
+                                            Margin="1"
+                                            IsEnabled="{Binding Status, Converter={StaticResource statusToBoolConverter}}" />
                                 </StackPanel>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>

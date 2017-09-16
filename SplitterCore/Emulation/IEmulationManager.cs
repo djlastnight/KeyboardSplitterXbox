@@ -13,7 +13,7 @@ using System.Collections.ObjectModel;
 
         ObservableCollection<IEmulationSlot> Slots { get; set; }
 
-        void Start();
+        void Start(bool forced = false);
 
         void Stop();
 

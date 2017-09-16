@@ -1,21 +1,9 @@
-﻿using KeyboardSplitter.Models;
-using SplitterCore.Emulation;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-
-namespace KeyboardSplitter.Controls
+﻿namespace KeyboardSplitter.Controls
 {
+    using System.Windows;
+    using System.Windows.Controls;
+    using KeyboardSplitter.Managers;
+
     /// <summary>
     /// Interaction logic for GameList.xaml
     /// </summary>
@@ -26,22 +14,9 @@ namespace KeyboardSplitter.Controls
             this.InitializeComponent();
         }
 
-        private void listView_Loaded(object sender, RoutedEventArgs e)
+        private void ListViewLoaded(object sender, RoutedEventArgs e)
         {
-            var splitter = Helpers.SplitterHelper.TryFindSplitter();
-            if (splitter == null)
-            {
-                return;
-            }
-
-
-            List<GameData> gamesData = new List<GameData>();
-            foreach (var slot in splitter.EmulationManager.Slots)
-            {
-                gamesData.Add(new GameData(null, slot.Keyboard.FriendlyName));
-            }
-
-            this.listView.ItemsSource = gamesData;
+            this.listView.ItemsSource = GameDataManager.Games;
         }
     }
 }

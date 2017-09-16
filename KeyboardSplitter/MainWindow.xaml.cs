@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.ComponentModel;
     using System.Diagnostics;
     using System.Linq;
@@ -13,6 +14,7 @@
     using System.Windows.Media.Animation;
     using System.Windows.Threading;
     using KeyboardSplitter.Commands;
+    using KeyboardSplitter.Controls;
     using KeyboardSplitter.Exceptions;
     using KeyboardSplitter.Managers;
     using KeyboardSplitter.Models;
@@ -173,6 +175,15 @@
                 catch (Exception e)
                 {
                     LogWriter.Write("Preset save failed! Exception details: " + Environment.NewLine + e);
+                }
+
+                try
+                {
+                    GameDataManager.WriteGameDataToFile();
+                }
+                catch (Exception e)
+                {
+                    LogWriter.Write("Game data save failed! Exception details: " + Environment.NewLine + e.ToString());
                 }
 
                 LogWriter.Write("Main window disposed");
@@ -505,6 +516,77 @@
         {
             var wind = new XinputSubTypesWindow();
             wind.ShowDialog();
+        }
+
+        private void OnEditGamesListClicked(object sender, RoutedEventArgs e)
+        {
+            var gameEditor = new GameEditor();
+            gameEditor.ShowDialog();
+        }
+
+        private void GamesSubmenuOpened(object sender, RoutedEventArgs e)
+        {
+            this.playGameMenuItem.Items.Clear();
+
+            foreach (var game in GameDataManager.Games)
+            {
+                game.GameAboutToStart -= this.OnGameAboutToStart;
+
+                if (game.Status == Enums.GameStatus.OK)
+                {
+                    var newItem = new MenuItem() { Header = game.GameTitle };
+                    newItem.Click += (ss, ee) => { game.Play(); };
+                    newItem.Icon = new Image() { Source = game.GameIcon, Width = 20, Height = 20 };
+                    game.GameAboutToStart += this.OnGameAboutToStart;
+                    this.playGameMenuItem.Items.Add(newItem);
+                }
+            }
+        }
+
+        private bool OnGameAboutToStart(Game game)
+        {
+            if (this.Splitter.EmulationManager.IsEmulationStarted)
+            {
+                Controls.MessageBox.Show("You must stop the emulation, before starting a game!", ApplicationInfo.AppName, MessageBoxButton.OK, MessageBoxImage.Error);
+                return false;
+            }
+
+            if (game == null)
+            {
+                return false;
+            }
+
+            if (game.Status != Enums.GameStatus.OK)
+            {
+                return false;
+            }
+
+            var slots = new ObservableCollection<SplitterCore.Emulation.IEmulationSlot>();
+            foreach (var slotData in game.SlotsData)
+            {
+                var keyboard = SplitterCore.Input.Keyboard.None;
+                var mouse = SplitterCore.Input.Mouse.None;
+
+                if (slotData.KeyboardHardwareId != string.Empty)
+                {
+                    keyboard = this.Splitter.InputManager.Keyboards.Find(x => x.HardwareID == slotData.KeyboardHardwareId);
+                }
+
+                if (slotData.MouseHardwareId != string.Empty)
+                {
+                    mouse = this.Splitter.InputManager.Mice.Find(x => x.HardwareID == slotData.MouseHardwareId);
+                }
+
+                var preset = PresetDataManager.CurrentPresets.First(x => x.Name == slotData.PresetName);
+                slots.Add(new EmulationSlot(slotData.SlotNumber, new XboxGamepad(slotData.GamepadUserIndex), keyboard, mouse, preset));
+            }
+
+            var inputManager = this.Splitter.InputManager;
+            var emulationManager = new EmulationManager(slots);
+            this.Splitter = new Splitter(inputManager, emulationManager);
+            this.Splitter.EmulationManager.Start(true);
+
+            return true;
         }
     }
 }

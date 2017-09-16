@@ -1,12 +1,21 @@
 ﻿<ui:CustomWindow x:Class="KeyboardSplitter.UI.GameEditor"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                  xmlns:my="clr-namespace:KeyboardSplitter"
-        xmlns:controls="clr-namespace:KeyboardSplitter.Controls"
-        xmlns:ui="clr-namespace:KeyboardSplitter.UI"
-        Title="GameEditor" Height="300" Width="300">
+                 xmlns:controls="clr-namespace:KeyboardSplitter.Controls"
+                 xmlns:ui="clr-namespace:KeyboardSplitter.UI"
+                 Title="Game Editor (not finished)"
+                 Height="300"
+                 Width="300"
+                 SizeToContent="WidthAndHeight">
     <Grid>
         <controls:GameList VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="5,5,5,45" />
-        <Button Content="Close" Width="70" Height="23" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="10" />
+        <Button Content="Close"
+                Width="70"
+                Height="23"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Bottom"
+                Margin="10"
+                IsCancel="True" />
     </Grid>
 </ui:CustomWindow>

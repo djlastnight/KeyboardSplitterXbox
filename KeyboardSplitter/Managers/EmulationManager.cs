@@ -72,21 +72,24 @@
             set { this.SetValue(IsEmulationStartedProperty, value); }
         }
 
-        public void Start()
+        public void Start(bool forced = false)
         {
-            if (this.lastStartOrStopTime == null)
+            if (!forced)
             {
+                if (this.lastStartOrStopTime == null)
+                {
+                    this.lastStartOrStopTime = DateTime.Now;
+                }
+                else
+                {
+                    if (DateTime.Now - this.lastStartOrStopTime < TimeSpan.FromSeconds(5))
+                    {
+                        throw new KeyboardSplitterExceptionBase("You should wait at least 5 seconds, between each emulation start/stop!");
+                    }
+                }
+
                 this.lastStartOrStopTime = DateTime.Now;
             }
-            else
-            {
-                if (DateTime.Now - this.lastStartOrStopTime < TimeSpan.FromSeconds(5))
-                {
-                    throw new KeyboardSplitterExceptionBase("You should wait at least 5 seconds, between each emulation start/stop!");
-                }
-            }
-
-            this.lastStartOrStopTime = DateTime.Now;
 
             try
             {
