@@ -33,6 +33,14 @@
                 GameData data = (GameData)serializer.Deserialize(reader);
                 foreach (var game in data.Games)
                 {
+                    foreach (var slotData in game.SlotsData)
+                    {
+                        if (slotData.PresetName == null)
+                        {
+                            slotData.PresetName = string.Empty;
+                        }
+                    }
+
                     game.UpdateStatus();
                 }
 

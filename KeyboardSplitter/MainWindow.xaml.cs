@@ -170,20 +170,20 @@
                 this.Splitter.Destroy();
                 try
                 {
-                    PresetDataManager.WritePresetDataToFile();
-                }
-                catch (Exception e)
-                {
-                    LogWriter.Write("Preset save failed! Exception details: " + Environment.NewLine + e);
-                }
-
-                try
-                {
                     GameDataManager.WriteGameDataToFile();
                 }
                 catch (Exception e)
                 {
                     LogWriter.Write("Game data save failed! Exception details: " + Environment.NewLine + e.ToString());
+                }
+
+                try
+                {
+                    PresetDataManager.WritePresetDataToFile();
+                }
+                catch (Exception e)
+                {
+                    LogWriter.Write("Preset save failed! Exception details: " + Environment.NewLine + e);
                 }
 
                 LogWriter.Write("Main window disposed");
@@ -530,63 +530,30 @@
 
             foreach (var game in GameDataManager.Games)
             {
-                game.GameAboutToStart -= this.OnGameAboutToStart;
-
                 if (game.Status == Enums.GameStatus.OK)
                 {
                     var newItem = new MenuItem() { Header = game.GameTitle };
-                    newItem.Click += (ss, ee) => { game.Play(); };
+                    newItem.Click += (ss, ee) =>
+                    {
+                        try
+                        {
+                            game.TryStart();
+                        }
+                        catch (Exception ex)
+                        {
+                            Controls.MessageBox.Show(
+                                ex.Message,
+                                ApplicationInfo.AppName,
+                                MessageBoxButton.OK,
+                                MessageBoxImage.Error);
+                        }
+                    };
+
                     newItem.Icon = new Image() { Source = game.GameIcon, Width = 20, Height = 20 };
-                    game.GameAboutToStart += this.OnGameAboutToStart;
+                    newItem.ToolTip = game.GameNotes;
                     this.playGameMenuItem.Items.Add(newItem);
                 }
             }
-        }
-
-        private bool OnGameAboutToStart(Game game)
-        {
-            if (this.Splitter.EmulationManager.IsEmulationStarted)
-            {
-                Controls.MessageBox.Show("You must stop the emulation, before starting a game!", ApplicationInfo.AppName, MessageBoxButton.OK, MessageBoxImage.Error);
-                return false;
-            }
-
-            if (game == null)
-            {
-                return false;
-            }
-
-            if (game.Status != Enums.GameStatus.OK)
-            {
-                return false;
-            }
-
-            var slots = new ObservableCollection<SplitterCore.Emulation.IEmulationSlot>();
-            foreach (var slotData in game.SlotsData)
-            {
-                var keyboard = SplitterCore.Input.Keyboard.None;
-                var mouse = SplitterCore.Input.Mouse.None;
-
-                if (slotData.KeyboardHardwareId != string.Empty)
-                {
-                    keyboard = this.Splitter.InputManager.Keyboards.Find(x => x.HardwareID == slotData.KeyboardHardwareId);
-                }
-
-                if (slotData.MouseHardwareId != string.Empty)
-                {
-                    mouse = this.Splitter.InputManager.Mice.Find(x => x.HardwareID == slotData.MouseHardwareId);
-                }
-
-                var preset = PresetDataManager.CurrentPresets.First(x => x.Name == slotData.PresetName);
-                slots.Add(new EmulationSlot(slotData.SlotNumber, new XboxGamepad(slotData.GamepadUserIndex), keyboard, mouse, preset));
-            }
-
-            var inputManager = this.Splitter.InputManager;
-            var emulationManager = new EmulationManager(slots);
-            this.Splitter = new Splitter(inputManager, emulationManager);
-            this.Splitter.EmulationManager.Start(true);
-
-            return true;
         }
     }
 }

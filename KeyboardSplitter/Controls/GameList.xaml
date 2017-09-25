@@ -9,7 +9,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
-        <ListView SelectionMode="Single" Name="listView" Loaded="ListViewLoaded">
+        <ListView SelectionMode="Single" Name="listView" Loaded="ListViewLoaded" Margin="0,0,0,50">
             <ListView.Resources>
                 <converters:GameStatusToBrushConverter x:Key="statusToBrushConverter" />
                 <converters:GameStatusToStringConverter x:Key="statusToStringConverter" />
@@ -20,33 +20,46 @@
                     <GridViewColumn Header="Status" Width="40">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <Ellipse Width="20"
-                                         Height="20"
+                                <Ellipse Width="15"
+                                         Height="15"
                                          Fill="{Binding Status, Converter={StaticResource statusToBrushConverter}}"
                                          ToolTip="{Binding Status, Converter={StaticResource statusToStringConverter}}" />
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
-                    <GridViewColumn Header="Icon" Width="30">
+                    <GridViewColumn Header="Icon"
+                                    Width="40">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <Image Source="{Binding GameIcon}" />
+                                <Image Source="{Binding GameIcon}" Width="25" Height="25" />
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
                     <GridViewColumn Header="Title" DisplayMemberBinding="{Binding GameTitle}" />
                     <GridViewColumn Header="Notes" DisplayMemberBinding="{Binding GameNotes}" />
                     <GridViewColumn Header="Path" DisplayMemberBinding="{Binding GamePath}" />
-                    <GridViewColumn Header="Action" Width="120">
+                    <GridViewColumn Header="Action" Width="160">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
-                                    <Button Width="50" Height="23" Content="Edit" Margin="1" IsEnabled="False" />
+                                    <Button Width="50" Height="23" Content="Edit" Margin="1" Click="OnEditButtonClicked" Tag="{Binding}" />
                                     <Button Width="50"
                                             Height="23"
                                             Content="Play"
                                             Margin="1"
-                                            IsEnabled="{Binding Status, Converter={StaticResource statusToBoolConverter}}" />
+                                            IsEnabled="{Binding Status, Converter={StaticResource statusToBoolConverter}}"
+                                            Click="OnPlayButtonClicked"
+                                            Tag="{Binding}"/>
+                                    <Button Width="23"
+                                            Height="23"
+                                            ToolTip="Remove game"
+                                            Margin="15,1,1,1"
+                                            Click="OnRemoveButtonClicked"
+                                            Tag="{Binding}">
+                                        <StackPanel>
+                                            <Image Source="/KeyboardSplitter;component/Resources/delete.png" />
+                                        </StackPanel>
+                                    </Button>
                                 </StackPanel>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
@@ -54,6 +67,41 @@
                 </GridView>
             </ListView.View>
         </ListView>
+        
+        <!-- Watermark textblock -->
+        <TextBlock Text="Type here to filter games"
+                   Height="23"
+                   VerticalAlignment="Bottom"
+                   HorizontalAlignment="Stretch"
+                   Margin="10"
+                   Opacity="0.5"
+                   FontStyle="Italic">
+            <TextBlock.Style>
+                <Style TargetType="TextBlock">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding ElementName=filterTextBox, Path=IsFocused}" Value="true">
+                            <Setter Property="Visibility" Value="Hidden" />
+                        </DataTrigger>
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding ElementName=filterTextBox, Path=IsFocused}" Value="false" />
+                                <Condition Binding="{Binding ElementName=filterTextBox, Path=Text.IsEmpty}" Value="true" />
+                            </MultiDataTrigger.Conditions>
+                            <MultiDataTrigger.Setters>
+                                <Setter Property="Visibility" Value="Visible" />
+                            </MultiDataTrigger.Setters>
+                        </MultiDataTrigger>
+                    </Style.Triggers>
+                    <Setter Property="Visibility" Value="Hidden" />
+                </Style>
+            </TextBlock.Style>
+        </TextBlock>
+        <TextBox Name="filterTextBox"
+                 Height="23"
+                 VerticalAlignment="Bottom"
+                 HorizontalAlignment="Stretch"
+                 Margin="10"
+                 Background="Transparent"
+                 TextChanged="OnFilterTextBoxTextChanged" />
     </Grid>
-
 </UserControl>

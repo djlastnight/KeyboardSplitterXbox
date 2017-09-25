@@ -4,12 +4,23 @@
                  xmlns:my="clr-namespace:KeyboardSplitter"
                  xmlns:controls="clr-namespace:KeyboardSplitter.Controls"
                  xmlns:ui="clr-namespace:KeyboardSplitter.UI"
-                 Title="Game Editor (not finished)"
+                 xmlns:converter="clr-namespace:KeyboardSplitter.Converters"
+                 Title="Game Editor"
                  Height="300"
                  Width="300"
                  SizeToContent="WidthAndHeight">
+    <ui:CustomWindow.Resources>
+        <converter:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+    </ui:CustomWindow.Resources>
     <Grid>
-        <controls:GameList VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="5,5,5,45" />
+        <controls:GameList x:Name="gameList" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="5,5,5,45"/>
+        <Button Content="Add game"
+                Width="70"
+                Height="23"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Bottom"
+                Margin="10"
+                Click="OnAddGameClicked" />
         <Button Content="Close"
                 Width="70"
                 Height="23"

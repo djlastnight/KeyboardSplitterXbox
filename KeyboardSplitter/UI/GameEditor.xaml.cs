@@ -9,5 +9,11 @@
         {
             this.InitializeComponent();
         }
+
+        private void OnAddGameClicked(object sender, System.Windows.RoutedEventArgs e)
+        {
+            var editor = new GameItemEditor();
+            editor.ShowDialog();
+        }
     }
 }

@@ -102,6 +102,7 @@
     <Compile Include="Controls\ScrollingTextBox.cs" />
     <Compile Include="Converters\BooleanToVisibilityConverter.cs" />
     <Compile Include="Converters\BoolToReversedBoolConverter.cs" />
+    <Compile Include="Converters\DebugConverter.cs" />
     <Compile Include="Converters\GameStatusToBrushConverter.cs" />
     <Compile Include="Converters\GameStatusToStringConverter.cs" />
     <Compile Include="Converters\LedNumberToBrushConverter.cs" />
@@ -128,7 +129,9 @@
     <Compile Include="Helpers\SplitterHelper.cs" />
     <Compile Include="Helpers\TextMeasureHelper.cs" />
     <Compile Include="Managers\GameDataManager.cs" />
-    <Compile Include="Models\Game.cs" />
+    <Compile Include="Models\Game.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Models\GameData.cs" />
     <Compile Include="Models\SlotData.cs" />
     <Compile Include="UI\GameEditor.xaml.cs">

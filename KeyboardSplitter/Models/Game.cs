@@ -1,15 +1,15 @@
 ﻿namespace KeyboardSplitter.Models
 {
     using System;
-    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.ComponentModel;
     using System.Diagnostics;
     using System.Drawing;
     using System.IO;
     using System.Linq;
-    using System.Windows;
     using System.Windows.Media;
     using System.Xml.Serialization;
+    using KeyboardSplitter.Controls;
     using KeyboardSplitter.Enums;
     using KeyboardSplitter.Helpers;
     using KeyboardSplitter.Presets;
@@ -28,13 +28,13 @@
 
         private string gamePath;
 
-        private List<SlotData> slotsData;
+        private ObservableCollection<SlotData> slotsData;
 
         public Game()
         {
         }
 
-        public Game(string title, string path, string gameNotes, List<SlotData> slotsData)
+        public Game(string title, string path, string gameNotes, ObservableCollection<SlotData> slotsData)
             : this()
         {
             if (title == null)
@@ -58,11 +58,7 @@
             this.GamePath = path;
         }
 
-        public delegate bool GameStartHandler(Game game);
-
         public event PropertyChangedEventHandler PropertyChanged;
-
-        public event GameStartHandler GameAboutToStart;
 
         [XmlIgnore]
         public ImageSource GameIcon
@@ -141,7 +137,7 @@
         }
 
         [XmlElement("Slot")]
-        public List<SlotData> SlotsData
+        public ObservableCollection<SlotData> SlotsData
         {
             get
             {
@@ -155,59 +151,73 @@
             }
         }
 
-        public void UpdateStatus()
+        public void TryStart()
         {
-            this.Status = this.GetStatus();
-        }
+            var splitter = Helpers.SplitterHelper.TryFindSplitter();
+            if (splitter == null)
+            {
+                throw new Exception("Unable to find the splitter");
+            }
 
-        public void Play()
-        {
+            if (splitter.EmulationManager == null)
+            {
+                throw new Exception("Splitter's Emulation manager is null");
+            }
+
+            if (splitter.EmulationManager.IsEmulationStarted)
+            {
+                throw new Exception("You must stop emulation, before starting a game!");
+            }
+
             if (!File.Exists(this.gamePath))
             {
-                Controls.MessageBox.Show(
-                    this.gamePath + " does not exsists!",
-                    ApplicationInfo.AppName,
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Error);
-
-                return;
+                throw new Exception("Can not run a game with non exsisting exe file!");
             }
+
+            this.UpdateStatus();
 
             if (this.status != GameStatus.OK)
             {
                 var errorMessage = new Converters.GameStatusToStringConverter().Convert(this.status, typeof(string), null, null);
-                Controls.MessageBox.Show(
-                    "Can not start the game, because of the following error: " + errorMessage,
-                    ApplicationInfo.AppName,
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Error);
-
-                return;
+                throw new Exception("Can not run the game: " + errorMessage);
             }
 
-            if (this.GameAboutToStart == null)
+            Process.Start(this.gamePath);
+
+            var slots = new ObservableCollection<SplitterCore.Emulation.IEmulationSlot>();
+            foreach (var slotData in this.SlotsData)
             {
-                throw new InvalidOperationException("You must subscribe to GameAboutToStart event, before calling Play()");
+                var keyboard = SplitterCore.Input.Keyboard.None;
+                var mouse = SplitterCore.Input.Mouse.None;
+
+                if (slotData.KeyboardHardwareId != string.Empty)
+                {
+                    keyboard = splitter.InputManager.Keyboards.Find(x => x.HardwareID == slotData.KeyboardHardwareId);
+                }
+
+                if (slotData.MouseHardwareId != string.Empty)
+                {
+                    mouse = splitter.InputManager.Mice.Find(x => x.HardwareID == slotData.MouseHardwareId);
+                }
+
+                var preset = PresetDataManager.CurrentPresets.First(x => x.Name == slotData.PresetName);
+                slots.Add(new EmulationSlot(slotData.SlotNumber, new XboxGamepad(slotData.GamepadUserIndex), keyboard, mouse, preset));
             }
 
-            bool startTheGame = this.GameAboutToStart(this);
-
-            if (startTheGame)
+            var mainWindow = App.Current.MainWindow as MainWindow;
+            mainWindow.SlotsCount = slots.Count;
+            splitter.EmulationManager.Slots.Clear();
+            foreach (var slot in slots)
             {
-                try
-                {
-                    Process.Start(this.gamePath);
-                }
-                catch (Exception ex)
-                {
-                    LogWriter.Write(ex.ToString());
-                    Controls.MessageBox.Show(
-                        "Unable to start " + this.gameTitle + ". See " + LogWriter.GetLogFileName + " for more details!",
-                        ApplicationInfo.AppName,
-                        MessageBoxButton.OK,
-                        MessageBoxImage.Error);
-                }
+                splitter.EmulationManager.Slots.Add(slot);
             }
+
+            splitter.EmulationManager.Start(true);
+        }
+
+        public void UpdateStatus()
+        {
+            this.Status = this.GetStatus();
         }
 
         public override string ToString()
