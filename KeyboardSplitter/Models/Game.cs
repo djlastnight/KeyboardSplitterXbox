@@ -182,7 +182,9 @@
                 throw new Exception("Can not run the game: " + errorMessage);
             }
 
-            Process.Start(this.gamePath);
+            var process = Process.Start(this.gamePath);
+            process.EnableRaisingEvents = true;
+            process.Exited += OnProcessExited;
 
             var slots = new ObservableCollection<SplitterCore.Emulation.IEmulationSlot>();
             foreach (var slotData in this.SlotsData)
@@ -230,6 +232,35 @@
             if (this.PropertyChanged != null)
             {
                 this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+
+        private void OnProcessExited(object sender, EventArgs e)
+        {
+            if (App.Current != null && App.Current.Dispatcher != null)
+            {
+                App.Current.Dispatcher.Invoke((Action)delegate
+                {
+                    var splitter = SplitterHelper.TryFindSplitter();
+                    if (splitter.EmulationManager == null)
+                    {
+                        return;
+                    }
+
+                    if (splitter.EmulationManager.IsEmulationStarted)
+                    {
+                        var result = Controls.MessageBox.Show(
+                            "'" + this.gameTitle + "' has been closed. Do you want to stop the emulation?",
+                            ApplicationInfo.AppName,
+                            System.Windows.MessageBoxButton.YesNo,
+                            System.Windows.MessageBoxImage.Question);
+
+                        if (result == System.Windows.MessageBoxResult.Yes)
+                        {
+                            splitter.EmulationManager.Stop();
+                        }
+                    }
+                });
             }
         }
 

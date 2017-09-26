@@ -46,7 +46,7 @@
                     <Button Grid.Row="2" Grid.Column="2" Content="Browse" Margin="5" Padding="0" Click="OnBrowseButtonClicked" />
                 </Grid>
             </GroupBox>
-            <GroupBox Name="slotsGroupBox" Padding="15" Margin="10" Header="Slots data">
+            <GroupBox Name="slotsGroupBox" IsEnabled="False" Padding="15" Margin="10" Header="Slots data">
                 <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" MaxHeight="400">
                     <WrapPanel>
                         <ItemsControl ItemsSource="{Binding SlotsData}">

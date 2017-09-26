@@ -50,6 +50,10 @@
             KeysHelper.CheckInterceptionKeysForDuplicates();
             this.KeyboardFilterMode = keyboardFilter;
             this.MouseFilterMode = mouseFilter;
+            if (MouseFilterMode == Enums.MouseFilterMode.None)
+            {
+                Interception.DisableMouseEvents = true;
+            }
 
             this.hardwareId = new StringBuilder(Interception.HardwareIdSize);
 
@@ -95,6 +99,18 @@
         public event EventHandler<InterceptionEventArgs> InputActivity;
 
         public event EventHandler<InterceptionDeviceEventArgs> InputDeviceConnectionChanged;
+
+        public static bool DisableMouseEvents
+        {
+            get;
+            set;
+        }
+
+        public static bool SwallowMouse
+        {
+            get;
+            set;
+        }
 
         public static List<InterceptionDevice> ConnectedInputDevices
         {
@@ -578,6 +594,19 @@
             while (NativeMethods.Receive(this.context, this.deviceId = NativeMethods.Wait(this.context), ref stroke, 1) > 0)
             {
                 bool isKeyboard = NativeMethods.IsKeyboard(this.deviceId) > 0;
+
+                if (!isKeyboard)
+                {
+                    if (Interception.DisableMouseEvents)
+                    {
+                        if (!Interception.SwallowMouse)
+                        {
+                            this.Send(this.context, this.deviceId, ref stroke, 1);
+                        }
+
+                        continue;
+                    }
+                }
 
                 // Checking if the input device is already in the device list. If not - adding it.
                 if (this.devices.ContainsKey(this.deviceId))

@@ -23,6 +23,31 @@
 
         static App()
         {
+#if !DEBUG
+            if (System.Diagnostics.Debugger.IsAttached)
+            {
+                var warningMessage = "There is debugger attached to the application's process!";
+                warningMessage += Environment.NewLine;
+                warningMessage += "If the debugger or application itself blocks the main UI thread,";
+                warningMessage += Environment.NewLine;
+                warningMessage += "interception driver callback will never respond and as result";
+                warningMessage += Environment.NewLine;
+                warningMessage += "this will block all keyboards and mice until system reboot!";
+                warningMessage += Environment.NewLine;
+                warningMessage += Environment.NewLine;
+                warningMessage += "Are you sure that you want to continue execution?";
+                var result = System.Windows.MessageBox.Show(
+                    warningMessage,
+                    ApplicationInfo.AppName,
+                    MessageBoxButton.YesNo,
+                    MessageBoxImage.Question);
+
+                if (result != MessageBoxResult.Yes)
+                {
+                    Environment.Exit(0);
+                }
+            }
+#endif
             App.StartLogging();
             App.CheckForObsoleteOS();
             App.LoadAssemblies();

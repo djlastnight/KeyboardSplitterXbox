@@ -514,12 +514,34 @@
 
         private void OnControllerSubtypesClicked(object sender, RoutedEventArgs e)
         {
+            if (this.Splitter.EmulationManager.IsEmulationStarted)
+            {
+                Controls.MessageBox.Show(
+                    "You can not change controller subtypes, when emulation is running!",
+                    ApplicationInfo.AppName,
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+
+                return;
+            }
+
             var wind = new XinputSubTypesWindow();
             wind.ShowDialog();
         }
 
         private void OnEditGamesListClicked(object sender, RoutedEventArgs e)
         {
+            if (this.Splitter.EmulationManager.IsEmulationStarted)
+            {
+                Controls.MessageBox.Show(
+                    "You can not edit games, when emulation is running!",
+                    ApplicationInfo.AppName,
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+
+                return;
+            }
+
             var gameEditor = new GameEditor();
             gameEditor.ShowDialog();
         }
@@ -554,6 +576,8 @@
                     this.playGameMenuItem.Items.Add(newItem);
                 }
             }
+
+            this.playGameMenuItem.IsEnabled = this.playGameMenuItem.Items.Count != 0;
         }
     }
 }

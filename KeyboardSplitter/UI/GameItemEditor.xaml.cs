@@ -5,7 +5,6 @@
     using System.Collections.ObjectModel;
     using System.Linq;
     using System.Windows;
-    using System.Windows.Forms;
     using KeyboardSplitter.Managers;
     using KeyboardSplitter.Models;
     using KeyboardSplitter.Presets;
@@ -89,8 +88,8 @@
 
         private void OnBrowseButtonClicked(object sender, RoutedEventArgs e)
         {
+            var dialog = new Microsoft.Win32.OpenFileDialog();
             var game = this.DataContext as Game;
-            OpenFileDialog dialog = new OpenFileDialog();
             if (game != null && game.GamePath != null)
             {
                 dialog.InitialDirectory = System.IO.Path.GetDirectoryName(game.GamePath);
@@ -98,18 +97,20 @@
             }
 
             dialog.AddExtension = true;
-            dialog.AutoUpgradeEnabled = true;
+            //dialog.AutoUpgradeEnabled = true;
             dialog.CheckFileExists = true;
             dialog.CheckPathExists = true;
             dialog.DefaultExt = "*.exe";
             dialog.DereferenceLinks = true;
             dialog.Filter = "Executable file (*.exe)|*.exe";
             dialog.Multiselect = false;
-            dialog.SupportMultiDottedExtensions = false;
+            //dialog.SupportMultiDottedExtensions = false;
             dialog.Title = "Choose game or application";
             dialog.ValidateNames = true;
+            Interceptor.Interception.DisableMouseEvents = true;
             var result = dialog.ShowDialog();
-            if (result == System.Windows.Forms.DialogResult.OK || result == System.Windows.Forms.DialogResult.Yes)
+            Interceptor.Interception.DisableMouseEvents = false;
+            if (result == true)
             {
                 var ext = System.IO.Path.GetExtension(dialog.FileName);
                 if (ext.ToLower() != ".exe")

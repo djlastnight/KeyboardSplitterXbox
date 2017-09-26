@@ -166,6 +166,11 @@
 
         private void OnMouseMove(object sender, MouseEventArgs e)
         {
+            if (e.Handled)
+            {
+                return;
+            }
+
             if (e.LeftButton == MouseButtonState.Pressed)
             {
                 if (this.parent != null)
@@ -182,7 +187,9 @@
                         this.parent.Left = e.MouseDevice.GetPosition(this.parent).X - (x / zoomFactor);
                     }
 
+                    Interceptor.Interception.DisableMouseEvents = true;
                     this.parent.DragMove();
+                    Interceptor.Interception.DisableMouseEvents = false;
                 }
             }
         }

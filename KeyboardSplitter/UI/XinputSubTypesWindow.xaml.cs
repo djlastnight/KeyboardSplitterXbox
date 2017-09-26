@@ -7,9 +7,9 @@
     using System.Reflection;
     using System.Windows;
     using System.Windows.Documents;
-    using System.Windows.Forms;
     using KeyboardSplitter.Helpers;
     using XinputWrapper.Enums;
+    using Microsoft.Win32;
 
     /// <summary>
     /// Interaction logic for ManageSubTypes.xaml
@@ -25,18 +25,20 @@
         {
             OpenFileDialog dialog = new OpenFileDialog();
             dialog.AddExtension = true;
-            dialog.AutoUpgradeEnabled = true;
+            //dialog.AutoUpgradeEnabled = true;
             dialog.CheckFileExists = true;
             dialog.CheckPathExists = true;
             dialog.DefaultExt = "*.exe";
             dialog.DereferenceLinks = true;
             dialog.Filter = "Executable file (*.exe)|*.exe";
             dialog.Multiselect = false;
-            dialog.SupportMultiDottedExtensions = false;
+            //dialog.SupportMultiDottedExtensions = false;
             dialog.Title = "Choose game or application";
             dialog.ValidateNames = true;
-            var result = dialog.ShowDialog();
-            if (result == System.Windows.Forms.DialogResult.OK || result == System.Windows.Forms.DialogResult.Yes)
+            Interceptor.Interception.DisableMouseEvents = true;
+            var result = dialog.ShowDialog(this);
+            Interceptor.Interception.DisableMouseEvents = false;
+            if (result == true)
             {
                 var ext = System.IO.Path.GetExtension(dialog.FileName);
                 if (ext.ToLower() != ".exe")

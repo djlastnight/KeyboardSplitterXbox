@@ -64,9 +64,7 @@
 
             this.interceptor.InputActivity += this.OnInterceptionInputActivity;
             this.interceptor.InputDeviceConnectionChanged += this.OnInterceptionInputDeviceConnectionChanged;
-            LogWriter.Write("Gathering keyboards");
             this.Keyboards = this.GetInterceptionKeyboards();
-            LogWriter.Write("Gathering mice");
             this.Mice = this.GetInterceptionMice();
         }
 

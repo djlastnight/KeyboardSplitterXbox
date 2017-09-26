@@ -30,7 +30,7 @@
             : base()
         {
             this.WindowStyle = System.Windows.WindowStyle.None;
-            this.ResizeMode = System.Windows.ResizeMode.CanResizeWithGrip;
+            //this.ResizeMode = System.Windows.ResizeMode.CanResizeWithGrip;
             this.Icon = new BitmapImage(new Uri(@"pack://application:,,,/KeyboardSplitter;component/Resources/icon.ico", UriKind.RelativeOrAbsolute));
             this.Loaded += this.OnLoaded;
         }
@@ -127,8 +127,17 @@
             base.OnSourceInitialized(e);
             if (AeroHelper.IsAeroEnabled)
             {
-                AeroHelper.ExtendGlassFrame(this, new Thickness(0, CustomTitlebar.TitlebarHeightInPixels + 4, 0, 0));
+                AeroHelper.ExtendGlassFrame(this, new Thickness(0, CustomTitlebar.TitlebarHeightInPixels, 0, 0));
             }
+        }
+
+        protected override void OnPreviewMouseMove(System.Windows.Input.MouseEventArgs e)
+        {
+            Interceptor.Interception.DisableMouseEvents = true;
+            Interceptor.Interception.SwallowMouse = true;
+            base.OnPreviewMouseMove(e);
+            Interceptor.Interception.DisableMouseEvents = false;
+            Interceptor.Interception.SwallowMouse = false;
         }
 
         private void OnAeroColorChanged(object sender, EventArgs e)
