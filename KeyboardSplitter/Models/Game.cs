@@ -133,6 +133,7 @@
                 this.gamePath = value;
                 this.OnPropertyChanged("GamePath");
                 this.GameIcon = this.RetrieveGameIcon();
+                this.RetrieveGameDetails();
             }
         }
 
@@ -335,6 +336,26 @@
             catch (Exception)
             {
                 return null;
+            }
+        }
+
+        private void RetrieveGameDetails()
+        {
+            if (this.gamePath == null || !File.Exists(this.gamePath))
+            {
+                return;
+            }
+
+            var fileInfo = FileVersionInfo.GetVersionInfo(this.gamePath);
+
+            if (string.IsNullOrEmpty(this.gameTitle))
+            {
+                this.GameTitle = fileInfo.ProductName;
+            }
+
+            if (string.IsNullOrEmpty(this.gameNotes))
+            {
+                this.GameNotes = fileInfo.FileDescription;
             }
         }
     }

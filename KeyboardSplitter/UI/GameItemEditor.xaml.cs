@@ -124,6 +124,8 @@
                     return;
                 }
 
+                game.GameTitle = null;
+                game.GameNotes = null;
                 game.GamePath = dialog.FileName;
                 this.slotsGroupBox.IsEnabled = true;
             }
