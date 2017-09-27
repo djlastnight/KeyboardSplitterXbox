@@ -171,20 +171,12 @@
                 this.Splitter.Destroy();
                 try
                 {
+                    LogWriter.Write("Saving game data");
                     GameDataManager.WriteGameDataToFile();
                 }
                 catch (Exception e)
                 {
                     LogWriter.Write("Game data save failed! Exception details: " + Environment.NewLine + e.ToString());
-                }
-
-                try
-                {
-                    PresetDataManager.WritePresetDataToFile();
-                }
-                catch (Exception e)
-                {
-                    LogWriter.Write("Preset save failed! Exception details: " + Environment.NewLine + e);
                 }
 
                 LogWriter.Write("Main window disposed");
@@ -527,6 +519,8 @@
             }
 
             var wind = new XinputSubTypesWindow();
+            wind.Owner = this;
+            wind.WindowStartupLocation = WindowStartupLocation.CenterOwner;
             wind.ShowDialog();
         }
 
@@ -544,6 +538,8 @@
             }
 
             var gameEditor = new GameEditor();
+            gameEditor.Owner = this;
+            gameEditor.WindowStartupLocation = WindowStartupLocation.CenterOwner;
             gameEditor.ShowDialog();
         }
 
@@ -615,21 +611,20 @@
                 return;
             }
 
-            bool arePresetsCurrentVersion = false;
             List<Preset> presets = new List<Preset>();
             Exception ex = null;
             try
             {
                 presets = PresetData.Deserialize(dialog.FileName).Presets.ToList();
-                arePresetsCurrentVersion = true;
             }
             catch (Exception currentVersionException)
             {
                 ex = currentVersionException;
             }
 
-            if (!arePresetsCurrentVersion)
+            if (ex != null)
             {
+                ex = null;
                 try
                 {
                     presets = PresetUpgrader.GetUpgradedPresets(dialog.FileName).ToList();
@@ -641,7 +636,73 @@
 
             }
 
-            // TODO: Implement me
+            if (ex != null)
+            {
+                LogWriter.Write(ex.ToString());
+                Controls.MessageBox.Show(
+                    "Failed to load presets! See " + LogWriter.GetLogFileName + " for more details",
+                    ApplicationInfo.AppName,
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+
+                return;
+            }
+
+            var presetNames = string.Empty;
+            foreach (var preset in presets)
+            {
+                presetNames += Environment.NewLine + preset.Name;
+                var dublicate = PresetDataManager.FindPreset(preset.Name);
+                if (dublicate != null)
+                {
+                    presetNames += " [Will be overwritten]";
+                }
+            }
+
+            var confirm = Controls.MessageBox.Show(
+                "Are you sure that you want to add/overwrite the following presets?\r\n" + presetNames,
+                ApplicationInfo.AppName,
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Question);
+
+            if (confirm == MessageBoxResult.Yes)
+            {
+                foreach (var preset in presets)
+                {
+                    var dublicateToDelete = PresetDataManager.FindPreset(preset.Name);
+                    if (dublicateToDelete != null)
+                    {
+                        PresetDataManager.DeletePreset(dublicateToDelete);
+                    }
+
+                    PresetDataManager.AddNewPreset(preset);
+                }
+            }
+        }
+
+        private void OnExportPresetsClicked(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                PresetDataManager.WritePresetDataToFile(removeImuttablePresets: false);
+            }
+            catch (Exception ex)
+            {
+                LogWriter.Write(ex.ToString());
+                Controls.MessageBox.Show(
+                    "Presets export failed! Please see " + LogWriter.GetLogFileName + " for details",
+                    ApplicationInfo.AppName,
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+
+                return;
+            }
+
+            Controls.MessageBox.Show(
+                "Presets successfully exported to " + PresetDataManager.PresetsFilename,
+                ApplicationInfo.AppName,
+                MessageBoxButton.OK,
+                MessageBoxImage.Information);
         }
     }
 }

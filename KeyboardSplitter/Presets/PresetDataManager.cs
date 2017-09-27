@@ -9,7 +9,7 @@
 
     public static class PresetDataManager
     {
-        private const string PresetsFilename = "splitter_presets.xml";
+        public const string PresetsFilename = "splitter_presets.xml";
 
         private const string PresetsBackupFilename = "splitter_presets_backup.xml";
 
@@ -93,9 +93,9 @@
             return data;
         }
 
-        public static void WritePresetDataToFile()
+        public static void WritePresetDataToFile(bool removeImuttablePresets = true)
         {
-            PresetDataManager.data.Serialize(PresetsFilename);
+            PresetDataManager.data.Serialize(PresetsFilename, removeImuttablePresets);
         }
 
         public static void AddNewPreset(Preset preset)
@@ -154,6 +154,11 @@
                 var presetSerialized = preset.ToXml();
                 return origialSerialized != presetSerialized;
             }
+        }
+
+        public static Preset FindPreset(string presetName)
+        {
+            return PresetDataManager.CurrentPresets.FirstOrDefault(x => x.Name.ToLower() == presetName.ToLower());
         }
     }
 }

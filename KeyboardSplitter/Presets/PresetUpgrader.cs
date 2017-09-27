@@ -1,5 +1,7 @@
 ﻿namespace KeyboardSplitter.Presets
 {
+    using SplitterCore.Input;
+    using SplitterCore.Preset;
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
@@ -12,13 +14,48 @@
     {
         public static IEnumerable<Preset> GetUpgradedPresets(string versionOneXmlFileLocation)
         {
-            var data = PresetDataVersionOne.Deserialize(versionOneXmlFileLocation);
-            return data.Presets;
+            var xmlText = File.ReadAllText(versionOneXmlFileLocation);
+            var correctedXmlText = xmlText.Replace("LeftTrigger", "Left").Replace("RightTrigger", "Right");
+            var upgraded = new List<Preset>();
+            var oldData = PresetDataVersionOne.Deserialize(correctedXmlText);
+            foreach (var oldPreset in oldData.Presets)
+            {
+                var preset = new Preset();
+                preset.Name = oldPreset.Name;
+                foreach (var axis in oldPreset.Axes)
+                {
+                    preset.Axes.Add(new PresetAxis((uint)axis.Axis, (short)axis.Position, (InputKey)Enum.Parse(typeof(InputKey), axis.KeyboardKey)));
+                }
+
+                foreach (var button in oldPreset.Buttons)
+                {
+                    preset.Buttons.Add(new PresetButton((uint)button.Button, (InputKey)Enum.Parse(typeof(InputKey), button.KeyboardKey)));
+                }
+
+                foreach (var trigger in oldPreset.Triggers)
+                {
+                    preset.Triggers.Add(new PresetTrigger((uint)trigger.Trigger, (InputKey)Enum.Parse(typeof(InputKey), trigger.KeyboardKey)));
+                }
+
+                foreach (var pov in oldPreset.Povs)
+                {
+                    preset.Dpads.Add(new PresetDpad((int)pov.Direction, (InputKey)Enum.Parse(typeof(InputKey), pov.KeyboardKey)));
+                }
+
+                foreach (var custom in oldPreset.CustomFunctions)
+                {
+                    preset.CustomFunctions.Add(new PresetCustom((uint)custom.Function, (InputKey)Enum.Parse(typeof(InputKey), custom.KeyboardKey)));
+                }
+
+                upgraded.Add(preset);
+            }
+
+            return upgraded;
         }
 
         [Serializable]
         [XmlType("preset")]
-        internal class PresetVersionOne
+        public class PresetVersionOne
         {
             public PresetVersionOne()
             {
@@ -50,7 +87,7 @@
 
         [Serializable]
         [XmlType("axis")]
-        internal class PresetAxisVersionOne
+        public class PresetAxisVersionOne
         {
             public PresetAxisVersionOne()
             {
@@ -86,7 +123,7 @@
 
         [Serializable]
         [XmlType("button")]
-        internal class PresetButtonVersionOne
+        public class PresetButtonVersionOne
         {
             public PresetButtonVersionOne()
             {
@@ -117,7 +154,7 @@
 
         [Serializable]
         [XmlType("custom")]
-        internal class PresetCustomVersionOne
+        public class PresetCustomVersionOne
         {
             public PresetCustomVersionOne()
             {
@@ -148,7 +185,7 @@
 
         [Serializable]
         [XmlType("dpad")]
-        internal class PresetDpadVersionOne
+        public class PresetDpadVersionOne
         {
             public PresetDpadVersionOne()
             {
@@ -179,7 +216,7 @@
 
         [Serializable]
         [XmlType("trigger")]
-        internal class PresetTriggerVersionOne
+        public class PresetTriggerVersionOne
         {
             public PresetTriggerVersionOne()
             {
@@ -210,29 +247,23 @@
 
         [Serializable]
         [XmlType("preset_data")]
-        internal class PresetDataVersionOne
+        public class PresetDataVersionOne
         {
             public PresetDataVersionOne()
             {
-                this.Presets = new ObservableCollection<Preset>();
+                this.Presets = new ObservableCollection<PresetVersionOne>();
             }
 
             [XmlElement("preset")]
-            public ObservableCollection<Preset> Presets { get; set; }
+            public ObservableCollection<PresetVersionOne> Presets { get; set; }
 
-            public static PresetDataVersionOne Deserialize(string xmlFileLocation)
+            public static PresetDataVersionOne Deserialize(string xmlText)
             {
-                if (!File.Exists(xmlFileLocation))
-                {
-                    throw new FileNotFoundException(xmlFileLocation);
-                }
-
                 var serializer = new XmlSerializer(typeof(PresetDataVersionOne));
-                using (var fileStream = new FileStream(xmlFileLocation, FileMode.Open))
+
+                using (var reader = new StringReader(xmlText))
                 {
-                    var reader = new XmlTextReader(fileStream);
-                    PresetDataVersionOne data = (PresetDataVersionOne)serializer.Deserialize(reader);
-                    return data;
+                    return (PresetDataVersionOne)serializer.Deserialize(reader);
                 }
             }
         }

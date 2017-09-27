@@ -46,15 +46,21 @@
         </Grid.RowDefinitions>
         <Menu Height="19" Grid.Row="0">
             <MenuItem Header="File">
+                <MenuItem Header="Import">
+                    <MenuItem Header="Presets" Click="OnImportPresetsClicked" />
+                </MenuItem>
+                <MenuItem Header="Export">
+                    <MenuItem Header="Presets" Click="OnExportPresetsClicked" />
+                </MenuItem>
+
                 <MenuItem Header="Exit" Click="FileExit_Click"/>
             </MenuItem>
             <MenuItem Header="Controllers">
                 <MenuItem Header="Test Xinput Controllers" Click="ControllerTest_Click"/>
-                <MenuItem Header="Open Windows' Gamepads" Click="OpenGamepadProperties_Click"/>
+                <MenuItem Header="Open Windows' Controllers" Click="OpenGamepadProperties_Click"/>
                 <MenuItem Header="Change Controller Subtype" Click="OnControllerSubtypesClicked" />
             </MenuItem>
             <MenuItem Header="Tools">
-                <MenuItem Header="Import Presets" Click="OnImportPresetsClicked" />
                 <MenuItem Header="Options" Click="OptionsClicked" />
             </MenuItem>
             <MenuItem Header="Games" SubmenuOpened="GamesSubmenuOpened">

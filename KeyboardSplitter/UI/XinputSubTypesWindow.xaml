@@ -5,14 +5,14 @@
                  xmlns:System="clr-namespace:System;assembly=mscorlib"
                  xmlns:enums="clr-namespace:XinputWrapper.Enums;assembly=XinputWrapper"
                  IsToolWindow="True"
-                 Title="Set custom controller subtypes"
+                 Title="Set custom subtypes of Xbox 360 controllers"
                  Height="370"
                  Width="470">
     <Grid>
         <StackPanel>
             <TextBlock Text="To change controller subtype, you have to patch the desired game or application." Margin="5,5,0,0" />
             <TextBlock Text="Note that the patch creates/overwrites the following files:" Margin="5,5,0,0" />
-            <TextBlock Text="- XINPUT9_1_0.DLL" Margin="5,5,0,0" />
+            <TextBlock Text="- xinput9_1_0.dll" Margin="5,5,0,0" />
             <TextBlock Text="- xinput1_3.dll" Margin="5,5,0,0" />
             <TextBlock Text="- xinput1_4.dll" Margin="5,5,0,0"/>
             <TextBlock Text="- xinput.ini" Margin="5,5,0,0"/>

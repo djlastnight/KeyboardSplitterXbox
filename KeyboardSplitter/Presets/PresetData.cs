@@ -14,7 +14,12 @@
         public PresetData()
         {
             this.Presets = new ObservableCollection<Preset>();
-            this.Presets.Add(Preset.Default);
+            PresetData.AddImuttablePresets(this);
+        }
+
+        private static void AddImuttablePresets(PresetData data)
+        {
+            data.Presets.Insert(0, Preset.Default);
         }
 
         [XmlElement("preset")]
@@ -28,17 +33,33 @@
             }
 
             var serializer = new XmlSerializer(typeof(PresetData));
+            serializer.UnknownNode += (ss, ee) => { throw new InvalidOperationException(); };
             using (var fileStream = new FileStream(xmlFileLocation, FileMode.Open))
             {
                 var reader = new XmlTextReader(fileStream);
                 PresetData data = (PresetData)serializer.Deserialize(reader);
+                var array = new Preset[data.Presets.Count];
+                data.Presets.CopyTo(array, 0);
+
+                foreach (var item in array)
+                {
+                    if (PresetDataManager.IsProtectedPreset(item.Name))
+                    {
+                        data.Presets.Remove(item);
+                    }
+                }
+
+                AddImuttablePresets(data);
                 return data;
             }
         }
 
-        public void Serialize(string xmlFileLocation)
+        public void Serialize(string xmlFileLocation, bool removeImuttablePresets = true)
         {
-            this.RemoveImuttablePresets();
+            if (removeImuttablePresets)
+            {
+                this.RemoveImuttablePresets();
+            }
 
             using (var writer = new StreamWriter(path: xmlFileLocation, append: false, encoding: Encoding.Unicode))
             {
