@@ -22,6 +22,7 @@
     using KeyboardSplitter.UI;
     using SplitterCore;
     using SplitterCore.Preset;
+    using Microsoft.Win32;
 
     public partial class MainWindow : CustomWindow, IDisposable
     {
@@ -578,6 +579,69 @@
             }
 
             this.playGameMenuItem.IsEnabled = this.playGameMenuItem.Items.Count != 0;
+        }
+
+        private void OnImportPresetsClicked(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog dialog = new OpenFileDialog();
+            dialog.AddExtension = true;
+            //dialog.AutoUpgradeEnabled = true;
+            dialog.CheckFileExists = true;
+            dialog.CheckPathExists = true;
+            dialog.DefaultExt = "*.xml";
+            dialog.DereferenceLinks = true;
+            dialog.Filter = "Extensible Markup Language file (*.xml)|*.xml";
+            dialog.Multiselect = false;
+            //dialog.SupportMultiDottedExtensions = false;
+            dialog.Title = "Choose game or application";
+            dialog.ValidateNames = true;
+            Interceptor.Interception.DisableMouseEvents = true;
+            var result = dialog.ShowDialog(this);
+            Interceptor.Interception.DisableMouseEvents = false;
+            if (result != true)
+            {
+                return;
+            }
+
+            var extension = System.IO.Path.GetExtension(dialog.FileName);
+            if (extension.ToLower() != ".xml")
+            {
+                Controls.MessageBox.Show(
+                    "You must provide an xml file!",
+                    ApplicationInfo.AppName,
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+
+                return;
+            }
+
+            bool arePresetsCurrentVersion = false;
+            List<Preset> presets = new List<Preset>();
+            Exception ex = null;
+            try
+            {
+                presets = PresetData.Deserialize(dialog.FileName).Presets.ToList();
+                arePresetsCurrentVersion = true;
+            }
+            catch (Exception currentVersionException)
+            {
+                ex = currentVersionException;
+            }
+
+            if (!arePresetsCurrentVersion)
+            {
+                try
+                {
+                    presets = PresetUpgrader.GetUpgradedPresets(dialog.FileName).ToList();
+                }
+                catch (Exception oldVersionException)
+                {
+                    ex = oldVersionException;
+                }
+
+            }
+
+            // TODO: Implement me
         }
     }
 }

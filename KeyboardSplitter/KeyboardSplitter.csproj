@@ -134,6 +134,7 @@
     </Compile>
     <Compile Include="Models\GameData.cs" />
     <Compile Include="Models\SlotData.cs" />
+    <Compile Include="Presets\PresetUpgrader.cs" />
     <Compile Include="UI\GameEditor.xaml.cs">
       <DependentUpon>GameEditor.xaml</DependentUpon>
     </Compile>

@@ -2868,9 +2868,6 @@
     </timestamps>
     <violations />
   </sourcecode>
-  <project key="11514932">
-    <configuration>TRACE;DEBUG;main</configuration>
-  </project>
   <sourcecode name="ApplicationInfo.cs" parser="StyleCop.CSharp.CsParser">
     <timestamps>
       <styleCop>2016 05 12 20:26:32.000</styleCop>
@@ -4578,6 +4575,32 @@
       <styleCop>2016 05 12 20:26:32.000</styleCop>
       <settingsFile>2017 09 14 08:47:08.489</settingsFile>
       <sourceFile>2017 09 14 08:47:08.559</sourceFile>
+      <parser>2016 05 12 20:26:32.000</parser>
+      <StyleCop.CSharp.DocumentationRules>2016 05 12 20:26:32.000</StyleCop.CSharp.DocumentationRules>
+      <StyleCop.CSharp.DocumentationRules.FilesHashCode>1272315275</StyleCop.CSharp.DocumentationRules.FilesHashCode>
+      <StyleCop.CSharp.LayoutRules>2016 05 12 20:26:32.000</StyleCop.CSharp.LayoutRules>
+      <StyleCop.CSharp.LayoutRules.FilesHashCode>0</StyleCop.CSharp.LayoutRules.FilesHashCode>
+      <StyleCop.CSharp.MaintainabilityRules>2016 05 12 20:26:32.000</StyleCop.CSharp.MaintainabilityRules>
+      <StyleCop.CSharp.MaintainabilityRules.FilesHashCode>0</StyleCop.CSharp.MaintainabilityRules.FilesHashCode>
+      <StyleCop.CSharp.NamingRules>2016 05 12 20:26:32.000</StyleCop.CSharp.NamingRules>
+      <StyleCop.CSharp.NamingRules.FilesHashCode>0</StyleCop.CSharp.NamingRules.FilesHashCode>
+      <StyleCop.CSharp.OrderingRules>2016 05 12 20:26:32.000</StyleCop.CSharp.OrderingRules>
+      <StyleCop.CSharp.OrderingRules.FilesHashCode>0</StyleCop.CSharp.OrderingRules.FilesHashCode>
+      <StyleCop.CSharp.ReadabilityRules>2016 05 12 20:26:32.000</StyleCop.CSharp.ReadabilityRules>
+      <StyleCop.CSharp.ReadabilityRules.FilesHashCode>0</StyleCop.CSharp.ReadabilityRules.FilesHashCode>
+      <StyleCop.CSharp.SpacingRules>2016 05 12 20:26:32.000</StyleCop.CSharp.SpacingRules>
+      <StyleCop.CSharp.SpacingRules.FilesHashCode>0</StyleCop.CSharp.SpacingRules.FilesHashCode>
+    </timestamps>
+    <violations />
+  </sourcecode>
+  <project key="11514932">
+    <configuration>TRACE;DEBUG;main</configuration>
+  </project>
+  <sourcecode name="PresetConverter.cs" parser="StyleCop.CSharp.CsParser">
+    <timestamps>
+      <styleCop>2016 05 12 20:26:32.000</styleCop>
+      <settingsFile>2017 09 15 12:24:55.615</settingsFile>
+      <sourceFile>2017 09 27 15:53:36.730</sourceFile>
       <parser>2016 05 12 20:26:32.000</parser>
       <StyleCop.CSharp.DocumentationRules>2016 05 12 20:26:32.000</StyleCop.CSharp.DocumentationRules>
       <StyleCop.CSharp.DocumentationRules.FilesHashCode>1272315275</StyleCop.CSharp.DocumentationRules.FilesHashCode>
