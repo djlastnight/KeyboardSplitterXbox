@@ -40,13 +40,13 @@
                     <Button Grid.Row="0" Grid.Column="2" Content="Browse" Margin="5" Padding="0" Click="OnBrowseButtonClicked" />
                     
                     <TextBlock Grid.Row="1" Grid.Column="0" Text="Title" />
-                    <TextBox Grid.Row="1" Grid.Column="1" Height="23" VerticalAlignment="Top" Text="{Binding GameTitle}"/>
+                    <TextBox Name="titleTextBox" Grid.Row="1" Grid.Column="1" Height="23" VerticalAlignment="Top" Text="{Binding GameTitle}" />
 
                     <TextBlock Grid.Row="2" Grid.Column="0" Text="Notes" />
-                    <TextBox Grid.Row="2" Grid.Column="1" Height="23" VerticalAlignment="Top" Text="{Binding GameNotes}" />
+                    <TextBox Name="notesTextBox" Grid.Row="2" Grid.Column="1" Height="23" VerticalAlignment="Top" Text="{Binding GameNotes}" />
                 </Grid>
             </GroupBox>
-            <GroupBox Name="slotsGroupBox" IsEnabled="False" Padding="15" Margin="10" Header="Slots data">
+            <GroupBox Name="slotsGroupBox" Padding="15" Margin="10" Header="Slots data">
                 <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" MaxHeight="400">
                     <WrapPanel>
                         <ItemsControl ItemsSource="{Binding SlotsData}">

@@ -49,6 +49,9 @@
             this.Title = "Create new game";
             this.createOrOKButton.Content = "Create";
             this.game = this.DataContext as Game;
+            this.slotsGroupBox.IsEnabled = false;
+            this.titleTextBox.IsEnabled = false;
+            this.notesTextBox.IsEnabled = false;
         }
 
         public GameItemEditor(Game game)
@@ -124,6 +127,8 @@
                     return;
                 }
 
+                this.titleTextBox.IsEnabled = true;
+                this.notesTextBox.IsEnabled = true;
                 game.GameTitle = null;
                 game.GameNotes = null;
                 game.GamePath = dialog.FileName;
