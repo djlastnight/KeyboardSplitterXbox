@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Collections.ObjectModel;
     using System.ComponentModel;
     using System.Diagnostics;
     using System.Linq;
@@ -14,15 +13,14 @@
     using System.Windows.Media.Animation;
     using System.Windows.Threading;
     using KeyboardSplitter.Commands;
-    using KeyboardSplitter.Controls;
     using KeyboardSplitter.Exceptions;
     using KeyboardSplitter.Managers;
     using KeyboardSplitter.Models;
     using KeyboardSplitter.Presets;
     using KeyboardSplitter.UI;
+    using Microsoft.Win32;
     using SplitterCore;
     using SplitterCore.Preset;
-    using Microsoft.Win32;
 
     public partial class MainWindow : CustomWindow, IDisposable
     {
@@ -545,6 +543,7 @@
 
         private void GamesSubmenuOpened(object sender, RoutedEventArgs e)
         {
+            this.Cursor = Cursors.Wait;
             this.playGameMenuItem.Items.Clear();
 
             foreach (var game in GameDataManager.Games)
@@ -575,21 +574,20 @@
             }
 
             this.playGameMenuItem.IsEnabled = this.playGameMenuItem.Items.Count != 0;
+            this.Cursor = Cursors.Arrow;
         }
 
         private void OnImportPresetsClicked(object sender, RoutedEventArgs e)
         {
             OpenFileDialog dialog = new OpenFileDialog();
             dialog.AddExtension = true;
-            //dialog.AutoUpgradeEnabled = true;
             dialog.CheckFileExists = true;
             dialog.CheckPathExists = true;
             dialog.DefaultExt = "*.xml";
             dialog.DereferenceLinks = true;
-            dialog.Filter = "Extensible Markup Language file (*.xml)|*.xml";
+            dialog.Filter = "XML file (*.xml)|*.xml";
             dialog.Multiselect = false;
-            //dialog.SupportMultiDottedExtensions = false;
-            dialog.Title = "Choose game or application";
+            dialog.Title = "Choose presets file to import";
             dialog.ValidateNames = true;
             Interceptor.Interception.DisableMouseEvents = true;
             var result = dialog.ShowDialog(this);
@@ -633,7 +631,6 @@
                 {
                     ex = oldVersionException;
                 }
-
             }
 
             if (ex != null)
@@ -649,18 +646,26 @@
             }
 
             var presetNames = string.Empty;
+            var overwriteString = string.Empty;
             foreach (var preset in presets)
             {
                 presetNames += Environment.NewLine + preset.Name;
-                var dublicate = PresetDataManager.FindPreset(preset.Name);
-                if (dublicate != null)
+                var duplicate = PresetDataManager.FindPreset(preset.Name);
+                if (duplicate != null)
                 {
                     presetNames += " [Will be overwritten]";
+                    overwriteString = "/overwrite";
                 }
             }
 
+            var message = string.Format(
+                "Are you sure that you want to add{0} the following presets?{1}{2}",
+                overwriteString,
+                Environment.NewLine,
+                presetNames);
+
             var confirm = Controls.MessageBox.Show(
-                "Are you sure that you want to add/overwrite the following presets?\r\n" + presetNames,
+                message,
                 ApplicationInfo.AppName,
                 MessageBoxButton.YesNo,
                 MessageBoxImage.Question);
@@ -669,10 +674,10 @@
             {
                 foreach (var preset in presets)
                 {
-                    var dublicateToDelete = PresetDataManager.FindPreset(preset.Name);
-                    if (dublicateToDelete != null)
+                    var duplicateToDelete = PresetDataManager.FindPreset(preset.Name);
+                    if (duplicateToDelete != null)
                     {
-                        PresetDataManager.DeletePreset(dublicateToDelete);
+                        PresetDataManager.DeletePreset(duplicateToDelete);
                     }
 
                     PresetDataManager.AddNewPreset(preset);
@@ -682,15 +687,27 @@
 
         private void OnExportPresetsClicked(object sender, RoutedEventArgs e)
         {
-            try
+            SaveFileDialog dialog = new SaveFileDialog();
+            dialog.AddExtension = true;
+            dialog.CheckPathExists = true;
+            dialog.DefaultExt = "*.xml";
+            dialog.DereferenceLinks = true;
+            dialog.Filter = "XML file (*.xml)|*.xml";
+            dialog.Title = "Export presets";
+            dialog.ValidateNames = true;
+            Interceptor.Interception.DisableMouseEvents = true;
+            var result = dialog.ShowDialog(this);
+            Interceptor.Interception.DisableMouseEvents = false;
+            if (result != true)
             {
-                PresetDataManager.WritePresetDataToFile(removeImuttablePresets: false);
+                return;
             }
-            catch (Exception ex)
+
+            var extension = System.IO.Path.GetExtension(dialog.FileName);
+            if (extension.ToLower() != ".xml")
             {
-                LogWriter.Write(ex.ToString());
                 Controls.MessageBox.Show(
-                    "Presets export failed! Please see " + LogWriter.GetLogFileName + " for details",
+                    "You must export presets as xml file!",
                     ApplicationInfo.AppName,
                     MessageBoxButton.OK,
                     MessageBoxImage.Error);
@@ -698,11 +715,19 @@
                 return;
             }
 
-            Controls.MessageBox.Show(
-                "Presets successfully exported to " + PresetDataManager.PresetsFilename,
-                ApplicationInfo.AppName,
-                MessageBoxButton.OK,
-                MessageBoxImage.Information);
+            try
+            {
+                PresetDataManager.WritePresetDataToFile(dialog.FileName);
+            }
+            catch (Exception ex)
+            {
+                LogWriter.Write(ex.ToString());
+                Controls.MessageBox.Show(
+                    "Presets export failed! Please refer to " + LogWriter.GetLogFileName + " for details",
+                    ApplicationInfo.AppName,
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+            }
         }
     }
 }

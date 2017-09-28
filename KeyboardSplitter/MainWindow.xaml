@@ -46,13 +46,6 @@
         </Grid.RowDefinitions>
         <Menu Height="19" Grid.Row="0">
             <MenuItem Header="File">
-                <MenuItem Header="Import">
-                    <MenuItem Header="Presets" Click="OnImportPresetsClicked" />
-                </MenuItem>
-                <MenuItem Header="Export">
-                    <MenuItem Header="Presets" Click="OnExportPresetsClicked" />
-                </MenuItem>
-
                 <MenuItem Header="Exit" Click="FileExit_Click"/>
             </MenuItem>
             <MenuItem Header="Controllers">
@@ -62,6 +55,10 @@
             </MenuItem>
             <MenuItem Header="Tools">
                 <MenuItem Header="Options" Click="OptionsClicked" />
+            </MenuItem>
+            <MenuItem Header="Presets">
+                <MenuItem Header="Import" Click="OnImportPresetsClicked" />
+                <MenuItem Header="Export" Click="OnExportPresetsClicked" />
             </MenuItem>
             <MenuItem Header="Games" SubmenuOpened="GamesSubmenuOpened">
                 <MenuItem Header="Play" Name="playGameMenuItem" SubmenuOpened="GamesSubmenuOpened"/>

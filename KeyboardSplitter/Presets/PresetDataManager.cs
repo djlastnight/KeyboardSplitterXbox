@@ -93,9 +93,14 @@
             return data;
         }
 
-        public static void WritePresetDataToFile(bool removeImuttablePresets = true)
+        public static void WritePresetDataToFile()
         {
-            PresetDataManager.data.Serialize(PresetsFilename, removeImuttablePresets);
+            PresetDataManager.data.Serialize(PresetDataManager.PresetsFilename);
+        }
+
+        public static void WritePresetDataToFile(string fileFullPath)
+        {
+            PresetDataManager.data.Serialize(fileFullPath);
         }
 
         public static void AddNewPreset(Preset preset)

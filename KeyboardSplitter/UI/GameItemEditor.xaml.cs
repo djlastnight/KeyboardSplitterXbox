@@ -100,14 +100,12 @@
             }
 
             dialog.AddExtension = true;
-            //dialog.AutoUpgradeEnabled = true;
             dialog.CheckFileExists = true;
             dialog.CheckPathExists = true;
             dialog.DefaultExt = "*.exe";
             dialog.DereferenceLinks = true;
             dialog.Filter = "Executable file (*.exe)|*.exe";
             dialog.Multiselect = false;
-            //dialog.SupportMultiDottedExtensions = false;
             dialog.Title = "Choose game or application";
             dialog.ValidateNames = true;
             Interceptor.Interception.DisableMouseEvents = true;

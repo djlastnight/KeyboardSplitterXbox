@@ -185,7 +185,7 @@
 
             var process = Process.Start(this.gamePath);
             process.EnableRaisingEvents = true;
-            process.Exited += OnProcessExited;
+            process.Exited += this.OnProcessExited;
 
             var slots = new ObservableCollection<SplitterCore.Emulation.IEmulationSlot>();
             foreach (var slotData in this.SlotsData)

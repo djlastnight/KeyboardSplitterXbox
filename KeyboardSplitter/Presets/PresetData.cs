@@ -14,12 +14,7 @@
         public PresetData()
         {
             this.Presets = new ObservableCollection<Preset>();
-            PresetData.AddImuttablePresets(this);
-        }
-
-        private static void AddImuttablePresets(PresetData data)
-        {
-            data.Presets.Insert(0, Preset.Default);
+            PresetData.InsertImuttablePresets(this);
         }
 
         [XmlElement("preset")]
@@ -33,11 +28,13 @@
             }
 
             var serializer = new XmlSerializer(typeof(PresetData));
-            serializer.UnknownNode += (ss, ee) => { throw new InvalidOperationException(); };
+            serializer.UnknownNode += (ss, ee) => { throw new InvalidOperationException("Deserialize found unknown node"); };
             using (var fileStream = new FileStream(xmlFileLocation, FileMode.Open))
             {
                 var reader = new XmlTextReader(fileStream);
                 PresetData data = (PresetData)serializer.Deserialize(reader);
+
+                // Removing protected presets from file data
                 var array = new Preset[data.Presets.Count];
                 data.Presets.CopyTo(array, 0);
 
@@ -49,30 +46,39 @@
                     }
                 }
 
-                AddImuttablePresets(data);
+                InsertImuttablePresets(data);
                 return data;
             }
         }
 
-        public void Serialize(string xmlFileLocation, bool removeImuttablePresets = true)
+        public void Serialize(string xmlFileLocation)
         {
-            if (removeImuttablePresets)
+            var filteredPresets = new ObservableCollection<Preset>();
+            foreach (var preset in this.Presets)
             {
-                this.RemoveImuttablePresets();
+                if (PresetDataManager.IsProtectedPreset(preset.Name))
+                {
+                    continue;
+                }
+
+                filteredPresets.Add(preset);
             }
+
+            var filteredData = new PresetData();
+            filteredData.Presets = filteredPresets;
 
             using (var writer = new StreamWriter(path: xmlFileLocation, append: false, encoding: Encoding.Unicode))
             {
                 var serializer = new XmlSerializer(this.GetType());
-                serializer.Serialize(writer, this);
+                serializer.Serialize(writer, filteredData);
             }
         }
 
-        private void RemoveImuttablePresets()
+        private static void InsertImuttablePresets(PresetData data)
         {
-            foreach (Preset imuttablePreset in Preset.ImuttablePresets)
+            for (int i = 0; i < Preset.ImuttablePresets.Count; i++)
             {
-                this.Presets.Remove(imuttablePreset);
+                data.Presets.Insert(i, Preset.ImuttablePresets[i]);
             }
         }
     }

@@ -1,13 +1,13 @@
 ﻿namespace KeyboardSplitter.Presets
 {
-    using SplitterCore.Input;
-    using SplitterCore.Preset;
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.IO;
     using System.Xml;
     using System.Xml.Serialization;
+    using SplitterCore.Input;
+    using SplitterCore.Preset;
     using VirtualXbox.Enums;
 
     public static class PresetUpgrader

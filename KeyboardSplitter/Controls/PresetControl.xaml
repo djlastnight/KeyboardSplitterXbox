@@ -24,8 +24,8 @@
               Height="32"
               VerticalAlignment="Top">
             <TextBlock
-                IsHitTestVisible="False"
                 Text="Preset:"
+                ToolTip="{Binding ElementName=presetControl, Path=Preset.Name}"
                 Height="23"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Top"
@@ -36,7 +36,6 @@
                       Margin="47,5,0,0"
                       VerticalAlignment="Top"
                       Width="140"
-                      ToolTip="Select existing preset. To create new preset: type new name here and hit the save button."
                       ItemsSource="{Binding ElementName=presetControl, Path=CurrentPresets}"
                       SelectedItem="{Binding ElementName=presetControl, Path=Preset, Mode=TwoWay}"
                       IsEditable="True"
@@ -44,7 +43,22 @@
                       IsTextSearchEnabled="False"
                       Text="{Binding ElementName=presetControl, Path=PresetBoxText}"
                       TextBoxBase.TextChanged="OnPresetTextboxTextChanged"
-                      SelectionChanged="OnPresetSelectionChanged" />
+                      SelectionChanged="OnPresetSelectionChanged">
+                <ComboBox.ToolTip>
+                    <StackPanel Orientation="Vertical">
+                        <TextBlock>
+                        Select existing preset.
+                        <LineBreak />
+                        If you want to create new preset:
+                        </TextBlock>
+                        <TextBlock Foreground="Orange">
+                            1. Type new preset name here (must be non-exsiting name)
+                        <LineBreak />
+                        2. Hit the save preset button.
+                        </TextBlock>
+                    </StackPanel>
+                </ComboBox.ToolTip>
+            </ComboBox>
             <Button Height="23"
                     HorizontalAlignment="Left"
                     Margin="193,5,0,0"
@@ -139,7 +153,7 @@
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
-            
+
             <ItemsControl ItemsSource="{Binding Preset.Triggers}">
                 <ItemsControl.Resources>
                     <Converters:XboxTriggerConverter x:Key="TriggerConverter" />
@@ -155,7 +169,7 @@
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
-            
+
             <ItemsControl ItemsSource="{Binding Preset.Axes}">
                 <ItemsControl.Resources>
                     <Converters:XboxAxisConverter x:Key="AxisConverter" />

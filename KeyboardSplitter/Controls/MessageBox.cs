@@ -63,5 +63,15 @@
 
             return result;
         }
+
+        public static void Show(string message)
+        {
+            MessageBox.Show(message, ApplicationInfo.AppName, MessageBoxButton.OK, MessageBoxImage.None);
+        }
+
+        public static void Show(string message, string caption)
+        {
+            MessageBox.Show(message, caption, MessageBoxButton.OK, MessageBoxImage.None);
+        }
     }
 }

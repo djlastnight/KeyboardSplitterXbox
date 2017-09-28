@@ -30,7 +30,7 @@
             : base()
         {
             this.WindowStyle = System.Windows.WindowStyle.None;
-            //this.ResizeMode = System.Windows.ResizeMode.CanResizeWithGrip;
+            this.ResizeMode = System.Windows.ResizeMode.CanResizeWithGrip;
             this.Icon = new BitmapImage(new Uri(@"pack://application:,,,/KeyboardSplitter;component/Resources/icon.ico", UriKind.RelativeOrAbsolute));
             this.Loaded += this.OnLoaded;
         }
