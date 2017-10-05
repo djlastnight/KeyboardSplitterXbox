@@ -309,6 +309,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <None Include="app.config" />
+    <None Include="Lib\VirtualXboxNative.lib" />
     <None Include="Resources\disconnected.wav" />
     <None Include="Resources\connected.wav" />
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -457,9 +458,6 @@
     <EmbeddedResource Include="Lib\VirtualXbox.dll" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Lib\VirtualXboxNative.dll" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Lib\xinput.dll" />
   </ItemGroup>
   <ItemGroup>
@@ -486,6 +484,9 @@
       <Name>XinputWrapper</Name>
       <Private>False</Private>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Lib\VirtualXboxNative.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
