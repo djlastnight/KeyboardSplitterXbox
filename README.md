@@ -12,7 +12,7 @@ with different keyboards instead of just one. Any application,
 which works with such controllers should be supported too.
 
 # Video
-https://www.youtube.com/watch?v=06ZZp-u01kE
+[![video](https://img.youtube.com/vi/06ZZp-u01kE/0.jpg)](https://www.youtube.com/watch?v=06ZZp-u01kE)
 
 # Main Features:
 - keyboards input monitor
