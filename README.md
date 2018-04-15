@@ -1,5 +1,4 @@
-[![Github All Releases](https://img.shields.io/github/downloads/djlastnight/KeyboardSplitterXbox/total.svg?style=plastic)](https://github.com/djlastnight/KeyboardSplitterXbox) ![Coveralls github](https://img.shields.io/coveralls/github/djlastnight/KeyboardSplitterXbox.svg)
-
+[![Github All Releases](https://img.shields.io/github/downloads/djlastnight/KeyboardSplitterXbox/total.svg?style=plastic)](https://github.com/djlastnight/KeyboardSplitterXbox)
 
 # djlastnight's Gaming Keyboard Splitter
 
