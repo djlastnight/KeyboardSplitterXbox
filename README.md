@@ -1,6 +1,6 @@
 [![Github All Releases](https://img.shields.io/github/downloads/djlastnight/KeyboardSplitterXbox/total.svg?style=plastic)](https://github.com/djlastnight/KeyboardSplitterXbox)
 
-# KeyboardSplitterXbox
+# djlastnight's Gaming Keyboard Splitter
 
 By default Windows OS does not distinguish between the
 connected keyboards. They act as the same device.
