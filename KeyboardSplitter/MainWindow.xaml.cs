@@ -265,7 +265,7 @@
         {
             LogWriter.Write("Application is about to close. Checking for unsaved presets...");
 
-            // checking for unsaved presets
+            // Checking for unsaved presets
             var unsavedPresets = new List<IPreset>();
             foreach (var preset in PresetDataManager.CurrentPresets)
             {
@@ -296,6 +296,32 @@
                 }
 
                 e.Cancel = result == MessageBoxResult.Cancel;
+            }
+            else
+            {
+                // We may have a deleted preset(s)
+                var xmlPresets = PresetDataManager.ReadPresetDataFromFile();
+                bool hasChanges = false;
+                foreach (var preset in xmlPresets.Presets)
+                {
+                    try
+                    {
+                        if (PresetDataManager.IsPresetChanged(preset))
+                        {
+                            hasChanges = true;
+                        }
+                    }
+                    catch (InvalidOperationException)
+                    {
+                        // Preset is deleted
+                        hasChanges = true;
+                    }
+                }
+
+                if (hasChanges)
+                {
+                    PresetDataManager.WritePresetDataToFile();
+                }
             }
         }
 

@@ -26,7 +26,11 @@
                         case MessageBoxButton.OKCancel:
                             break;
                         case MessageBoxButton.YesNo:
-                            box.CustomTitlebar.EnableCloseButton = false;
+                            if (box.CustomTitlebar != null)
+                            {
+                                box.CustomTitlebar.EnableCloseButton = false;
+                            }
+
                             break;
                         case MessageBoxButton.YesNoCancel:
                             break;
