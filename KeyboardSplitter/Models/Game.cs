@@ -316,7 +316,7 @@
 
                 if (!PresetDataManager.IsProtectedPreset(slotData.PresetName))
                 {
-                    if (PresetDataManager.CurrentPresets.FirstOrDefault(x => x.Name.ToLower() == slotData.PresetName) == null)
+                    if (PresetDataManager.CurrentPresets.FirstOrDefault(x => x.Name.ToLower() == slotData.PresetName.ToLower()) == null)
                     {
                         // Preset unavailable
                         return GameStatus.PresetMissing;
