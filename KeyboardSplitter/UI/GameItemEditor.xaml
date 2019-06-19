@@ -11,21 +11,21 @@
                  SizeToContent="WidthAndHeight"
                  Loaded="CustomWindow_Loaded"
                  MinWidth="470"
-                 MinHeight="470">
+                 MinHeight="560">
     <ui:CustomWindow.DataContext>
         <models:Game />
     </ui:CustomWindow.DataContext>
     <Grid>
         <StackPanel Orientation="Vertical" VerticalAlignment="Stretch" Margin="0,0,0,55">
-            <GroupBox Header="Game data"
+            <GroupBox Header="Game executable data"
                   Padding="15"
                   Margin="10"
-                  Height="150"
+                  Height="180"
                   VerticalAlignment="Top"
                   HorizontalAlignment="Stretch">
                 <Grid>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="50"/>
+                        <ColumnDefinition Width="65"/>
                         <ColumnDefinition MinWidth="200" />
                         <ColumnDefinition Width="70"/>
                     </Grid.ColumnDefinitions>
@@ -33,18 +33,29 @@
                         <RowDefinition Height="30" />
                         <RowDefinition Height="30" />
                         <RowDefinition Height="30" />
+                        <RowDefinition Height="30" />
                     </Grid.RowDefinitions>
 
                     <TextBlock Grid.Row="0" Grid.Column="0" Text="Path" />
                     <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding GamePath}" />
-                    <Button Grid.Row="0" Grid.Column="2" Content="Browse" Margin="5" Padding="0" Click="OnBrowseButtonClicked" />
+                    <Button Grid.Row="0" Grid.Column="2" Content="Browse" Margin="5,0" Padding="0" Click="OnBrowseButtonClicked" VerticalAlignment="Top" />
                     
                     <TextBlock Grid.Row="1" Grid.Column="0" Text="Title" />
                     <TextBox Name="titleTextBox" Grid.Row="1" Grid.Column="1" Height="23" VerticalAlignment="Top" Text="{Binding GameTitle}" />
 
                     <TextBlock Grid.Row="2" Grid.Column="0" Text="Notes" />
                     <TextBox Name="notesTextBox" Grid.Row="2" Grid.Column="1" Height="23" VerticalAlignment="Top" Text="{Binding GameNotes}" />
+
+                    <TextBlock Grid.Row="3" Grid.Column="0" Text="Arguments" />
+                    <TextBox Name="argumentsTextBox" Grid.Row="3" Grid.Column="1" Height="23" VerticalAlignment="Top" Text="{Binding Arguments}" />
                 </Grid>
+            </GroupBox>
+            <GroupBox Header="Splitter settings" Margin="100,0">
+                <StackPanel Orientation="Horizontal" Margin="10">
+                    <CheckBox IsChecked="{Binding BlockKeyboards}" IsThreeState="False" Content="Block Keyboards" Margin="3" />
+                    <CheckBox IsChecked="{Binding BlockMice}" IsThreeState="False" Content="Block Mice" Margin="3" />
+                </StackPanel>
+
             </GroupBox>
             <GroupBox Name="slotsGroupBox" Padding="15" Margin="10" Header="Slots data">
                 <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" MaxHeight="400">

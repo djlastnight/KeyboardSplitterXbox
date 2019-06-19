@@ -39,7 +39,7 @@
             catch (Exception e)
             {
                 data.Games = new ObservableCollection<Game>();
-                data.Games.Add(new Game("Error occured, while trying to get data.", GameDataFilename, e.Message, new ObservableCollection<SlotData>()));
+                data.Games.Add(new Game("Error occured, while trying to get data.", GameDataFilename, null, e.Message, true, false, new ObservableCollection<SlotData>()));
             }
 
             return data;

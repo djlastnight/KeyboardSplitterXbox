@@ -49,9 +49,11 @@
             this.Title = "Create new game";
             this.createOrOKButton.Content = "Create";
             this.game = this.DataContext as Game;
+            this.game.BlockKeyboards = true;
             this.slotsGroupBox.IsEnabled = false;
             this.titleTextBox.IsEnabled = false;
             this.notesTextBox.IsEnabled = false;
+            this.argumentsTextBox.IsEnabled = false;
         }
 
         public GameItemEditor(Game game)
@@ -63,7 +65,7 @@
             }
 
             this.game = game;
-            this.originalGame = new Game(game.GameTitle, game.GamePath, game.GameNotes, game.SlotsData);
+            this.originalGame = new Game(game.GameTitle, game.GamePath, game.Arguments, game.GameNotes, game.BlockKeyboards, game.BlockMice, game.SlotsData);
 
             this.creatingNewGame = false;
             this.Title = "Edit game";
@@ -127,6 +129,7 @@
 
                 this.titleTextBox.IsEnabled = true;
                 this.notesTextBox.IsEnabled = true;
+                this.argumentsTextBox.IsEnabled = true;
                 game.GameTitle = null;
                 game.GameNotes = null;
                 game.GamePath = dialog.FileName;

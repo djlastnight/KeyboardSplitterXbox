@@ -2918,7 +2918,7 @@
     <configuration>TRACE;DEBUG;main</configuration>
   </project>
   <project key="563045037">
-    <configuration>TRACE;DEBUG;main</configuration>
+    <configuration>TRACE;main</configuration>
   </project>
   <sourcecode name="ApplicationInfo.cs" parser="StyleCop.CSharp.CsParser">
     <timestamps>
@@ -4097,7 +4097,7 @@
     <timestamps>
       <styleCop>2016/03/13 20:28:52.000</styleCop>
       <settingsFile>2019/06/13 20:04:24.066</settingsFile>
-      <sourceFile>2019/06/13 20:04:23.807</sourceFile>
+      <sourceFile>2019/06/19 01:55:32.025</sourceFile>
       <parser>2016/03/13 20:28:52.000</parser>
       <StyleCop.CSharp.DocumentationRules>2016/03/13 20:28:52.000</StyleCop.CSharp.DocumentationRules>
       <StyleCop.CSharp.DocumentationRules.FilesHashCode>1584320079</StyleCop.CSharp.DocumentationRules.FilesHashCode>
@@ -4143,7 +4143,7 @@
     <timestamps>
       <styleCop>2016/03/13 20:28:52.000</styleCop>
       <settingsFile>2019/06/13 20:04:24.066</settingsFile>
-      <sourceFile>2019/06/13 20:04:23.830</sourceFile>
+      <sourceFile>2019/06/19 02:36:13.804</sourceFile>
       <parser>2016/03/13 20:28:52.000</parser>
       <StyleCop.CSharp.DocumentationRules>2016/03/13 20:28:52.000</StyleCop.CSharp.DocumentationRules>
       <StyleCop.CSharp.DocumentationRules.FilesHashCode>1584320079</StyleCop.CSharp.DocumentationRules.FilesHashCode>
@@ -4373,7 +4373,7 @@
     <timestamps>
       <styleCop>2016/03/13 20:28:52.000</styleCop>
       <settingsFile>2019/06/13 20:04:24.066</settingsFile>
-      <sourceFile>2019/06/13 20:04:23.941</sourceFile>
+      <sourceFile>2019/06/19 02:32:08.708</sourceFile>
       <parser>2016/03/13 20:28:52.000</parser>
       <StyleCop.CSharp.DocumentationRules>2016/03/13 20:28:52.000</StyleCop.CSharp.DocumentationRules>
       <StyleCop.CSharp.DocumentationRules.FilesHashCode>1584320079</StyleCop.CSharp.DocumentationRules.FilesHashCode>
@@ -4649,7 +4649,7 @@
     <timestamps>
       <styleCop>2016/03/13 20:28:52.000</styleCop>
       <settingsFile>2019/06/13 20:04:24.066</settingsFile>
-      <sourceFile>2019/06/15 16:15:12.121</sourceFile>
+      <sourceFile>2019/06/15 16:15:52.584</sourceFile>
       <parser>2016/03/13 20:28:52.000</parser>
       <StyleCop.CSharp.DocumentationRules>2016/03/13 20:28:52.000</StyleCop.CSharp.DocumentationRules>
       <StyleCop.CSharp.DocumentationRules.FilesHashCode>1584320079</StyleCop.CSharp.DocumentationRules.FilesHashCode>
@@ -4764,7 +4764,7 @@
     <timestamps>
       <styleCop>2016/03/13 20:28:52.000</styleCop>
       <settingsFile>2019/06/13 20:04:24.066</settingsFile>
-      <sourceFile>2019/06/13 20:04:24.153</sourceFile>
+      <sourceFile>2019/06/19 01:54:17.987</sourceFile>
       <parser>2016/03/13 20:28:52.000</parser>
       <StyleCop.CSharp.DocumentationRules>2016/03/13 20:28:52.000</StyleCop.CSharp.DocumentationRules>
       <StyleCop.CSharp.DocumentationRules.FilesHashCode>1584320079</StyleCop.CSharp.DocumentationRules.FilesHashCode>

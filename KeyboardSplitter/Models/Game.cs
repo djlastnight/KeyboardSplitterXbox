@@ -7,12 +7,15 @@
     using System.Drawing;
     using System.IO;
     using System.Linq;
+    using System.Threading.Tasks;
+    using System.Windows;
     using System.Windows.Media;
     using System.Xml.Serialization;
     using KeyboardSplitter.Controls;
     using KeyboardSplitter.Enums;
     using KeyboardSplitter.Helpers;
     using KeyboardSplitter.Presets;
+    using System.Runtime.Serialization;
 
     [Serializable]
     [XmlType("Game")]
@@ -28,13 +31,22 @@
 
         private string gamePath;
 
+        private string gameArguments;
+
+        private bool blockKeyboards;
+
+        private bool blockMice;
+
         private ObservableCollection<SlotData> slotsData;
 
         public Game()
         {
+            this.BlockKeyboards = true;
+            this.BlockMice = false;
+            this.Arguments = null;
         }
 
-        public Game(string title, string path, string gameNotes, ObservableCollection<SlotData> slotsData)
+        public Game(string title, string path, string arguments, string gameNotes, bool blockKeyboards, bool blockMice, ObservableCollection<SlotData> slotsData)
             : this()
         {
             if (title == null)
@@ -52,10 +64,13 @@
                 throw new ArgumentNullException("slotsData");
             }
 
+            this.gameArguments = arguments;
             this.SlotsData = slotsData;
             this.GameTitle = title;
             this.GameNotes = gameNotes;
             this.GamePath = path;
+            this.BlockKeyboards = blockKeyboards;
+            this.BlockMice = blockMice;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -137,6 +152,51 @@
             }
         }
 
+        [XmlAttribute("Arguments")]
+        public string Arguments
+        {
+            get
+            {
+                return this.gameArguments;
+            }
+
+            set
+            {
+                this.gameArguments = value;
+                this.OnPropertyChanged("Arguments");
+            }
+        }
+
+        [XmlAttribute("BlockKeyboards")]
+        public bool BlockKeyboards
+        {
+            get
+            {
+                return this.blockKeyboards;
+            }
+
+            set
+            {
+                this.blockKeyboards = value;
+                this.OnPropertyChanged("BlockKeyboards");
+            }
+        }
+
+        [XmlAttribute("BlockMice")]
+        public bool BlockMice
+        {
+            get
+            {
+                return this.blockMice;
+            }
+
+            set
+            {
+                this.blockMice = value;
+                this.OnPropertyChanged("BlockMice");
+            }
+        }
+
         [XmlElement("Slot")]
         public ObservableCollection<SlotData> SlotsData
         {
@@ -183,10 +243,6 @@
                 throw new Exception("Can not run the game: " + errorMessage);
             }
 
-            var process = Process.Start(this.gamePath);
-            process.EnableRaisingEvents = true;
-            process.Exited += this.OnProcessExited;
-
             var slots = new ObservableCollection<SplitterCore.Emulation.IEmulationSlot>();
             foreach (var slotData in this.SlotsData)
             {
@@ -215,7 +271,47 @@
                 splitter.EmulationManager.Slots.Add(slot);
             }
 
+            splitter.ShouldBlockKeyboards = this.blockKeyboards;
+            splitter.ShouldBlockMice = this.blockMice;
             splitter.EmulationManager.Start(true);
+
+            var result = Controls.MessageBox.Show(
+                "Your game settings are applied.\r\n\r\nWould you like to run the game now?",
+                "Run a Keyboard Splitter Game?",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Question);
+
+            if (result == MessageBoxResult.Yes)
+            {
+                /*
+                var process = Process.Start(this.gamePath);
+                process.EnableRaisingEvents = true;
+                process.Exited += this.OnProcessExited;
+                */
+                var now = DateTime.Now;
+                Task.Factory.StartNew(() =>
+                {
+                    var startInfo = new ProcessStartInfo();
+                    startInfo.FileName = this.gamePath;
+                    startInfo.WorkingDirectory = Path.GetDirectoryName(this.gamePath);
+                    if (this.gameArguments != null)
+                    {
+                        startInfo.Arguments = this.gameArguments;
+                    }
+
+                    startInfo.UseShellExecute = true;
+                    var process = Process.Start(startInfo);
+                    process.WaitForExit();
+                }).ContinueWith((task) => 
+                    {
+                        if ((DateTime.Now - now).TotalSeconds > 3)
+                        {
+                            this.OnProcessExited();
+                        }
+
+                        return task;
+                    });
+            }
         }
 
         public void UpdateStatus()
@@ -236,7 +332,7 @@
             }
         }
 
-        private void OnProcessExited(object sender, EventArgs e)
+        private void OnProcessExited()
         {
             if (App.Current != null && App.Current.Dispatcher != null)
             {
@@ -251,7 +347,7 @@
                     if (splitter.EmulationManager.IsEmulationStarted)
                     {
                         var result = Controls.MessageBox.Show(
-                            "'" + this.gameTitle + "' has been closed. Do you want to stop the emulation?",
+                            "'" + this.gameTitle + "' has been closed.\r\n\r\nDo you want to stop the emulation?",
                             ApplicationInfo.AppName,
                             System.Windows.MessageBoxButton.YesNo,
                             System.Windows.MessageBoxImage.Question);
