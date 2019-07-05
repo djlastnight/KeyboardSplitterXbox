@@ -168,7 +168,14 @@
                 if (success)
                 {
                     slot.Lock();
-                    LogWriter.Write(string.Format("Plug in {0} - OK", slot.Gamepad.FriendlyName));
+                    LogWriter.Write(string.Format(
+                        "Plug in {0} - OK | User Index: {1} | {2} | {3} | Slot #{4}",
+                        slot.Gamepad.FriendlyName,
+                        slot.Gamepad.UserIndex,
+                        slot.Keyboard.StrongName,
+                        slot.Mouse.StrongName,
+                        slot.SlotNumber));
+
                     slot.Gamepad.Disconnected += this.OnGamepadDisconnected;
                 }
                 else

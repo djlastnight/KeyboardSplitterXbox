@@ -15,6 +15,7 @@
     using SplitterCore.Preset;
 
     using VirtualXbox.Enums;
+    using XinputWrapper.Enums;
 
     public class Splitter : SplitterBase
     {
@@ -68,6 +69,7 @@
         {
             if (!slot.Gamepad.IsOwned)
             {
+                LogWriter.Write("owned");
                 return;
             }
 
@@ -81,27 +83,45 @@
                     continue;
                 }
 
+                string functionName;
                 switch (functionType)
                 {
                     case FunctionType.Button:
-                        this.SetButton(slot.Gamepad, mapping, e.IsDown);
+                        functionName = this.SetButton(slot.Gamepad, mapping, e.IsDown);
                         break;
                     case FunctionType.Axis:
-                        this.SetAxis(slot.Gamepad, mapping, e.IsDown, this.HasOppositeAxisKeysDown(slot, mapping, e.InputDevice));
+                        functionName = this.SetAxis(slot.Gamepad, mapping, e.IsDown, this.HasOppositeAxisKeysDown(slot, mapping, e.InputDevice));
                         break;
                     case FunctionType.Dpad:
-                        this.SetDpad(slot.Gamepad, mapping, e.IsDown);
+                        functionName = this.SetDpad(slot.Gamepad, mapping, e.IsDown);
                         break;
                     case FunctionType.Trigger:
-                        this.SetTrigger(slot.Gamepad, mapping, e.IsDown);
+                        functionName = this.SetTrigger(slot.Gamepad, mapping, e.IsDown);
                         break;
                     default:
                         throw new NotImplementedException("Not implemented function type: " + functionType);
                 }
+
+#if DEBUG
+                if (functionName != null)
+                {
+                    bool suppress = (e.InputDevice.IsKeyboard && this.ShouldBlockKeyboards) || (!e.InputDevice.IsKeyboard && this.ShouldBlockMice);
+                    LogWriter.Write(string.Format(
+                        "Translate {0}{1} {2} ({3}) --> Gamepad #{4} {5} ||| Slot #{6} ||| Preset '{7}'",
+                        suppress ? "(suppress) " : string.Empty,
+                        e.InputDevice.StrongName,
+                        e.Key,
+                        e.IsDown ? "\u2193" : "\u2191",
+                        slot.Gamepad.UserIndex,
+                        functionName,
+                        slot.SlotNumber,
+                        slot.Preset.Name));
+                }
+#endif
             }
         }
 
-        private void SetButton(IVirtualGamepad gamepad, Mapping mapping, bool isKeyDown)
+        private string SetButton(IVirtualGamepad gamepad, Mapping mapping, bool isKeyDown)
         {
             uint button = (uint)mapping.Function;
             bool currentValue = gamepad.GetButtonState(button);
@@ -109,13 +129,14 @@
 
             if (currentValue == newValue)
             {
-                return;
+                return null;
             }
 
             gamepad.SetButtonState(button, newValue);
+            return ((XinputButton)button).ToString();
         }
 
-        private void SetTrigger(IVirtualGamepad gamepad, Mapping mapping, bool isKeyDown)
+        private string SetTrigger(IVirtualGamepad gamepad, Mapping mapping, bool isKeyDown)
         {
             uint trigger = (uint)mapping.Function;
             byte currentValue = gamepad.GetTriggerState(trigger);
@@ -123,13 +144,14 @@
 
             if (currentValue == newValue)
             {
-                return;
+                return null;
             }
 
             gamepad.SetTriggerState(trigger, newValue);
+            return ((XinputTrigger)newValue).ToString();
         }
 
-        private void SetAxis(IVirtualGamepad gamepad, Mapping mapping, bool isKeyDown, bool hasOppositeDown)
+        private string SetAxis(IVirtualGamepad gamepad, Mapping mapping, bool isKeyDown, bool hasOppositeDown)
         {
             uint axis = (uint)mapping.Function;
             short axisValue = (short)mapping.TargetValue;
@@ -150,23 +172,25 @@
 
             if (oldValue == newValue)
             {
-                return;
+                return null;
             }
 
             gamepad.SetAxisState(axis, newValue);
+            return ((XinputAxis)axis) + " Axis " + ((XboxAxisPosition)newValue);
         }
 
-        private void SetDpad(IVirtualGamepad gamepad, Mapping mapping, bool isKeyDown)
+        private string SetDpad(IVirtualGamepad gamepad, Mapping mapping, bool isKeyDown)
         {
             int direction = (int)mapping.Function;
             int oldValue = gamepad.GetDpadState();
             int newValue = isKeyDown ? oldValue | direction : oldValue & ~direction;
             if (oldValue == newValue)
             {
-                return;
+                return null;
             }
 
             gamepad.SetDpadState(newValue);
+            return ((XinputButton)newValue).ToString();
         }
 
         private bool HasOppositeAxisKeysDown(IEmulationSlot slot, Mapping mapping, InputDevice inputDevice)

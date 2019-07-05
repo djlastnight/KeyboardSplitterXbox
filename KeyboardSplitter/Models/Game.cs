@@ -15,7 +15,6 @@
     using KeyboardSplitter.Enums;
     using KeyboardSplitter.Helpers;
     using KeyboardSplitter.Presets;
-    using System.Runtime.Serialization;
 
     [Serializable]
     [XmlType("Game")]

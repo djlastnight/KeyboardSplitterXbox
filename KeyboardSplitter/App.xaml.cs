@@ -1,6 +1,7 @@
 ﻿namespace KeyboardSplitter
 {
     using System;
+    using System.Diagnostics;
     using System.IO;
     using System.Reflection;
     using System.Threading;
@@ -131,10 +132,21 @@
                     ApplicationInfo.AppTempDirectory,
                     EnvironmentVariableTarget.Process);
 
-                LogWriter.Write("Extracting native resources");
                 var assembly = Assembly.GetExecutingAssembly();
-                ResourceExtractor.ExtractResource(assembly, "KeyboardSplitter.Lib.interception.dll", ApplicationInfo.AppTempDirectory);
-                ResourceExtractor.ExtractResource(assembly, "KeyboardSplitter.Lib.VirtualXboxNative.dll", ApplicationInfo.AppTempDirectory);
+
+                var interceptionPath = ResourceExtractor.ExtractResource(
+                    assembly,
+                    "KeyboardSplitter.Lib.interception.dll",
+                    ApplicationInfo.AppTempDirectory);
+
+                LogWriter.Write("Loading interception " + FileVersionInfo.GetVersionInfo(interceptionPath).ProductVersion);
+                
+                var vxboxNativePath = ResourceExtractor.ExtractResource(
+                    assembly,
+                    "KeyboardSplitter.Lib.VirtualXboxNative.dll",
+                    ApplicationInfo.AppTempDirectory);
+
+                LogWriter.Write("Loading VirtualXboxNative " + FileVersionInfo.GetVersionInfo(vxboxNativePath).ProductVersion);
 
                 ManagedAssemblyLoader.Load(
                     "KeyboardSplitter.Lib.Interceptor.dll",
