@@ -35,11 +35,14 @@ which works with such controllers should be supported too.
 - remote blocking/unblocking the keyboards input
 
 # Prerequisites
-DirectX 9.0c June https://download.microsoft.com/download/8/4/A/84A35BF1-DAFE-4AE8-82AF-AD2AE20B6B14/directx_Jun2010_redist.exe
-Vcredist 2013 x86 https://download.microsoft.com/download/2/E/6/2E61CFA4-993B-4DD4-91DA-3737CD5CD6E3/vcredist_x86.exe
-At least 1 connected keyboard
+DirectX 9.0c June https://download.microsoft.com/download/8/4/A/84A35BF1-DAFE-4AE8-82AF-AD2AE20B6B14/directx_Jun2010_redist.exe  
+
+Vcredist 2013 x86 https://download.microsoft.com/download/2/E/6/2E61CFA4-993B-4DD4-91DA-3737CD5CD6E3/vcredist_x86.exe  
+
+At least 1 connected keyboard  
+
 If you use Windows XP, Vista or Seven, you also need the
-Microsoft's Xbox Accessories Driver found at https://www.microsoft.com/accessories/bg-bg/d/xbox-360-controller-for-windows
+Microsoft's Xbox Accessories Driver found at https://www.microsoft.com/accessories/bg-bg/d/xbox-360-controller-for-windows  
 
 # Installation:
 Run the application, it will ask you to install the built-in drivers.
