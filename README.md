@@ -49,6 +49,13 @@ Run the application, it will ask you to install the built-in drivers.
 Do it and reboot your PC.
 Please read the FAQ section located in application's Help menu.
 
+# Keyboard Ghosting
+Keyboard splitter can not really help if you own a cheap keyboard,
+so you have 2 options:
+1. Buy an anti-ghosting keyboard
+or
+2. Change the preset bindings. Try which keys might be presses simultaneously here: https://drakeirving.github.io/MultiKeyDisplay/
+
 # Download
 https://github.com/djlastnight/KeyboardSplitterXbox/releases
 
