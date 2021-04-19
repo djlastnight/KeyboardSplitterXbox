@@ -50,12 +50,13 @@ Do it and reboot your PC.
 Please read the FAQ section located in application's Help menu.
 
 # Keyboard Ghosting
-Keyboard splitter can not really help if you own a cheap keyboard, so you have 2 options:
+Keyboard splitter can not really help in case you own a cheap keyboard, so you have 2 options:  
 1. Buy an anti-ghosting keyboard  
-or
+or  
 2. Change the preset bindings. Try which keys might be pressed simultaneously here: https://drakeirving.github.io/MultiKeyDisplay/  
 Please do not report issues like [x] key + [y] key does not register ingame! Choose your preset bindings wisely to avoid ghosting!  
 The default preset has known ghosting - you can't use both sticks (LS and RS) at their lower left positions (x min + y min) simultaneously.  
+Please do use the built-in xbox 360 controller tester to ensure the preset works as you expect before running the game!!!   
 
 # Download
 https://github.com/djlastnight/KeyboardSplitterXbox/releases
