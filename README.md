@@ -41,8 +41,8 @@ Vcredist 2013 x86 https://download.microsoft.com/download/2/E/6/2E61CFA4-993B-4D
 
 At least 1 connected keyboard  
 
-If you use Windows XP, Vista or Seven, you also need the
-Microsoft's Xbox Accessories Driver https://github.com/djlastnight/KeyboardSplitterXbox/blob/master/Xbox360Accessories_x64_1.2.exe?raw=true  
+If you use Windows XP, Vista or Seven, you will also need the
+Microsoft's Xbox Accessories Driver (64 bit) https://github.com/djlastnight/KeyboardSplitterXbox/blob/master/Xbox360Accessories_x64_1.2.exe?raw=true  
 
 # Installation:
 Run the application, it will ask you to install the built-in drivers.
@@ -50,11 +50,12 @@ Do it and reboot your PC.
 Please read the FAQ section located in application's Help menu.
 
 # Keyboard Ghosting
-Keyboard splitter can not really help if you own a cheap keyboard,
-so you have 2 options:
+Keyboard splitter can not really help if you own a cheap keyboard, so you have 2 options:
 1. Buy an anti-ghosting keyboard
 or
-2. Change the preset bindings. Try which keys might be presses simultaneously here: https://drakeirving.github.io/MultiKeyDisplay/
+2. Change the preset bindings. Try which keys might be pressed simultaneously here: https://drakeirving.github.io/MultiKeyDisplay/
+Please do not report issues like [x] key + [y] key does not register ingame! Choose your preset bindings wisely to avoid ghosting!
+The default preset has known ghosting - you can't use both sticks (LS and RS) at their lower left positions (x min + y min) simultaneously.
 
 # Download
 https://github.com/djlastnight/KeyboardSplitterXbox/releases
