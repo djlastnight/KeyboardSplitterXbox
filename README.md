@@ -42,7 +42,7 @@ Vcredist 2013 x86 https://download.microsoft.com/download/2/E/6/2E61CFA4-993B-4D
 At least 1 connected keyboard  
 
 If you use Windows XP, Vista or Seven, you also need the
-Microsoft's Xbox Accessories Driver found at https://www.microsoft.com/accessories/bg-bg/d/xbox-360-controller-for-windows  
+Microsoft's Xbox Accessories Driver https://github.com/djlastnight/KeyboardSplitterXbox/blob/master/Xbox360Accessories_x64_1.2.exe?raw=true  
 
 # Installation:
 Run the application, it will ask you to install the built-in drivers.
