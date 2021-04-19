@@ -51,11 +51,11 @@ Please read the FAQ section located in application's Help menu.
 
 # Keyboard Ghosting
 Keyboard splitter can not really help if you own a cheap keyboard, so you have 2 options:
-1. Buy an anti-ghosting keyboard
+1. Buy an anti-ghosting keyboard  
 or
-2. Change the preset bindings. Try which keys might be pressed simultaneously here: https://drakeirving.github.io/MultiKeyDisplay/
-Please do not report issues like [x] key + [y] key does not register ingame! Choose your preset bindings wisely to avoid ghosting!
-The default preset has known ghosting - you can't use both sticks (LS and RS) at their lower left positions (x min + y min) simultaneously.
+2. Change the preset bindings. Try which keys might be pressed simultaneously here: https://drakeirving.github.io/MultiKeyDisplay/  
+Please do not report issues like [x] key + [y] key does not register ingame! Choose your preset bindings wisely to avoid ghosting!  
+The default preset has known ghosting - you can't use both sticks (LS and RS) at their lower left positions (x min + y min) simultaneously.  
 
 # Download
 https://github.com/djlastnight/KeyboardSplitterXbox/releases
