@@ -44,6 +44,15 @@ At least 1 connected keyboard
 If you use Windows XP, Vista or Seven, you will also need the
 Microsoft's Xbox Accessories Driver (64 bit) https://github.com/djlastnight/KeyboardSplitterXbox/blob/master/Xbox360Accessories_x64_1.2.exe?raw=true  
 
+# Scp virtual bus version mismatch  
+If you get 'Slot is invalidated' error, you probably you have different SCP Bus installed.  
+It must be 22.52.24.182. In case it differs (no matter newer or older):  
+Go to device manager and under system devices find it and uninstall it.  
+![image](https://user-images.githubusercontent.com/19281127/115582624-d1ffd100-a2d1-11eb-8e8a-c7fc69ebfdc4.png)
+
+Reboot, run KS - it should offer you to install drivers, do it and reboot again.  
+If this does not fix your problem open a new issue or find existing one.  
+
 # Installation:
 Run the application, it will ask you to install the built-in drivers.
 Do it and reboot your PC.
