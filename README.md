@@ -41,7 +41,6 @@ Vcredist 2013 x86 https://download.microsoft.com/download/2/E/6/2E61CFA4-993B-4D
 
 At least 1 connected keyboard  
 
-If you use Windows XP, Vista or Seven, you will also need the
 Microsoft's Xbox Accessories Driver (64 bit) https://github.com/djlastnight/KeyboardSplitterXbox/blob/master/Xbox360Accessories_x64_1.2.exe?raw=true  
 
 # Scp virtual bus version mismatch  
