@@ -35,13 +35,16 @@ which works with such controllers should be supported too.
 - remote blocking/unblocking the keyboards input
 
 # Prerequisites
-DirectX 9.0c June https://download.microsoft.com/download/8/4/A/84A35BF1-DAFE-4AE8-82AF-AD2AE20B6B14/directx_Jun2010_redist.exe  
+* **At least 1 connected keyboard**  
 
-Vcredist 2013 x86 https://download.microsoft.com/download/2/E/6/2E61CFA4-993B-4DD4-91DA-3737CD5CD6E3/vcredist_x86.exe  
+* **DirectX 9.0c June**    
+https://download.microsoft.com/download/8/4/A/84A35BF1-DAFE-4AE8-82AF-AD2AE20B6B14/directx_Jun2010_redist.exe  
 
-At least 1 connected keyboard  
+* **Vcredist 2013 x86**    
+https://download.microsoft.com/download/2/E/6/2E61CFA4-993B-4DD4-91DA-3737CD5CD6E3/vcredist_x86.exe  
 
-Microsoft's Xbox Accessories Driver (64 bit) https://github.com/djlastnight/KeyboardSplitterXbox/blob/master/Xbox360Accessories_x64_1.2.exe?raw=true  
+* **Microsoft's Xbox Accessories Driver** (64 bit)    
+https://github.com/djlastnight/KeyboardSplitterXbox/blob/master/Xbox360Accessories_x64_1.2.exe?raw=true  
 
 # Scp virtual bus version mismatch  
 If you get 'Slot is invalidated' error, you probably you have different SCP Bus installed.  
