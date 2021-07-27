@@ -106,9 +106,8 @@ This produces a single fully portable executable file (*.exe).
 # Drivers
 Keyboard Splitter required drivers (interception and xbox bus)
 are embedded into the exe file and the user will be prompted to
-install them on first run. The user must install Xbox Accessories
-Driver if he/she uses Windows XP, Vista or Seven.  
-You might want to try out my [Interception GUI Uninstaller](https://github.com/djlastnight/KeyboardSplitterXbox/blob/master/InterceptionUninstall/interception-gui-uninstaller.zip?raw=true)  
+install them on first run. The user must install Xbox Accessories Driver separately.      
+You might want to try out my [Interception GUI Uninstaller](https://github.com/djlastnight/KeyboardSplitterXbox/blob/master/InterceptionUninstall/interception-gui-uninstaller.zip?raw=true) in case you recently updated your W10.  
 
 # Credits (original author's projects)
 
