@@ -90,6 +90,27 @@ for different games/applications/players. The presets are kept in
 presets.xml, which the application reads on startup and writes on exit.
 Keyboard Splitter comes with two hardcoded presets called 'default' and 'empty'.
 
+# Custom Axes Range (0-100%) 
+By default the app will use the Axis Min and Max value.  
+You can achieve custom percentage of an axis by manually editing a preset xml file.  
+Open splitter_presets.xml file and manually add the following line  
+`<axis id="1" value="-16384">None</axis>`  
+In case you do not have such file simply open the app, create a new preset, exit the app and save the presets when asked.  
+
+Open the app, choose the preset you just modified and your custom axis will appear at the preset UI as follows  
+![image](https://github.com/djlastnight/KeyboardSplitterXbox/assets/19281127/3d092000-811b-4662-9cf2-1ea58b88d4be)  
+
+You have your custom axis created. You can use it as usual.  
+
+Here are the axis ids to use:  
+Left Stick X = 1  
+Left Stick Y = 2  
+Right Stick X = 4  
+Right Stick Y = 8  
+
+Values must be in range -32768 to 32767  
+You can add as many custom axes as you wish. The example above is an example of -50% Axis X  
+
 # How it works
 
 ![alt tag](https://raw.githubusercontent.com/djlastnight/KeyboardSplitterXbox/master/how_it_works_diagram.png)
