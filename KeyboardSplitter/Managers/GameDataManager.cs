@@ -7,7 +7,7 @@
 
     public static class GameDataManager
     {
-        private const string GameDataFilename = "splitter_games.xml";
+        public const string GameDataFilename = "splitter_games.xml";
 
         private static GameData data;
 

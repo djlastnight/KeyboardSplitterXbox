@@ -58,6 +58,7 @@
                     string memStamp = "[Mem: " + memoryUsage + " MB] - ";
                     string timeStamp = DateTime.Now.ToString("[ddd] dd MMM, yyyy [HH:mm:ss] ", CultureInfo.InvariantCulture);
                     writer.WriteLine(timeStamp + memStamp + logMessage);
+                    Console.WriteLine(timeStamp + memStamp + logMessage);
                 }
             }
             catch (Exception)

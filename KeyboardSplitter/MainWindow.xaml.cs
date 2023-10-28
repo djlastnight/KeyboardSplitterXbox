@@ -259,6 +259,17 @@
 
                 this.SlotsCount = Math.Min(Math.Max(keyboardsCount, miceCount), 4);
             }
+
+            if (!string.IsNullOrWhiteSpace(App.autostartGameName)) {
+                LogWriter.Write(string.Format("Autostarting keyboard splitter game={0}", App.autostartGameName));
+                Game game = GameDataManager.Games.FirstOrDefault(g => g.GameTitle == App.autostartGameName);
+                if (game == null)
+                {
+                    throw new InvalidOperationException("Unable to find game with name " + App.autostartGameName);
+                }
+
+                game.TryStart();
+            }
         }
 
         private void Window_Closing(object sender, CancelEventArgs e)

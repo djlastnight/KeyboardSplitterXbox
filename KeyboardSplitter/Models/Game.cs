@@ -274,11 +274,21 @@
             splitter.ShouldBlockMice = this.blockMice;
             splitter.EmulationManager.Start(true);
 
-            var result = Controls.MessageBox.Show(
-                "Your game settings are applied.\r\n\r\nWould you like to run the game now?",
-                "Run a Keyboard Splitter Game?",
-                MessageBoxButton.YesNo,
-                MessageBoxImage.Question);
+            MessageBoxResult result;
+
+            if (!string.IsNullOrWhiteSpace(App.autostartGameName))
+            {
+                result = MessageBoxResult.Yes;
+                App.Current.MainWindow.Hide();
+            }
+            else
+            {
+                result = Controls.MessageBox.Show(
+                    "Your game settings are applied.\r\n\r\nWould you like to run the game now?",
+                    "Run a Keyboard Splitter Game?",
+                    MessageBoxButton.YesNo,
+                    MessageBoxImage.Question);
+            }
 
             if (result == MessageBoxResult.Yes)
             {
@@ -345,15 +355,23 @@
 
                     if (splitter.EmulationManager.IsEmulationStarted)
                     {
-                        var result = Controls.MessageBox.Show(
-                            "'" + this.gameTitle + "' has been closed.\r\n\r\nDo you want to stop the emulation?",
-                            ApplicationInfo.AppName,
-                            System.Windows.MessageBoxButton.YesNo,
-                            System.Windows.MessageBoxImage.Question);
-
-                        if (result == System.Windows.MessageBoxResult.Yes)
+                        if (!string.IsNullOrWhiteSpace(App.autostartGameName))
                         {
                             splitter.EmulationManager.Stop();
+                            Environment.Exit(0);
+                        }
+                        else
+                        {
+                            var result = Controls.MessageBox.Show(
+                                "'" + this.gameTitle + "' has been closed.\r\n\r\nDo you want to stop the emulation?",
+                                ApplicationInfo.AppName,
+                                System.Windows.MessageBoxButton.YesNo,
+                                System.Windows.MessageBoxImage.Question);
+
+                            if (result == System.Windows.MessageBoxResult.Yes)
+                            {
+                                splitter.EmulationManager.Stop();
+                            }
                         }
                     }
                 });

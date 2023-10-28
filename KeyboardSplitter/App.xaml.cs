@@ -11,6 +11,7 @@
     using KeyboardSplitter.Managers;
     using KeyboardSplitter.Models;
     using KeyboardSplitter.Presets;
+    using System.Runtime.InteropServices;
 
     /// <summary>
     /// The main application's App class.
@@ -18,7 +19,12 @@
     /// </summary>
     public partial class App : Application, IDisposable
     {
+        [DllImport("kernel32.dll", SetLastError = true, ExactSpelling = true)]
+        private static extern bool FreeConsole();
+
         private static bool assembliesLoaded;
+
+        public static string autostartGameName;
 
         private Mutex mutex;
 
@@ -220,6 +226,11 @@
                     LogWriter.Write("Allow multi instance parameter passed");
                     allowMultiInstance = true;
                 }
+                else if (arg.StartsWith("game="))
+                {
+                    var gameName = arg.Substring("game=".Length);
+                    App.autostartGameName = gameName;
+                }
             }
 
             if (!allowMultiInstance)
@@ -241,6 +252,12 @@
 
                     Environment.Exit(0);
                 }
+            }
+
+            if (string.IsNullOrWhiteSpace(App.autostartGameName))
+            {
+                // Since we won't autostart a game through CLI, we will only show the WPF.
+                FreeConsole();
             }
 
             AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(this.CurrentDomain_AssemblyResolve);
