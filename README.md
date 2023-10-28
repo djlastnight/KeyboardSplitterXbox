@@ -76,7 +76,7 @@ If you encounter strange controller behavior in-game, please do an anti-ghosting
 # Download
 https://github.com/djlastnight/KeyboardSplitterXbox/releases
 
-# User Interface
+# Graphical User Interface (GUI)  
 The User Interface is very intuitive and does not require
 technical skills.
 
@@ -89,6 +89,17 @@ The user could manage (add/edit/delete) different presets
 for different games/applications/players. The presets are kept in
 presets.xml, which the application reads on startup and writes on exit.
 Keyboard Splitter comes with two hardcoded presets called 'default' and 'empty'.
+
+# Command Line Interface (CLI)    
+Since version 2.3 you can start KeyboardSplitter.exe from terminal by passing a game to autostart.  
+This means you must already have a game, added to your games list.  
+In case you do not have a game defined, start the app as usual (using the GUI), go to Games -> Edit -> Add Game.  
+  
+Once you have 1 or more games at your splitter_games.xml, provide the desired game title as command line agrument `game=`  
+The app will autohide the GUI, mount the predefined slots, start the emulation and then will autostart the game executable.  
+Once you exit the game, keyboard splitter will autoclose.  
+  
+example start from command line: `KeyboardSplitter.exe game=Fifa` // Fifa is a game Title, defined at splitter_games.xml
 
 # Custom Axes Range (0-100%) 
 By default the app will use the Axis Min and Max value.  
@@ -140,4 +151,4 @@ https://github.com/nefarius/ScpVBus
 
 https://github.com/shauleiz/vXboxInterface
 
-djlastnight, 2017
+djlastnight, 2023
