@@ -101,7 +101,7 @@ Once you exit the game, keyboard splitter will autoclose.
   
 example start from command line: `KeyboardSplitter.exe game=Fifa` // Fifa is a game Title, defined at splitter_games.xml
 
-# Custom Axes Range (0-100%) 
+# Custom Axes Range (from -100% to +100%) 
 By default the app will use the Axis Min and Max value.  
 You can achieve custom percentage of an axis by manually editing a preset xml file.  
 Open splitter_presets.xml file and manually add the following line  
